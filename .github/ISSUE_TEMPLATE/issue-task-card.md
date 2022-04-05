@@ -13,9 +13,9 @@ assignees: ''
 * Detail: fix actions from client redux
 
 # TODO
-[ ] Job1
-[ ] Job2
-[ ] Job3
+- [ ] Job1
+- [ ] Job2
+- [ ] Job3
 
 # Estimated time
 ```
