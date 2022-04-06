@@ -1,12 +1,12 @@
-// const express = require('express');
-// const router = express.Router();
-// const authController = require('../controllers/auth');
-// const isAuth = require('../middlewares/auth');
+const express = require('express');
+const router = express.Router();
 
-// router.post('/signup', authController.signup.post);
+const authRouter = require('./auth');
+// const tweetRouter = require('./tweet');
+// const mypageRouter = require('./mypage');
 
-// router.post('/login', authController.login.post); // 토큰이 발급이 됨
+router.use('/auth', authRouter);
+// router.use('/tweet', tweetRouter);
+// router.use('/mypage', mypageRouter);
 
-// router.get('/me', isAuth.authMe.get, authController.me.get); // get 요청을 할 때
-
-// module.exports = router;
+module.exports = router;

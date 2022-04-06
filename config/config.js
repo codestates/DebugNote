@@ -23,4 +23,11 @@ module.exports = {
     host: '127.0.0.1',
     dialect: 'mysql',
   },
+  jwt: {
+    secret_key: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  },
+  bcrypt: {
+    saltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS),
+  },
 };
