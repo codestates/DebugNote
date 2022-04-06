@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
         if (error) {
           return res.status(401).json({ message: 'Invalid Token'});
         }
-        const user = await User.findById(decoded.id);
+        const user = await User.findByPk(decoded.id);
         if (!user) {
           return res.status(401).json({ message: 'Authentication Error'});
         }
