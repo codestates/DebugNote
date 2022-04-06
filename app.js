@@ -3,11 +3,12 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
 const indexRouter = require('./routes/index');
+const { sequelize } = require('./models');
 dotenv.config();
 
-const { sequelize } = require('./models');
-
+// 데이터베이스 연결
 sequelize
   .sync({ force: false })
   .then(() => {
@@ -17,17 +18,33 @@ sequelize
     console.error(err);
   });
 
-
 const app = express();
 
-app.use(cors());
-app.use(helmet());
-app.use(morgan('dev'));
+// const corsOption = {
+//   origin: '*',
+//   optionsSuccessStatus: 200,
+//   credentials: true, // allow the Access-Control-Allow-Credentials
+// };
+
 app.use(express.json());
+app.use(cookieParser());
+app.use(helmet());
+app.use(cors());
+app.use(morgan('dev'));
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 
-// const
+// 지원하지 않는 api
+app.use((req, res, next) => {
+  res.sendStatus(404);
+});
+
+// 서버 에러
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.sendStatus(500);
+});
+
 app.listen(8080, () => {
   console.log(`8080번 포트에서 대기중`);
 });
