@@ -1,4 +1,12 @@
 import './Main.css';
+import {
+  idValidator,
+  pwValidator,
+  pwMatchValidator,
+  nicknameValidator,
+  nameValidator,
+  selectValidator,
+} from '../Utils/validator';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -59,11 +67,24 @@ export default function Main({ isLogin, handleResponseSuccess }) {
   const [isMember, setIsMember] = useState(false);
   const [signinID, setSigninID] = useState('');
   const [signinPW, setSigninPW] = useState('');
+  //회원가입 정보 인풋값 관리
+  const [signupInfo, setSignupInfo] = useState({
+    email: '',
+    password: '',
+    passwordConfirm: '',
+    nickname: '',
+    name: '',
+    job: '',
+  });
+
+  const handleSignupInputValue = key => e => {
+    setSignupInfo({ ...signupInfo, [key]: e.target.value });
+  };
 
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
   };
-  const signupHandler = () => {
+  const modalToggleHandler = () => {
     setIsMember(!isMember);
   };
 
@@ -82,10 +103,10 @@ export default function Main({ isLogin, handleResponseSuccess }) {
 
     axios
       .post(
-        '엔드포인트주소',
+        'http://15.164.104.171:80/auth/login',
         {
-          signinID,
-          signinPW,
+          email: signinID,
+          password: signinPW,
         },
         {
           headers: { Accept: 'application/json' },
@@ -93,14 +114,61 @@ export default function Main({ isLogin, handleResponseSuccess }) {
       )
       .then(response => {
         console.log(response.statusCode, '응답코드');
-        if (response.statusCode === 201) {
-          console.log(response.cookies, '응답으로 받아온 쿠키');
+        if (response.status === 201) {
+          console.log(response.data.accToken, '응답');
           handleResponseSuccess();
         }
-      });
+      })
+      .catch(console.log);
   };
 
-  const logoutHandler = () => {};
+  const { email, password, nickname, name, job } = signupInfo;
+  console.log('닉네임', nickname);
+  const signupHandler = async () => {
+    //입력값 에러 처리
+    console.log('ok');
+
+    if (
+      email === '' ||
+      password === '' ||
+      nickname === '' ||
+      name === '' ||
+      job === ''
+    ) {
+      console.log('조건문 통과함');
+      return;
+    }
+
+    await axios
+      .post(
+        'http://15.164.104.171:80/auth/signup',
+        {
+          email,
+          password,
+          nickname,
+          name,
+          job,
+        },
+        {
+          headers: { Accept: 'application/json' },
+        },
+      )
+      .then(response => {
+        if (response.status === 201) {
+          console.log(`${response.data}`);
+        }
+      })
+      .catch(console.log);
+  };
+
+  const logoutHandler = () => {
+    axios.post('http://15.164.104.171:80/auth/logout').then(response => {
+      if (response.status === 200) {
+        console.log('logout ok');
+        handleResponseSuccess();
+      }
+    });
+  };
 
   return (
     <div>
@@ -155,7 +223,7 @@ export default function Main({ isLogin, handleResponseSuccess }) {
                     </div>
                     <button onClick={loginHandler}>로그인</button>
                   </section>
-                  <div onClick={signupHandler}>
+                  <div onClick={modalToggleHandler}>
                     아직 회원이 아니신가요? 회원가입
                   </div>
                 </>
@@ -166,40 +234,85 @@ export default function Main({ isLogin, handleResponseSuccess }) {
                   <section>
                     <div>
                       <div>email</div>
-                      <input placeholder="이메일을 입력하세요"></input>
-                      <div>유효성검사안내</div>
+                      <input
+                        placeholder="이메일을 입력하세요"
+                        onChange={handleSignupInputValue('email')}
+                      ></input>
+                      <div>
+                        {idValidator(signupInfo.email)
+                          ? '올바른 이메일 형식입니다'
+                          : '이메일 형식에 맞지 않습니다'}
+                      </div>
                     </div>
                     <div>
                       <div>password</div>
-                      <input placeholder="비밀번호를 입력하세요"></input>
-                      <div>유효성검사안내</div>
+                      <input
+                        type="password"
+                        placeholder="비밀번호를 입력하세요"
+                        onChange={handleSignupInputValue('password')}
+                      ></input>
+                      <div>
+                        {pwValidator(signupInfo.password)
+                          ? '올바른 비밀번호 형식입니다'
+                          : '비밀번호 형식에 맞지 않습니다'}
+                      </div>
                     </div>
                     <div>
                       <div>password 확인</div>
-                      <input placeholder="비밀번호를 한번 더 입력하세요"></input>
-                      <div>유효성검사안내</div>
+                      <input
+                        type="password"
+                        placeholder="비밀번호를 한번 더 입력하세요"
+                        onChange={handleSignupInputValue('passwordConfirm')}
+                      ></input>
+                      <div>
+                        {pwMatchValidator(
+                          signupInfo.password,
+                          signupInfo.passwordConfirm,
+                        )
+                          ? '비밀번호가 일치합니다'
+                          : '비밀번호가 일치하지 않습니다'}
+                      </div>
                     </div>
                     <div>
                       <div>nickname</div>
-                      <input placeholder="닉네임을 입력하세요"></input>
-                      <div>유효성검사안내</div>
+                      <input
+                        placeholder="닉네임을 입력하세요"
+                        onChange={handleSignupInputValue('nickname')}
+                      ></input>
+                      <div>
+                        {nicknameValidator(signupInfo.nickname)
+                          ? '올바른 닉네임입니다'
+                          : '닉네임은 3-20글자 사이여야 합니다'}
+                      </div>
                     </div>
                     <div>
                       <div>name</div>
-                      <input placeholder="이름을 입력하세요"></input>
-                      <div>유효성검사안내</div>
+                      <input
+                        placeholder="이름을 입력하세요"
+                        onChange={handleSignupInputValue('name')}
+                      ></input>
+                      <div>
+                        {nameValidator(signupInfo.name)
+                          ? '올바른 이름입니다'
+                          : '이름을 입력해주세요'}
+                      </div>
                     </div>
                     <div>
                       <div>job</div>
-                      <select>
+                      <select onChange={handleSignupInputValue('job')}>
                         <option>직업을 선택하세요</option>
                         <option>개발자</option>
                         <option>학생</option>
                       </select>
+                      <div>
+                        {selectValidator(signupInfo.job)
+                          ? '올바른 형식입니다'
+                          : '직업을 선택해주세요'}
+                      </div>
                     </div>
-                    <button>회원가입</button>
+                    <button onClick={signupHandler}>회원가입</button>
                   </section>
-                  <div onClick={signupHandler}>
+                  <div onClick={modalToggleHandler}>
                     계정이 이미 있으신가요? 로그인
                   </div>
                 </>
