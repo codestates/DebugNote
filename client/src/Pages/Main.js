@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import ErrorLog from '../Components/ErrorLog';
 
 export const ModalBackdrop = styled.div`
   position: fixed; //전체화면에 깔리도록..
@@ -49,12 +50,10 @@ export const ModalView = styled.div.attrs(props => ({
   width: 350px;
   height: 600px;
   justify-content: center;
-
   > span.close-btn {
     margin-top: 5px;
     cursor: pointer;
   }
-
   > div.desc {
     margin-top: 25px;
     color: #4000c7;
@@ -65,8 +64,6 @@ export default function Main({ isLogin, handleResponseSuccess }) {
   // console.log(isLogin, '로그인 상태');
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
-  const [signinID, setSigninID] = useState('');
-  const [signinPW, setSigninPW] = useState('');
   const [searchValue, setSearchValue] = useState('');
   //검색창 관리
   const searchHandler = () => {
@@ -74,11 +71,13 @@ export default function Main({ isLogin, handleResponseSuccess }) {
     setSearchValue('');
     //이제 서버에게 검색 결과를 달라고 요청할 것.
   };
-
   const searchInputChangeHandler = event => {
     setSearchValue(event.target.value);
   };
-
+  const [signinInfo, setSigninInfo] = useState({
+    email: '',
+    password: '',
+  });
   //회원가입 정보 인풋값 관리
   const [signupInfo, setSignupInfo] = useState({
     email: '',
@@ -93,6 +92,10 @@ export default function Main({ isLogin, handleResponseSuccess }) {
     setSignupInfo({ ...signupInfo, [key]: e.target.value });
   };
 
+  const handleSigninInputValue = key => e => {
+    setSigninInfo({ ...signinInfo, [key]: e.target.value });
+  };
+
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
   };
@@ -100,16 +103,8 @@ export default function Main({ isLogin, handleResponseSuccess }) {
     setIsMember(!isMember);
   };
 
-  const loginInputIDHandler = event => {
-    setSigninID(event.target.value);
-  };
-
-  const loginInputPWHandler = event => {
-    setSigninPW(event.target.value);
-  };
-
   const loginHandler = () => {
-    if (signinID === '' || signinPW === '') {
+    if (signinInfo.email === '' || signinInfo.password === '') {
       return;
     }
 
@@ -117,8 +112,8 @@ export default function Main({ isLogin, handleResponseSuccess }) {
       .post(
         'http://15.164.104.171:80/auth/login',
         {
-          email: signinID,
-          password: signinPW,
+          email: signinInfo.email,
+          password: signinInfo.password,
         },
         {
           headers: { Accept: 'application/json' },
@@ -137,6 +132,7 @@ export default function Main({ isLogin, handleResponseSuccess }) {
 
   const { email, password, nickname, name, job } = signupInfo;
   //회원가입
+
   const signupHandler = async () => {
     //입력값 에러 처리
     console.log('ok');
@@ -215,122 +211,116 @@ export default function Main({ isLogin, handleResponseSuccess }) {
             </span>
             <section>
               {isMember ? (
-                <>
+                <section>
                   <header>로그인</header>
-                  <div>소셜 로그인 버튼</div>
-                  <section>
-                    <div>
-                      <div>ID</div>
-                      <input
-                        placeholder="아이디를 입력하세요"
-                        value={signinID}
-                        onChange={loginInputIDHandler}
-                      ></input>
-                    </div>
-                    <div>
-                      <div>PASSWORD</div>
-                      <input
-                        type="password"
-                        placeholder="비밀번호를 입력하세요"
-                        value={signinPW}
-                        onChange={loginInputPWHandler}
-                      ></input>
-                    </div>
-                    <button onClick={loginHandler}>로그인</button>
-                  </section>
+                  <div>
+                    <div>ID</div>
+                    <input
+                      placeholder="이메일을 입력하세요"
+                      onChange={handleSigninInputValue('email')}
+                    ></input>
+                  </div>
+                  <div>
+                    <div>PASSWORD</div>
+                    <input
+                      type="password"
+                      placeholder="비밀번호를 입력하세요"
+                      onChange={handleSigninInputValue('password')}
+                    ></input>
+                  </div>
+                  <button onClick={loginHandler}>로그인</button>
                   <div onClick={modalToggleHandler}>
                     아직 회원이 아니신가요? 회원가입
                   </div>
-                </>
+                  <div>소셜 계정으로 로그인</div>
+                  <button>github</button>
+                </section>
               ) : (
-                <>
+                <section>
                   <header>회원가입</header>
-                  <div>소셜 회원가입</div>
-                  <section>
+                  <div>
+                    <div>email</div>
+                    <input
+                      placeholder="이메일을 입력하세요"
+                      onChange={handleSignupInputValue('email')}
+                    ></input>
                     <div>
-                      <div>email</div>
-                      <input
-                        placeholder="이메일을 입력하세요"
-                        onChange={handleSignupInputValue('email')}
-                      ></input>
-                      <div>
-                        {idValidator(signupInfo.email)
-                          ? '올바른 이메일 형식입니다'
-                          : '이메일 형식에 맞지 않습니다'}
-                      </div>
+                      {idValidator(signupInfo.email)
+                        ? '올바른 이메일 형식입니다'
+                        : '이메일 형식에 맞지 않습니다'}
                     </div>
+                  </div>
+                  <div>
+                    <div>password</div>
+                    <input
+                      type="password"
+                      placeholder="비밀번호를 입력하세요"
+                      onChange={handleSignupInputValue('password')}
+                    ></input>
                     <div>
-                      <div>password</div>
-                      <input
-                        type="password"
-                        placeholder="비밀번호를 입력하세요"
-                        onChange={handleSignupInputValue('password')}
-                      ></input>
-                      <div>
-                        {pwValidator(signupInfo.password)
-                          ? '올바른 비밀번호 형식입니다'
-                          : '비밀번호 형식에 맞지 않습니다'}
-                      </div>
+                      {pwValidator(signupInfo.password)
+                        ? '올바른 비밀번호 형식입니다'
+                        : '비밀번호 형식에 맞지 않습니다'}
                     </div>
+                  </div>
+                  <div>
+                    <div>password 확인</div>
+                    <input
+                      type="password"
+                      placeholder="비밀번호를 한번 더 입력하세요"
+                      onChange={handleSignupInputValue('passwordConfirm')}
+                    ></input>
                     <div>
-                      <div>password 확인</div>
-                      <input
-                        type="password"
-                        placeholder="비밀번호를 한번 더 입력하세요"
-                        onChange={handleSignupInputValue('passwordConfirm')}
-                      ></input>
-                      <div>
-                        {pwMatchValidator(
-                          signupInfo.password,
-                          signupInfo.passwordConfirm,
-                        )
-                          ? '비밀번호가 일치합니다'
-                          : '비밀번호가 일치하지 않습니다'}
-                      </div>
+                      {pwMatchValidator(
+                        signupInfo.password,
+                        signupInfo.passwordConfirm,
+                      )
+                        ? '비밀번호가 일치합니다'
+                        : '비밀번호가 일치하지 않습니다'}
                     </div>
+                  </div>
+                  <div>
+                    <div>nickname</div>
+                    <input
+                      placeholder="닉네임을 입력하세요"
+                      onChange={handleSignupInputValue('nickname')}
+                    ></input>
                     <div>
-                      <div>nickname</div>
-                      <input
-                        placeholder="닉네임을 입력하세요"
-                        onChange={handleSignupInputValue('nickname')}
-                      ></input>
-                      <div>
-                        {nicknameValidator(signupInfo.nickname)
-                          ? '올바른 닉네임입니다'
-                          : '닉네임은 3-20글자 사이여야 합니다'}
-                      </div>
+                      {nicknameValidator(signupInfo.nickname)
+                        ? '올바른 닉네임입니다'
+                        : '닉네임은 3-20글자 사이여야 합니다'}
                     </div>
+                  </div>
+                  <div>
+                    <div>name</div>
+                    <input
+                      placeholder="이름을 입력하세요"
+                      onChange={handleSignupInputValue('name')}
+                    ></input>
                     <div>
-                      <div>name</div>
-                      <input
-                        placeholder="이름을 입력하세요"
-                        onChange={handleSignupInputValue('name')}
-                      ></input>
-                      <div>
-                        {nameValidator(signupInfo.name)
-                          ? '올바른 이름입니다'
-                          : '이름을 입력해주세요'}
-                      </div>
+                      {nameValidator(signupInfo.name)
+                        ? '올바른 이름입니다'
+                        : '이름을 입력해주세요'}
                     </div>
+                  </div>
+                  <div>
+                    <div>job</div>
+                    <select onChange={handleSignupInputValue('job')}>
+                      <option>직업을 선택하세요</option>
+                      <option>개발자</option>
+                      <option>학생</option>
+                    </select>
                     <div>
-                      <div>job</div>
-                      <select onChange={handleSignupInputValue('job')}>
-                        <option>직업을 선택하세요</option>
-                        <option>개발자</option>
-                        <option>학생</option>
-                      </select>
-                      <div>
-                        {selectValidator(signupInfo.job)
-                          ? '올바른 형식입니다'
-                          : '직업을 선택해주세요'}
-                      </div>
+                      {selectValidator(signupInfo.job)
+                        ? '올바른 형식입니다'
+                        : '직업을 선택해주세요'}
                     </div>
-                    <button onClick={signupHandler}>회원가입</button>
-                  </section>
+                  </div>
+                  <button onClick={signupHandler}>회원가입</button>
                   <div onClick={modalToggleHandler}>
                     계정이 이미 있으신가요? 로그인
                   </div>
-                </>
+                </section>
               )}
             </section>
           </ModalView>
@@ -356,7 +346,10 @@ export default function Main({ isLogin, handleResponseSuccess }) {
           </div>
         </div>
       </section>
-      <section className="articles">게시글영역</section>
+      <section className="articles">
+        <div className="main-errlog-list-title">트렌딩</div>
+        <ErrorLog />
+      </section>
     </div>
   );
 }
