@@ -24,8 +24,6 @@ const corsOption = {
   origin: '*',
   optionsSuccessStatus: 200,
   credentials: true, // allow the Access-Control-Allow-Credentials
-  httponly: true,
-  samesite: on,
 };
 
 app.use(express.json());
