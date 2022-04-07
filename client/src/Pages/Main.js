@@ -323,14 +323,10 @@ export default function Main({ isLogin, handleResponseSuccess }) {
           <button>검색</button>
         </div>
       </section>
-<<<<<<< HEAD
       <section className="articles">
         <div className="main-errlog-list-title">트렌딩</div>
         <ErrorLog />
       </section>
-=======
-      <section className="articles">게시글영역</section>
->>>>>>> 4f975deca46ddd0fab19399c6b8ebedf91565e74
     </div>
   );
 }
