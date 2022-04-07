@@ -67,6 +67,18 @@ export default function Main({ isLogin, handleResponseSuccess }) {
   const [isMember, setIsMember] = useState(false);
   const [signinID, setSigninID] = useState('');
   const [signinPW, setSigninPW] = useState('');
+  const [searchValue, setSearchValue] = useState('');
+  //검색창 관리
+  const searchHandler = () => {
+    console.log('검색 이벤트핸들러 작동됨');
+    setSearchValue('');
+    //이제 서버에게 검색 결과를 달라고 요청할 것.
+  };
+
+  const searchInputChangeHandler = event => {
+    setSearchValue(event.target.value);
+  };
+
   //회원가입 정보 인풋값 관리
   const [signupInfo, setSignupInfo] = useState({
     email: '',
@@ -74,7 +86,7 @@ export default function Main({ isLogin, handleResponseSuccess }) {
     passwordConfirm: '',
     nickname: '',
     name: '',
-    job: '',
+    job: '직업을 선택하세요',
   });
 
   const handleSignupInputValue = key => e => {
@@ -113,17 +125,18 @@ export default function Main({ isLogin, handleResponseSuccess }) {
         },
       )
       .then(response => {
-        console.log(response.statusCode, '응답코드');
         if (response.status === 201) {
-          console.log(response.data.accToken, '응답');
+          //console.log(response.data.accToken, '응답');
           handleResponseSuccess();
+          //모달 창 닫기
+          openLoginModalHandler();
         }
       })
       .catch(console.log);
   };
 
   const { email, password, nickname, name, job } = signupInfo;
-  console.log('닉네임', nickname);
+  //회원가입
   const signupHandler = async () => {
     //입력값 에러 처리
     console.log('ok');
@@ -156,6 +169,8 @@ export default function Main({ isLogin, handleResponseSuccess }) {
       .then(response => {
         if (response.status === 201) {
           console.log(`${response.data}`);
+          //모달 창 닫기
+          openLoginModalHandler();
         }
       })
       .catch(console.log);
@@ -327,8 +342,18 @@ export default function Main({ isLogin, handleResponseSuccess }) {
           <option>내용</option>
         </select>
         <div>
-          <input placeholder="검색어를 입력해주세요"></input>
-          <button>검색</button>
+          <input
+            type="text"
+            value={searchValue}
+            placeholder="검색어를 입력해주세요"
+            onChange={searchInputChangeHandler}
+            onKeyUp={event =>
+              event.key === 'Enter' ? searchHandler(event) : null
+            }
+          ></input>
+          <div onClick={() => searchHandler(searchValue)}>
+            <i className="fa-solid fa-magnifying-glass"></i>
+          </div>
         </div>
       </section>
       <section className="articles">게시글영역</section>
