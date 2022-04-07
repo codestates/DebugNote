@@ -24,6 +24,7 @@ module.exports = {
   },
 
   selectValidator: option => {
+    console.log(option, '선택한 값');
     console.log(option === '직업을 선택하세요');
     return option !== '직업을 선택하세요';
   },
