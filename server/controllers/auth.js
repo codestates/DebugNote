@@ -89,7 +89,11 @@ module.exports = {
 
     return res
       .status(201)
-      .cookie('Bearer ', accToken)
+      .cookie('token', accToken, {
+        httpOnly: true,
+        // secure: true,
+        sameSite: 'none'
+      })
       .json({ accToken, message: '로그인 성공했습니다.' });
   },
   // 로그아웃
