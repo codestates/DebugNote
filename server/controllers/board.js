@@ -4,13 +4,6 @@ module.exports = {
   post: async (req, res, next) => {
     const { title, content, picture } = req.body;
 
-    if (!title) {
-      return res.status(401).json({ message: '제목 필수 입력' });
-    }
-    if (!content) {
-      return res.status(401).json({ message: '본문 내용 필수 입력' });
-    }
-
     const newBoard = await Board.create({
       title,
       content,

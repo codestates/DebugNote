@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const boardController = require('../controllers/board');
 const isAuth = require('../middlewares/auth');
+// const { body } = require('express-validator');
+// const validation = require('../middlewares/validator');
 
 // 게시물 작성
 router.post('/', isAuth, boardController.post);
