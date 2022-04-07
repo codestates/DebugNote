@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.loggedin-menu {
+  border: 1px solid pink;
+}
+
+.search {
+  border: 1px solid black;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.articles {
+  border: 1px solid blue;
+  height: 200px;
+}
