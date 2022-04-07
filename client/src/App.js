@@ -6,18 +6,30 @@ import Main from './Pages/Main';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
+  const handleResponseSuccess = () => {
+    setIsLogin(!isLogin);
+  };
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Main isLogin={isLogin} />} />
-        <Route path="mypage" element>
-          <Route index element />
-          <Route path="info" element />
-          <Route path="bookmark" element />
+        <Route
+          path="/"
+          element={
+            <Main
+              isLogin={isLogin}
+              handleResponseSuccess={handleResponseSuccess}
+            />
+          }
+        />
+        {/* <Route path="mypage" element={}>
+          <Route index element={}/>
+          <Route path="info" element={}/>
+          <Route path="bookmark" element={}/>
         </Route>
-        <Route path="article" element />
-        <Route path="write" element />
+        <Route path="article" element={}/>
+        <Route path="write"  element={}/> */}
       </Routes>
+      {/* 메인페이지, 마이페이지(회원정보,북마크,게시글:기본), 게시글 상세페이지: article, 게2379시글 작성 */}
     </BrowserRouter>
   );
 }

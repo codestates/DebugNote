@@ -1,10 +1,15 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+<<<<<<< HEAD
 const config = require('../config')
+=======
+const config = require('../config');
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
 const User = require('../models/user');
 
 module.exports = {
   // 회원가입
+<<<<<<< HEAD
   signup: async (req, res) =>{
       const { email, password, nickname, name, job } = req.body;
 
@@ -52,10 +57,43 @@ module.exports = {
   signout: async (req, res) =>{
     
   },  
+=======
+  signup: async (req, res) => {
+    const { email, password, nickname, name, job } = req.body;
+
+    // validation (nickname, email, password ...) 중복 확인 필요
+    const user = await User.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (user) {
+      return res.status(409).json({ message: '중복된 유저 입니다.' });
+    }
+    const hashedPassword = await bcrypt
+      .hash(password, config.bcrypt.saltRounds)
+      .catch(err => console.log(err));
+
+    const newUser = await User.create({
+      email,
+      password: hashedPassword,
+      nickname,
+      name,
+      job,
+    });
+    return res
+      .status(201)
+      .json({ id: newUser.id, message: '유저가 생성 되었습니다.' });
+  },
+  // 회원탈퇴
+  signout: async (req, res) => {},
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
   // 로그인
   login: async (req, res) => {
     const { email, password } = req.body;
 
+<<<<<<< HEAD
     if (!email) {
       return res.status(401).json({ message: '이메일 필수 입력' });
     }
@@ -64,6 +102,8 @@ module.exports = {
       return res.status(401).json({ message: '비밀번호 필수 입력' });
     }
 
+=======
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
     const user = await User.findOne({
       where: {
         email,
@@ -79,9 +119,13 @@ module.exports = {
       .catch(err => console.log(err));
 
     if (!isValidPassword) {
+<<<<<<< HEAD
       return res
         .status(401)
         .json({ message: '비밀번호가 일치하지 않습니다.' });
+=======
+      return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
     }
 
     const accToken = await createJwtToken(user.id);
@@ -89,11 +133,23 @@ module.exports = {
 
     return res
       .status(201)
+<<<<<<< HEAD
       .cookie('Bearer ', accToken)
       .json({ accToken, message: '로그인 성공했습니다.' });
   },
   // 로그아웃
   logout: async (req, res) =>{
+=======
+      .cookie('token', accToken, {
+        httpOnly: true,
+        // secure: true,
+        sameSite: 'none'
+      })
+      .json({ accToken, message: '로그인 성공했습니다.' });
+  },
+  // 로그아웃
+  logout: async (req, res) => {
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
     res.cookie('token', '');
     res.status(200).json({ message: 'User has been logged out' });
   },
@@ -104,7 +160,11 @@ module.exports = {
       return res.status(404).json({ message: 'User not found' });
     }
     res.status(200).json({ token: req.token, username: user.username });
+<<<<<<< HEAD
   }
+=======
+  },
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
 };
 
 async function createJwtToken(id) {

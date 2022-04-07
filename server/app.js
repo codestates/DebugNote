@@ -20,16 +20,28 @@ sequelize
 
 const app = express();
 
+<<<<<<< HEAD
 // const corsOption = {
 //   origin: '*',
 //   optionsSuccessStatus: 200,
 //   credentials: true, // allow the Access-Control-Allow-Credentials
 // };
+=======
+const corsOption = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+  credentials: true, // allow the Access-Control-Allow-Credentials
+};
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
+<<<<<<< HEAD
 app.use(cors());
+=======
+app.use(cors(corsOption));
+>>>>>>> 1fa809e757913b452ca780ba9a8fbc115d11812f
 app.use(morgan('dev'));
 
 app.use('/', indexRouter);
