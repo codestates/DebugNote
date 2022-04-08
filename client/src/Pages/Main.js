@@ -10,6 +10,8 @@ import Searchbar from '../Components/Searchbar';
 import LoadingIndicator from '../Components/LoadingIndicator';
 import FailIndicator from '../Components/FailIndicator';
 import ErrorLog from '../Components/ErrorLog';
+//* practice
+import Pagination from '../Components/Pagination';
 
 import allArticleApi from '../api/allArticleApi';
 
@@ -66,11 +68,16 @@ export default function Main({ isLogin, setIsLogin }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
 
+  //* 페이지네이션
+  //* 현재 클릭한 페이지, 서버로 부터 받은 총 게시글 수 상태값
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalArticles, setTotalArticles] = useState(0);
+
   //화면에 표시되는 게시글: 검색된 게시글일 수도 있고, 서버가 기본적으로 보내주는 게시글일 수도 있다.
   const [currentArticle, setCurrentArticle] = useState([]);
-
   const [isLoading, setIsLoading] = useState(true);
-
+  
+  //! 충돌된 useEffect - 수현님 
   //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
   useEffect(() => {
     setIsLoading(true);
@@ -108,6 +115,46 @@ export default function Main({ isLogin, setIsLogin }) {
       }
     });
   };
+
+  //! 충돌
+  // 정태영 페이지네이션 핸들러
+  const paginationHandler = currentPage => {
+    //* start, limit
+    const [S, L] = [currentPage * 10 - 9, currentPage * 10];
+
+    axios
+      .get(`http://15.164.104.171/?start=${S}&limit=${L}`, {
+        // 페이지, 페이지 시작번호는  상태로 관리 필요. 최신순으로 화면에 구현
+        headers: { Accept: 'application/json' },
+      })
+      .then(response => {
+        console.log('axios 요청 횟수', response.data.boards);
+        if (response.status === 200) {
+          setCurrentArticle(response.data.boards); // 키 값은 board인가요?
+
+          //! 추후 서버에서 받은 총 게시물 수로 대체
+          setTotalArticles(15);
+
+          setIsLoading(false); //로딩 종료
+          setIsOk(true);
+        } else {
+          console.log('게시물부르기실패');
+          setIsLoading(false); //일단 로딩화면 종료
+          //전체 게시물 불러오기 실패
+          setIsOk(false);
+          //게시물 불러오기에 실패했다는 화면 보여주기
+        }
+      })
+      .catch(console.log);
+  };
+  
+  //! 충돌 정태영 유스이펙트
+  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
+  useEffect(() => {
+    console.log('useEffect 실행');
+    setIsLoading(true);
+    paginationHandler(currentPage);
+  }, [currentPage]);
 
   return (
     <div>
@@ -153,6 +200,10 @@ export default function Main({ isLogin, setIsLogin }) {
         ) : (
           <FailIndicator />
         )}
+        <Pagination
+          totalArticles={totalArticles}
+          paginate={setCurrentPage}
+        ></Pagination>
       </section>
     </div>
   );
