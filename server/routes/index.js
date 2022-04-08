@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
       id: { [Op.between]: [start, limit] },
     },
   });
-  console.log(boards.length);
+  // console.log(boards.length);
 
   if (boards.length === 0) {
     return res.status(404).json({ message: '게시물이 존재하지 않습니다.' });

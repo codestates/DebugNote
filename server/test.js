@@ -22,9 +22,7 @@ db.Board = Board;
 User.init(sequelize);
 Board.init(sequelize);
 
-
-// Comment.associate()
-const comment = sequelize.define('Comment', {
+sequelize.define('Comment', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -34,7 +32,15 @@ const comment = sequelize.define('Comment', {
     type: Sequelize.STRING(50),
     allowNull: false,
     unique: false,
-     },
+  } ,
+  UserId: {
+    type: Sequelize.INTEGER,
+    unique: false,
+  },
+  BoardId: {
+    type: Sequelize.INTEGER,
+    unique: false,
+    } 
   },
   {
     sequelize,
@@ -43,12 +49,9 @@ const comment = sequelize.define('Comment', {
     tableName: 'comments',
   }
 )
-User.hasMany(comment)
-Board.hasMany(comment)
 
 User.associate(db);
 Board.associate(db);
-// Comment.associate(db)
 
 
 
