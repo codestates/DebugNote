@@ -6,20 +6,13 @@ import Main from './Pages/Main';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
-  const handleResponseSuccess = () => {
-    setIsLogin(!isLogin);
-  };
+
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
-          element={
-            <Main
-              isLogin={isLogin}
-              handleResponseSuccess={handleResponseSuccess}
-            />
-          }
+          element={<Main isLogin={isLogin} setIsLogin={setIsLogin} />}
         />
         {/* <Route path="mypage" element={}>
           <Route index element={}/>
