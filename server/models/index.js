@@ -23,8 +23,10 @@ User.init(sequelize);
 Board.init(sequelize);
 
 
+
 // Comment.associate()
 const comment = sequelize.define('Comment', {
+sequelize.define('comment', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -43,12 +45,19 @@ const comment = sequelize.define('Comment', {
     tableName: 'comments',
   }
 )
+
 User.hasMany(comment)
 Board.hasMany(comment)
 
+
+Board.comment = sequelize.define('comment', {
+  comment: Sequelize.STRING(50),
+});
+
+
 User.associate(db);
 Board.associate(db);
-// Comment.associate(db)
+
 
 
 

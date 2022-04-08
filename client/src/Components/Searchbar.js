@@ -1,34 +1,61 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
-export default function Searchbar({ setSearchedArticle }) {
-  const [searchValue, setSearchValue] = useState('');
+export default function Searchbar({ setCurrentArticle }) {
+  //검색 옵션 상태 관리
   const [option, setOption] = useState('제목');
   const optionChangeHandler = event => {
     setOption(event.target.value);
   };
-  const searchHandler = async () => {
-    //이제 서버에게 검색 결과를 달라고 요청할 것.
-    /*
-    로딩 화면 보여줌
-    요청에 성공하여 게시물을 받아오는 경우: App.js에서 내려받은 게시글 상태 업데이트. 상태갱신함수 프롭스로 뿌려주기
-    요청하였으나 게시글이 하나도 없는 경우 : 검색 결과가 하나도 없습니다 라고 화면에 보여주기
-    요청 끝
-    로딩 화면 안 보여줌
-    */
-    // await axios.get(`http://15.164.104.171:80/boards/search?${option==="제목"?titles=searchValue:contents=searchValue&pages=1&start=10}`,{
-    //   headers: { Accept: "application/json"}
-    // })
-    // .then(response =>{
-    //   console.log(response.data.board)
-    //   setSearchedArticle(response.data.board)
-    // })
-    //검색창 결과 비우기
-    setSearchValue('');
-  };
+  //검색창 인풋 내용 관리
+  const [searchKeyword, setSearchKeyword] = useState('');
   const searchInputChangeHandler = event => {
-    setSearchValue(event.target.value);
+    setSearchKeyword(event.target.value);
   };
+
+  const searchHandler = (searchOption, searchKeyword) => {
+    console.log(searchOption, searchKeyword, '검색 조건');
+    console.log('검색함수 실행한다.');
+    if (searchKeyword === '') return;
+    let endpoint;
+    if (searchOption === '제목') {
+      endpoint = `http://15.164.104.171:80/boards/search?titles=${searchKeyword}`;
+    } else {
+      endpoint = `http://15.164.104.171:80/boards/search?contents=${searchKeyword}(&pages={페이지넘버}&start={한 페이지 당 처음 시작 하는 게시물 번호})`;
+    }
+
+    //검색창 비우기
+    setSearchKeyword('');
+
+    //엔드포인트 주소를 설정했으면, 이제 서버에 요청을 보내자.
+    axios
+      .get(endpoint, {
+        headers: { Accept: 'application/json' },
+      })
+      .then(response => {
+        if (response.status === 201) {
+          //서버에 요청 보내기 성공하여 데이터를 잘 받아옴.
+          setCurrentArticle(response.data.boards);
+        } else {
+          //서버에 요청 보내기 실패하였음. 검색결과 없다고 할것
+          setCurrentArticle([]);
+        }
+      })
+      .catch(error => console.log(error, '에러 내용'));
+  };
+
+  const searchClickHandler = () => {
+    searchHandler(option, searchKeyword);
+  };
+
+  //검색창에 글자 입력 후 엔터를 치면 검색 함수 실행
+  const KeyPressHandler = event => {
+    if (event.type === 'keypress' && event.code === 'Enter') {
+      console.log('검색함수실행');
+      searchClickHandler();
+    }
+  };
+
   return (
     <section className="search">
       <select onChange={optionChangeHandler}>
@@ -37,15 +64,13 @@ export default function Searchbar({ setSearchedArticle }) {
       </select>
       <div>
         <input
+          placehoder="검색어를 입력하세요"
           type="text"
-          value={searchValue}
-          placeholder="검색어를 입력해주세요"
+          value={searchKeyword}
           onChange={searchInputChangeHandler}
-          onKeyUp={event =>
-            event.key === 'Enter' ? searchHandler(event) : null
-          }
+          onKeyPress={KeyPressHandler}
         ></input>
-        <div onClick={() => searchHandler(searchValue)}>
+        <div onClick={searchClickHandler}>
           <i className="fa-solid fa-magnifying-glass"></i>
         </div>
       </div>
