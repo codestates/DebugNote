@@ -16,14 +16,6 @@ module.exports = class Board extends Sequelize.Model {
           type: Sequelize.TEXT,
           allowNull: true,
         },
-        totalComment: {
-          type: Sequelize.INTEGER,
-          allowNull: true,
-        },
-        totalBookmark: {
-            type: Sequelize.INTEGER,
-            allowNull: true,
-          },
       },
       {
         sequelize,
@@ -38,9 +30,13 @@ module.exports = class Board extends Sequelize.Model {
       }
     );
   }
+
+
   static associate(db) {
     db.Board.belongsTo(db.User);
+    
     db.Board.belongsToMany(db.User, {
+      as: 'Comment',
       through: 'comment',
     });
     db.User.belongsToMany(db.Board, {
