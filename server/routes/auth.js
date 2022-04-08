@@ -29,13 +29,18 @@ router.post(
 router.post('/signout', authController.signout);
 
 // 로그인
+// router.post(
+//   '/login',
+//   [
+//     body('email').exists().isEmail().bail(),
+//     body('password').exists().isLength({ min: 8, max: 20 }).bail(),
+//     validation,
+//   ],
+//   authController.login,
+// );
+
 router.post(
   '/login',
-  [
-    body('email').exists().isEmail().trim().bail(),
-    body('password').exists().isLength({ min: 8, max: 20 }).trim().bail(),
-    validation,
-  ],
   authController.login,
 );
 

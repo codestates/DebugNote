@@ -9,8 +9,6 @@ module.exports = {
       title,
       content,
       picture,
-      totalComment: 0,
-      totalBookmark: 0,
     });
 
     return res
