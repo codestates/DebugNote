@@ -6,7 +6,7 @@ import Main from './Pages/Main';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
-
+  console.log('앱 렌더링됌');
   return (
     <BrowserRouter>
       <Routes>

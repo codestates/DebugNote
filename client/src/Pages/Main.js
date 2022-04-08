@@ -9,6 +9,8 @@ import Searchbar from '../Components/Searchbar';
 import LoadingIndicator from '../Components/LoadingIndicator';
 import FailIndicator from '../Components/FailIndicator';
 import ErrorLog from '../Components/ErrorLog';
+//* practice
+import Pagination from '../Components/Pagination';
 
 export const ModalBackdrop = styled.div`
   position: fixed; //전체화면에 깔리도록..
@@ -60,10 +62,14 @@ export const ModalView = styled.div.attrs(props => ({
 export default function Main({ isLogin, setIsLogin }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
-  const [allArticle, setAllArticle] = useState([]);
+  const [currentArticle, setCurrentArticle] = useState([]);
   const [isOk, setIsOk] = useState(false);
-  const [searchedArticle, setSearchedArticle] = useState([]); // 검색한 게시물만.
   const [isLoading, setIsLoading] = useState(true);
+
+  //* 페이지네이션
+  //* 현재 클릭한 페이지, 서버로 부터 받은 총 게시글 수 상태값
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalArticles, setTotalArticles] = useState(0);
 
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
@@ -82,18 +88,23 @@ export default function Main({ isLogin, setIsLogin }) {
     });
   };
 
-  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
-  useEffect(() => {
-    setIsLoading(true);
-    //서버에 전체 게시글 요청
+  const paginationHandler = currentPage => {
+    //* start, limit
+    const [S, L] = [currentPage * 10 - 9, currentPage * 10];
+
     axios
-      .get('http://15.164.104.171:80/?pages=1&start=10', {
+      .get(`http://15.164.104.171/?start=${S}&limit=${L}`, {
         // 페이지, 페이지 시작번호는  상태로 관리 필요. 최신순으로 화면에 구현
         headers: { Accept: 'application/json' },
       })
       .then(response => {
+        console.log('axios 요청 횟수', response.data.boards);
         if (response.status === 200) {
-          setAllArticle(response.data.board); // 키 값은 board인가요?
+          setCurrentArticle(response.data.boards); // 키 값은 board인가요?
+
+          //! 추후 서버에서 받은 총 게시물 수로 대체
+          setTotalArticles(15);
+
           setIsLoading(false); //로딩 종료
           setIsOk(true);
         } else {
@@ -105,7 +116,14 @@ export default function Main({ isLogin, setIsLogin }) {
         }
       })
       .catch(console.log);
-  }, [allArticle]);
+  };
+
+  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
+  useEffect(() => {
+    console.log('useEffect 실행');
+    setIsLoading(true);
+    paginationHandler(currentPage);
+  }, [currentPage]);
 
   return (
     <div>
@@ -153,19 +171,24 @@ export default function Main({ isLogin, setIsLogin }) {
           </ModalView>
         </ModalBackdrop>
       ) : null}
-      <Searchbar setSearchedArticle={setSearchedArticle} />
+      <Searchbar setCurrentArticle={setCurrentArticle} />
       <section className="articles">
         <div className="main-errlog-list-title">트렌딩</div>
+        <div>총 게시글 수:{totalArticles}</div>
         {/*useEffect을 통해 전체 게시글을 보여줄 부분. 우선은 로딩 여부에 따라서 보여주기*/}
         {isLoading ? (
           <LoadingIndicator />
         ) : isOk ? (
-          allArticle.map(article => (
+          currentArticle.map(article => (
             <ErrorLog key={article.id} article={article} />
           ))
         ) : (
           <FailIndicator />
         )}
+        <Pagination
+          totalArticles={totalArticles}
+          paginate={setCurrentPage}
+        ></Pagination>
       </section>
     </div>
   );
