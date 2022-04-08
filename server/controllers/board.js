@@ -15,9 +15,7 @@ module.exports = {
       .status(203)
       .json({ id: newBoard.id, message: '게시물 생성 되었습니다.' });
   },
-  get: async (req, res) => {
-    
-  },
+  get: async (req, res) => {},
   put: async (req, res) => {},
   remove: async (req, res) => {},
 };

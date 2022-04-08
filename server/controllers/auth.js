@@ -65,7 +65,7 @@ module.exports = {
       .cookie('token', accToken, {
         httpOnly: true,
         // secure: true,
-        sameSite: 'none'
+        sameSite: 'none',
       })
       .json({ accToken, message: '로그인 성공했습니다.' });
   },

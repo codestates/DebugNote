@@ -39,10 +39,7 @@ router.post('/signout', authController.signout);
 //   authController.login,
 // );
 
-router.post(
-  '/login',
-  authController.login,
-);
+router.post('/login', authController.login);
 
 // 로그아웃
 router.post('/logout', authController.logout);

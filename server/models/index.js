@@ -5,20 +5,18 @@ const config = require('../config/config.js')[env];
 const User = require('./user');
 const Board = require('./board');
 
-
 const db = {};
 const sequelize = new Sequelize(
   config.database,
   config.username,
   config.password,
-  config
+  config,
 );
 
 db.sequelize = sequelize;
 
 db.User = User;
 db.Board = Board;
-
 
 User.init(sequelize);
 Board.init(sequelize);
