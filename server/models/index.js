@@ -23,13 +23,24 @@ db.Board = Board;
 User.init(sequelize);
 Board.init(sequelize);
 
-Board.comment = sequelize.define('comment', {
-  comment: Sequelize.STRING(50)
-})
+sequelize.define('comment', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  comment: {
+    type: Sequelize.STRING(50),
+    allowNull: false,
+    unique: false,
+    } 
+  },
+  {
+    sequelize,
+    timestamps: true,
+  }
+)
 User.associate(db);
 Board.associate(db);
-
-
-
 
 module.exports = db;

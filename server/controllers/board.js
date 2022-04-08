@@ -1,5 +1,5 @@
 const Board = require('../models/board');
-  
+
 module.exports = {
   post: async (req, res) => {
     const { title, content, picture } = req.body;
