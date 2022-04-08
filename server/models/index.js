@@ -21,9 +21,29 @@ db.Board = Board;
 User.init(sequelize);
 Board.init(sequelize);
 
+
+sequelize.define('comment', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  comment: {
+    type: Sequelize.STRING(50),
+    allowNull: false,
+    unique: false,
+    } 
+  },
+  {
+    sequelize,
+    timestamps: true,
+  }
+)
+
 Board.comment = sequelize.define('comment', {
   comment: Sequelize.STRING(50),
 });
+
 User.associate(db);
 Board.associate(db);
 
