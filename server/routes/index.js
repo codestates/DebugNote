@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
       id: { [Op.between]: [start, limit] },
     },
   });
-  console.log(boards.length);
+  // console.log(boards.length);
 
       id: { [Op.between]: [start, start + 10] },
     },
