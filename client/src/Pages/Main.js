@@ -1,8 +1,14 @@
 import './Main.css';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import SigninForm from '../Components/SigninForm';
+import SignupForm from '../Components/SignupForm';
+import Searchbar from '../Components/Searchbar';
+import LoadingIndicator from '../Components/LoadingIndicator';
+import FailIndicator from '../Components/FailIndicator';
+import ErrorLog from '../Components/ErrorLog';
 
 export const ModalBackdrop = styled.div`
   position: fixed; //전체화면에 깔리도록..
@@ -41,66 +47,65 @@ export const ModalView = styled.div.attrs(props => ({
   width: 350px;
   height: 600px;
   justify-content: center;
-
   > span.close-btn {
     margin-top: 5px;
     cursor: pointer;
   }
-
   > div.desc {
     margin-top: 25px;
     color: #4000c7;
   }
 `;
 
-export default function Main({ isLogin, handleResponseSuccess }) {
-  // console.log(isLogin, '로그인 상태');
+export default function Main({ isLogin, setIsLogin }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
-  const [signinID, setSigninID] = useState('');
-  const [signinPW, setSigninPW] = useState('');
+  const [allArticle, setAllArticle] = useState([]);
+  const [isOk, setIsOk] = useState(false);
+  const [searchedArticle, setSearchedArticle] = useState([]); // 검색한 게시물만.
+  const [isLoading, setIsLoading] = useState(true);
 
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
   };
-  const signupHandler = () => {
+
+  const modalToggleHandler = () => {
     setIsMember(!isMember);
   };
 
-  const loginInputIDHandler = event => {
-    setSigninID(event.target.value);
+  const logoutHandler = () => {
+    axios.post('http://15.164.104.171:80/auth/logout').then(response => {
+      if (response.status === 200) {
+        console.log('logout ok');
+        setIsLogin(!isLogin);
+      }
+    });
   };
 
-  const loginInputPWHandler = event => {
-    setSigninPW(event.target.value);
-  };
-
-  const loginHandler = () => {
-    if (signinID === '' || signinPW === '') {
-      return;
-    }
-
+  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
+  useEffect(() => {
+    setIsLoading(true);
+    //서버에 전체 게시글 요청
     axios
-      .post(
-        '엔드포인트주소',
-        {
-          signinID,
-          signinPW,
-        },
-        {
-          headers: { Accept: 'application/json' },
-        },
-      )
+      .get('http://15.164.104.171:80/?pages=1&start=10', {
+        // 페이지, 페이지 시작번호는  상태로 관리 필요. 최신순으로 화면에 구현
+        headers: { Accept: 'application/json' },
+      })
       .then(response => {
-        console.log(response.statusCode, '응답코드');
-        if (response.statusCode === 201) {
-          console.log(response.cookies, '응답으로 받아온 쿠키');
-          handleResponseSuccess();
+        if (response.status === 200) {
+          setAllArticle(response.data.board); // 키 값은 board인가요?
+          setIsLoading(false); //로딩 종료
+          setIsOk(true);
+        } else {
+          console.log('게시물부르기실패');
+          setIsLoading(false); //일단 로딩화면 종료
+          //전체 게시물 불러오기 실패
+          setIsOk(false);
+          //게시물 불러오기에 실패했다는 화면 보여주기
         }
-      });
-  };
-
-  const logoutHandler = () => {};
+      })
+      .catch(console.log);
+  }, [allArticle]);
 
   return (
     <div>
@@ -127,98 +132,41 @@ export default function Main({ isLogin, handleResponseSuccess }) {
       {isOpen === true ? (
         <ModalBackdrop onClick={openLoginModalHandler}>
           <ModalView onClick={e => e.stopPropagation()}>
-            <span onClick={openLoginModalHandler} className="close-btn">
+            <div onClick={openLoginModalHandler} className="close-btn">
               &times;
-            </span>
+            </div>
             <section>
               {isMember ? (
-                <>
-                  <header>로그인</header>
-                  <div>소셜 로그인 버튼</div>
-                  <section>
-                    <div>
-                      <div>ID</div>
-                      <input
-                        placeholder="아이디를 입력하세요"
-                        value={signinID}
-                        onChange={loginInputIDHandler}
-                      ></input>
-                    </div>
-                    <div>
-                      <div>PASSWORD</div>
-                      <input
-                        type="password"
-                        placeholder="비밀번호를 입력하세요"
-                        value={signinPW}
-                        onChange={loginInputPWHandler}
-                      ></input>
-                    </div>
-                    <button onClick={loginHandler}>로그인</button>
-                  </section>
-                  <div onClick={signupHandler}>
-                    아직 회원이 아니신가요? 회원가입
-                  </div>
-                </>
+                <SignupForm
+                  modalToggleHandler={modalToggleHandler}
+                  openLoginModalHandler={openLoginModalHandler}
+                />
               ) : (
-                <>
-                  <header>회원가입</header>
-                  <div>소셜 회원가입</div>
-                  <section>
-                    <div>
-                      <div>email</div>
-                      <input placeholder="이메일을 입력하세요"></input>
-                      <div>유효성검사안내</div>
-                    </div>
-                    <div>
-                      <div>password</div>
-                      <input placeholder="비밀번호를 입력하세요"></input>
-                      <div>유효성검사안내</div>
-                    </div>
-                    <div>
-                      <div>password 확인</div>
-                      <input placeholder="비밀번호를 한번 더 입력하세요"></input>
-                      <div>유효성검사안내</div>
-                    </div>
-                    <div>
-                      <div>nickname</div>
-                      <input placeholder="닉네임을 입력하세요"></input>
-                      <div>유효성검사안내</div>
-                    </div>
-                    <div>
-                      <div>name</div>
-                      <input placeholder="이름을 입력하세요"></input>
-                      <div>유효성검사안내</div>
-                    </div>
-                    <div>
-                      <div>job</div>
-                      <select>
-                        <option>직업을 선택하세요</option>
-                        <option>개발자</option>
-                        <option>학생</option>
-                      </select>
-                    </div>
-                    <button>회원가입</button>
-                  </section>
-                  <div onClick={signupHandler}>
-                    계정이 이미 있으신가요? 로그인
-                  </div>
-                </>
+                <SigninForm
+                  modalToggleHandler={modalToggleHandler}
+                  openLoginModalHandler={openLoginModalHandler}
+                  isLogin={isLogin}
+                  setIsLogin={setIsLogin}
+                />
               )}
             </section>
           </ModalView>
         </ModalBackdrop>
       ) : null}
-      <section className="search">
-        <select>
-          <option>제목</option>
-          <option>내용</option>
-        </select>
-        <div>
-          <input placeholder="검색어를 입력해주세요"></input>
-          <button>검색</button>
-        </div>
+      <Searchbar setSearchedArticle={setSearchedArticle} />
+      <section className="articles">
+        <div className="main-errlog-list-title">트렌딩</div>
+        {/*useEffect을 통해 전체 게시글을 보여줄 부분. 우선은 로딩 여부에 따라서 보여주기*/}
+        {isLoading ? (
+          <LoadingIndicator />
+        ) : isOk ? (
+          allArticle.map(article => (
+            <ErrorLog key={article.id} article={article} />
+          ))
+        ) : (
+          <FailIndicator />
+        )}
       </section>
-      <section className="articles">게시글영역</section>
     </div>
   );
 }

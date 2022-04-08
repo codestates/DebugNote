@@ -38,6 +38,10 @@ module.exports = class User extends Sequelize.Model {
       }
     );
   }
+<<<<<<< HEAD
+=======
+  
+>>>>>>> d7a91e4f3b4efd7246a7db75aa602df3458aabc8
   static associate(db) {
     db.User.hasMany(db.Board);
     db.User.belongsToMany(db.Board, {
