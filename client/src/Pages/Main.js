@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import Navbar from '../Components/NavigationBar';
 import SigninForm from '../Components/SigninForm';
 import SignupForm from '../Components/SignupForm';
 import Searchbar from '../Components/Searchbar';
 import LoadingIndicator from '../Components/LoadingIndicator';
 import FailIndicator from '../Components/FailIndicator';
 import ErrorLog from '../Components/ErrorLog';
+
+import allArticleApi from '../api/allArticleApi';
 
 export const ModalBackdrop = styled.div`
   position: fixed; //전체화면에 깔리도록..
@@ -56,14 +59,38 @@ export const ModalView = styled.div.attrs(props => ({
     color: #4000c7;
   }
 `;
+//ajax call 단 1회만 호출되도록 설정.
+const articleData = allArticleApi();
 
 export default function Main({ isLogin, setIsLogin }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
-  const [allArticle, setAllArticle] = useState([]);
-  const [isOk, setIsOk] = useState(false);
-  const [searchedArticle, setSearchedArticle] = useState([]); // 검색한 게시물만.
+
+  //화면에 표시되는 게시글: 검색된 게시글일 수도 있고, 서버가 기본적으로 보내주는 게시글일 수도 있다.
+  const [currentArticle, setCurrentArticle] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
+
+  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
+  useEffect(() => {
+    setIsLoading(true);
+    //서버에 전체 게시글 요청
+    articleData
+      .then(response => {
+        if (response.status === 200) {
+          //전체 게시글 불러오기 성공
+          console.log('전체 게시글 불러오기 성공');
+          setCurrentArticle(response.data.boards);
+          setIsLoading(false);
+        } else {
+          //전체 게시글 불러오기 실패
+          console.log('전체 게시글 불러오기 실패');
+          setCurrentArticle([]);
+          setIsLoading(false);
+        }
+      })
+      .catch(error => console.log(error, '에러 내용'));
+  }, []);
 
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
@@ -82,53 +109,13 @@ export default function Main({ isLogin, setIsLogin }) {
     });
   };
 
-  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
-  useEffect(() => {
-    setIsLoading(true);
-    //서버에 전체 게시글 요청
-    axios
-      .get('http://15.164.104.171:80/?pages=1&start=10', {
-        // 페이지, 페이지 시작번호는  상태로 관리 필요. 최신순으로 화면에 구현
-        headers: { Accept: 'application/json' },
-      })
-      .then(response => {
-        if (response.status === 200) {
-          setAllArticle(response.data.board); // 키 값은 board인가요?
-          setIsLoading(false); //로딩 종료
-          setIsOk(true);
-        } else {
-          console.log('게시물부르기실패');
-          setIsLoading(false); //일단 로딩화면 종료
-          //전체 게시물 불러오기 실패
-          setIsOk(false);
-          //게시물 불러오기에 실패했다는 화면 보여주기
-        }
-      })
-      .catch(console.log);
-  }, [allArticle]);
-
   return (
     <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">DebugNote</Link>
-          </li>
-          {isLogin ? (
-            <ul className="loggedin-menu">
-              <li>
-                <Link to="">마이페이지</Link>
-              </li>
-              <li>
-                <Link to="">글쓰기</Link>
-              </li>
-              <li onClick={logoutHandler}>로그아웃</li>
-            </ul>
-          ) : (
-            <li onClick={openLoginModalHandler}>로그인</li>
-          )}
-        </ul>
-      </nav>
+      <Navbar
+        isLogin={isLogin}
+        logoutHandler={logoutHandler}
+        openLoginModalHandler={openLoginModalHandler}
+      ></Navbar>
       {isOpen === true ? (
         <ModalBackdrop onClick={openLoginModalHandler}>
           <ModalView onClick={e => e.stopPropagation()}>
@@ -153,14 +140,14 @@ export default function Main({ isLogin, setIsLogin }) {
           </ModalView>
         </ModalBackdrop>
       ) : null}
-      <Searchbar setSearchedArticle={setSearchedArticle} />
+      <Searchbar setCurrentArticle={setCurrentArticle} />
       <section className="articles">
         <div className="main-errlog-list-title">트렌딩</div>
-        {/*useEffect을 통해 전체 게시글을 보여줄 부분. 우선은 로딩 여부에 따라서 보여주기*/}
+        {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
         {isLoading ? (
           <LoadingIndicator />
-        ) : isOk ? (
-          allArticle.map(article => (
+        ) : currentArticle.length !== 0 ? (
+          currentArticle.map(article => (
             <ErrorLog key={article.id} article={article} />
           ))
         ) : (
