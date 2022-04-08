@@ -17,10 +17,11 @@ const Op = sequelize.Op;
 router.get('/', async (req, res) => {
   const { page, start } = req.query;
   // start + 10
+  console.log(start);
   const boards = await Board.findAll({
     order: [['id', 'desc']],
     where: {
-      id: { [Op.between]: [start, start + 10] },
+      id: { [Op.between]: [start, start + 9] },
     },
   });
   // console.log(boards.length);
