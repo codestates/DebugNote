@@ -17,12 +17,12 @@ module.exports = class User extends Sequelize.Model {
           allowNull: false,
         },
         nickname: {
-            type: Sequelize.STRING(255),
-            allowNull: false,
-          },
+          type: Sequelize.STRING(255),
+          allowNull: false,
+        },
         job: {
-            type: Sequelize.STRING(50),
-            allowNull: false,
+          type: Sequelize.STRING(50),
+          allowNull: false,
         },
       },
       {
@@ -35,17 +35,18 @@ module.exports = class User extends Sequelize.Model {
         // mb4 -> 이모티콘도 사용 가능
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
-      }
+      },
     );
   }
-  
+
   static associate(db) {
     db.User.hasMany(db.Board);
+    // db.User.belongsToMany(db.Board, {
+    //   through: 'Comment',
+    // });
+    // db.User.hasMany(db.Comment);
     db.User.belongsToMany(db.Board, {
-      through: 'comment',
+      through: 'bookmark',
     });
-    db.User.belongsToMany(db.Board, {
-        through: 'bookmark',
-      });
   }
 };

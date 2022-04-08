@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import Navbar from '../Components/NavigationBar';
 import SigninForm from '../Components/SigninForm';
 import SignupForm from '../Components/SignupForm';
 import Searchbar from '../Components/Searchbar';
@@ -11,6 +12,8 @@ import FailIndicator from '../Components/FailIndicator';
 import ErrorLog from '../Components/ErrorLog';
 //* practice
 import Pagination from '../Components/Pagination';
+
+import allArticleApi from '../api/allArticleApi';
 
 export const ModalBackdrop = styled.div`
   position: fixed; //전체화면에 깔리도록..
@@ -58,18 +61,43 @@ export const ModalView = styled.div.attrs(props => ({
     color: #4000c7;
   }
 `;
+//ajax call 단 1회만 호출되도록 설정.
+const articleData = allArticleApi();
 
 export default function Main({ isLogin, setIsLogin }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
-  const [currentArticle, setCurrentArticle] = useState([]);
-  const [isOk, setIsOk] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   //* 페이지네이션
   //* 현재 클릭한 페이지, 서버로 부터 받은 총 게시글 수 상태값
   const [currentPage, setCurrentPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
+
+  //화면에 표시되는 게시글: 검색된 게시글일 수도 있고, 서버가 기본적으로 보내주는 게시글일 수도 있다.
+  const [currentArticle, setCurrentArticle] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  //! 충돌된 useEffect - 수현님 
+  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
+  useEffect(() => {
+    setIsLoading(true);
+    //서버에 전체 게시글 요청
+    articleData
+      .then(response => {
+        if (response.status === 200) {
+          //전체 게시글 불러오기 성공
+          console.log('전체 게시글 불러오기 성공');
+          setCurrentArticle(response.data.boards);
+          setIsLoading(false);
+        } else {
+          //전체 게시글 불러오기 실패
+          console.log('전체 게시글 불러오기 실패');
+          setCurrentArticle([]);
+          setIsLoading(false);
+        }
+      })
+      .catch(error => console.log(error, '에러 내용'));
+  }, []);
 
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
@@ -88,6 +116,8 @@ export default function Main({ isLogin, setIsLogin }) {
     });
   };
 
+  //! 충돌
+  // 정태영 페이지네이션 핸들러
   const paginationHandler = currentPage => {
     //* start, limit
     const [S, L] = [currentPage * 10 - 9, currentPage * 10];
@@ -117,7 +147,8 @@ export default function Main({ isLogin, setIsLogin }) {
       })
       .catch(console.log);
   };
-
+  
+  //! 충돌 정태영 유스이펙트
   //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
   useEffect(() => {
     console.log('useEffect 실행');
@@ -127,26 +158,11 @@ export default function Main({ isLogin, setIsLogin }) {
 
   return (
     <div>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">DebugNote</Link>
-          </li>
-          {isLogin ? (
-            <ul className="loggedin-menu">
-              <li>
-                <Link to="">마이페이지</Link>
-              </li>
-              <li>
-                <Link to="">글쓰기</Link>
-              </li>
-              <li onClick={logoutHandler}>로그아웃</li>
-            </ul>
-          ) : (
-            <li onClick={openLoginModalHandler}>로그인</li>
-          )}
-        </ul>
-      </nav>
+      <Navbar
+        isLogin={isLogin}
+        logoutHandler={logoutHandler}
+        openLoginModalHandler={openLoginModalHandler}
+      ></Navbar>
       {isOpen === true ? (
         <ModalBackdrop onClick={openLoginModalHandler}>
           <ModalView onClick={e => e.stopPropagation()}>
@@ -174,11 +190,10 @@ export default function Main({ isLogin, setIsLogin }) {
       <Searchbar setCurrentArticle={setCurrentArticle} />
       <section className="articles">
         <div className="main-errlog-list-title">트렌딩</div>
-        <div>총 게시글 수:{totalArticles}</div>
-        {/*useEffect을 통해 전체 게시글을 보여줄 부분. 우선은 로딩 여부에 따라서 보여주기*/}
+        {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
         {isLoading ? (
           <LoadingIndicator />
-        ) : isOk ? (
+        ) : currentArticle.length !== 0 ? (
           currentArticle.map(article => (
             <ErrorLog key={article.id} article={article} />
           ))

@@ -6,7 +6,7 @@ export default function ErrorLog({ article }) {
       <div className="bookmark-count">북마크 수</div>
       <div>
         <div className="errlog-title-summary">{article.title}</div>
-        <div className="errlog-content-summary">{article.body}</div>
+        <div className="errlog-content-summary">{article.content}</div>
       </div>
     </article>
   );
