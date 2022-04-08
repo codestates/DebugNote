@@ -10,6 +10,7 @@ module.exports = {
   },
 
   pwMatchValidator: (pw, pwconfirm) => {
+    if (pw === '' || pwconfirm === '') return false;
     return pw === pwconfirm;
   },
 
