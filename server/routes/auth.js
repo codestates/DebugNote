@@ -29,15 +29,6 @@ router.post(
 router.post('/signout', authController.signout);
 
 // 로그인
-<<<<<<< HEAD
-router.post(
-  '/login',
-  [
-    body('email').exists().isEmail().trim().bail(),
-    body('password').exists().isLength({ min: 8, max: 20 }).trim().bail(),
-    validation,
-  ],
-=======
 // router.post(
 //   '/login',
 //   [
@@ -48,11 +39,7 @@ router.post(
 //   authController.login,
 // );
 
-router.post(
-  '/login',
->>>>>>> d7a91e4f3b4efd7246a7db75aa602df3458aabc8
-  authController.login,
-);
+router.post('/login', authController.login);
 
 // 로그아웃
 router.post('/logout', authController.logout);

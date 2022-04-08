@@ -1,5 +1,5 @@
 const Board = require('../models/board');
-  
+
 module.exports = {
   post: async (req, res) => {
     const { title, content, picture } = req.body;
@@ -15,9 +15,7 @@ module.exports = {
       .status(203)
       .json({ id: newBoard.id, message: '게시물 생성 되었습니다.' });
   },
-  get: async (req, res) => {
-    
-  },
+  get: async (req, res) => {},
   put: async (req, res) => {},
   remove: async (req, res) => {},
 };

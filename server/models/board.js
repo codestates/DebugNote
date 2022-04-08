@@ -16,17 +16,6 @@ module.exports = class Board extends Sequelize.Model {
           type: Sequelize.TEXT,
           allowNull: true,
         },
-<<<<<<< HEAD
-        totalComment: {
-          type: Sequelize.INTEGER,
-          allowNull: true,
-        },
-        totalBookmark: {
-            type: Sequelize.INTEGER,
-            allowNull: true,
-          },
-=======
->>>>>>> d7a91e4f3b4efd7246a7db75aa602df3458aabc8
       },
       {
         sequelize,
@@ -38,26 +27,19 @@ module.exports = class Board extends Sequelize.Model {
         // mb4 -> 이모티콘도 사용 가능
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
-      }
+      },
     );
   }
-<<<<<<< HEAD
-  static associate(db) {
-    db.Board.belongsTo(db.User);
-    db.Board.belongsToMany(db.User, {
-=======
-
 
   static associate(db) {
     db.Board.belongsTo(db.User);
-    
+
     db.Board.belongsToMany(db.User, {
       as: 'Comment',
->>>>>>> d7a91e4f3b4efd7246a7db75aa602df3458aabc8
       through: 'comment',
     });
     db.User.belongsToMany(db.Board, {
-        through: 'bookmark',
-      });
+      through: 'bookmark',
+    });
   }
 };
