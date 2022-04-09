@@ -5,7 +5,6 @@ const config = require('../config/config.js')[env];
 const User = require('./user');
 const Board = require('./board');
 
-
 const db = {};
 const sequelize = new Sequelize(
   config.database,
@@ -22,38 +21,35 @@ db.Board = Board;
 User.init(sequelize);
 Board.init(sequelize);
 
-
-
-// Comment.associate()
-const comment = sequelize.define('Comment', {
-sequelize.define('comment', {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  comment: {
-    type: Sequelize.STRING(50),
-    allowNull: false,
-    unique: false,
-     },
+sequelize.define(
+  'Comment',
+  {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    comment: {
+      type: Sequelize.STRING(50),
+      allowNull: false,
+      unique: false,
+    },
+    UserId: {
+      type: Sequelize.INTEGER,
+      unique: false,
+    },
+    BoardId: {
+      type: Sequelize.INTEGER,
+      unique: false,
+    },
   },
   {
     sequelize,
     timestamps: true,
     modelName: 'Comment',
     tableName: 'comments',
-  }
-),
-
-User.hasMany(comment)
-Board.hasMany(comment)
-
-
-Board.comment = sequelize.define('comment', {
-  comment: Sequelize.STRING(50),
-});
-
+  },
+);
 
 User.associate(db);
 Board.associate(db);

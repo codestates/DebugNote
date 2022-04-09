@@ -21,7 +21,7 @@ sequelize
 const app = express();
 
 const corsOption = {
-  origin: 'http://localhost:3000',
+  origin: '*',
   optionsSuccessStatus: 200,
   credentials: true, // allow the Access-Control-Allow-Credentials
 };

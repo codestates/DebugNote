@@ -9,6 +9,8 @@ import {
   selectValidator,
 } from '../Utils/validator';
 
+axios.defaults.withCredentials = false;
+
 export default function SignupForm({
   modalToggleHandler,
   openLoginModalHandler,
