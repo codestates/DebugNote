@@ -41,10 +41,6 @@ sequelize.define(
   },
 );
 
-Board.comment = sequelize.define('comment', {
-  comment: Sequelize.STRING(50),
-});
-
 User.associate(db);
 Board.associate(db);
 

@@ -1,5 +1,6 @@
 const Board = require('../models/board');
 const User = require('../models/user');
+const db = require('../models/index');
 
 module.exports = {
   post: async (req, res) => {
@@ -16,7 +17,12 @@ module.exports = {
         comment: comment,
       },
     });
+    // console.log(db.sequelize);
 
+    // const comments = await db.comments.findAll();
+    // console.log(comments);
+
+    // console.log(findBoard);
     res.status(200).json({ message: 'Comment Succesfully added' });
   },
   get: async (req, res) => {
@@ -44,7 +50,7 @@ module.exports = {
     const { commentId, comment } = req.body;
 
     const findBoard = await Board.findOne({ where: { id } });
-    // console.log(findBoard)
+    console.log(findBoard);
 
     await findBoard.setComment(req.userId, {
       through: {

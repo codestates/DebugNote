@@ -40,5 +40,7 @@ module.exports = {
     return res.status(201).json({ board, message: '게시물을 가져왔습니다.' });
   },
   put: async (req, res) => {},
-  remove: async (req, res) => {},
+  remove: async (req, res) => {
+    const { id } = req.params;
+  },
 };
