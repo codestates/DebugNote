@@ -20,7 +20,6 @@ router.get('/', async (req, res) => {
   const { page, start, limit } = req.query;
 
   // start + 10
-  console.log(start);
   const boards = await Board.findAll({
     order: [['id', 'desc']],
     where: {
