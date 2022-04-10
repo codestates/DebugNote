@@ -2,14 +2,16 @@ const express = require('express');
 const router = express.Router();
 
 const authRouter = require('./auth');
-const boradRouter = require('./board');
+const boardRouter = require('./board');
 const commentRouter = require('./comment');
 const bookmarkRouter = require('./bookmark');
+const searchRouter = require('./search');
 
 router.use('/auth', authRouter);
-router.use('/board', boradRouter);
+router.use('/board', boardRouter);
 router.use('/comment', commentRouter);
 router.use('/bookmark', bookmarkRouter);
+router.use('/search', searchRouter);
 
 const Board = require('../models/board');
 const sequelize = require('sequelize');
@@ -31,7 +33,7 @@ router.get('/', async (req, res) => {
   const boards = await Board.findAll({
     order: [['id', 'desc']],
     limit: Number(limit),
-    offset: (page - 1) * 10,
+    offset: (page - 1) * 10, // 1페이지 15 ~ 6 -> 5 ~ 1
   });
 
   if (boards.length === 0) {

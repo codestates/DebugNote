@@ -14,8 +14,8 @@ module.exports = {
       }
 
       const findBoard = await Board.findAll({
+        order: [['id', 'desc']],
         where: {
-          order: [['id', 'desc']],
           title: {
             [Op.like]: '%' + titles + '%', // 유사 검색
           },
