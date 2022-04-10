@@ -23,9 +23,9 @@ export default function Searchbar({
     if (searchKeyword === '') return;
     let endpoint;
     if (searchOption === '제목') {
-      endpoint = `http://15.164.104.171:80/boards/search?titles=${searchKeyword}&start=${pageQuery.start}&limit=${pageQuery.limit}`;
+      endpoint = `http://15.164.104.171:80/search?titles=${searchKeyword}&search_type=titles`;
     } else {
-      endpoint = `http://15.164.104.171:80/boards/search?contents=${searchKeyword}&start=${pageQuery.start}&limit=${pageQuery.limit}`;
+      endpoint = `http://15.164.104.171:80/search?contents=${searchKeyword}&search_type=contents`;
     }
 
     //검색창 비우기
@@ -39,15 +39,18 @@ export default function Searchbar({
       .then(response => {
         if (response.status === 201) {
           //서버에 요청 보내기 성공하여 데이터를 잘 받아옴.
-          //! 추후 총 검색 게시물수 응답 요청
-          setTotalArticles(response.data.검색게시물총수);
-          setCurrentArticle(response.data.boards);
+          setCurrentArticle(response.data.findBoard);
         } else {
           //서버에 요청 보내기 실패하였음. 검색결과 없다고 할것
-          setCurrentArticle([]);
+          console.log('검색결과없음');
+          // setCurrentArticle([]);
         }
       })
-      .catch(error => console.log(error, '에러 내용'));
+      .catch(error => {
+        //검색결과없음
+        console.log(error, '에러 내용');
+        setCurrentArticle([]);
+      });
   };
 
   const searchClickHandler = () => {
