@@ -4,10 +4,12 @@ const router = express.Router();
 const authRouter = require('./auth');
 const boradRouter = require('./board');
 const commentRouter = require('./comment');
+const bookmarkRouter = require('./bookmark');
 
 router.use('/auth', authRouter);
 router.use('/board', boradRouter);
 router.use('/comment', commentRouter);
+router.use('/bookmark', bookmarkRouter);
 
 const Board = require('../models/board');
 const sequelize = require('sequelize');
