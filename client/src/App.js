@@ -2,8 +2,6 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 
-import TestNavbar from './Components/temp/TestNavBar';
-
 import Main from './Pages/Main';
 import Write from './Pages/Article/Write';
 import Article from './Pages/Article/Article';
@@ -13,7 +11,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <TestNavbar />
       <Routes>
         <Route
           path="/"
