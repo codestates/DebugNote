@@ -17,15 +17,26 @@ const Op = sequelize.Op;
 // 메인 페이지 불러오기
 
 router.get('/', async (req, res) => {
+
   const { page, start, limit } = req.query;
+
+  const { page, start } = req.query;
+
   // start + 10
   const boards = await Board.findAll({
     order: [['id', 'desc']],
     where: {
+
       id: { [Op.between]: [start, limit] },
     },
   });
   // console.log(boards.length);
+
+      id: { [Op.between]: [start, start + 10] },
+    },
+  });
+  // console.log(boards.length);
+
 
   if (boards.length === 0) {
     return res.status(404).json({ message: '게시물이 존재하지 않습니다.' });
