@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function Searchbar({ setCurrentArticle }) {
+export default function Searchbar({
+  setCurrentArticle,
+  pageQuery,
+  setTotalArticles,
+}) {
   //검색 옵션 상태 관리
   const [option, setOption] = useState('제목');
   const optionChangeHandler = event => {
@@ -39,7 +43,7 @@ export default function Searchbar({ setCurrentArticle }) {
         } else {
           //서버에 요청 보내기 실패하였음. 검색결과 없다고 할것
           console.log('검색결과없음');
-          // setCurrentArticle([]);
+          setCurrentArticle([]);
         }
       })
       .catch(error => {

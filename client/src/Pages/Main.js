@@ -1,5 +1,4 @@
 import './Main.css';
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -72,7 +71,6 @@ export default function Main({ isLogin, setIsLogin, logoutHandler }) {
   //화면에 표시되는 게시글: 검색된 게시글일 수도 있고, 서버가 기본적으로 보내주는 게시글일 수도 있다.
   const [currentArticle, setCurrentArticle] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
   };
@@ -111,9 +109,12 @@ export default function Main({ isLogin, setIsLogin, logoutHandler }) {
       .catch(() => setIsLoading(false));
   };
 
+  //! 충돌 정태영 유스이펙트
+  //검색창 하단 기본 게시물 노출을 위한 useEffect 호출:
   useEffect(() => {
     console.log('useEffect 실행');
     setIsLoading(true);
+    setPageQuery({ start: currentPage * 10 - 9, limit: currentPage * 10 });
     paginationHandler(currentPage);
   }, [currentPage]);
 
