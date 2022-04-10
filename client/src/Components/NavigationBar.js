@@ -17,7 +17,7 @@ export default function Navbar({
               <Link to="">마이페이지</Link>
             </li>
             <li>
-              <Link to="">글쓰기</Link>
+              <Link to="write">글쓰기</Link>
             </li>
             <li onClick={logoutHandler}>로그아웃</li>
           </ul>
