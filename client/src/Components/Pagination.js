@@ -56,13 +56,13 @@ const Pagination = ({ totalArticles, paginate }) => {
         <PageUl className="pagination">
           {/* 위에서 만들어진 페이지를 map으로 뿌리고, 
           클릭이벤트로 Main에서 받은 setter로 현재 페이지 상태값 변경*/}
-          {pageNumbers.map(number => (
+          {pageNumbers.map(page => (
             <PageLi
-              key={number}
-              onClick={() => paginate(number)}
+              key={page}
+              onClick={() => paginate(page)}
               className="page-item"
             >
-              <PageSpan className="page-link">{number}</PageSpan>
+              <PageSpan className="page-link">{page}</PageSpan>
             </PageLi>
           ))}
         </PageUl>
