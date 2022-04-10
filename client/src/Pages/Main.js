@@ -2,7 +2,7 @@ import './Main.css';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import Navbar from '../Components/NavigationBar';
+import Navbar from '../Components/NavBar';
 import SigninForm from '../Components/SigninForm';
 import SignupForm from '../Components/SignupForm';
 import Searchbar from '../Components/Searchbar';
@@ -59,7 +59,7 @@ export const ModalView = styled.div.attrs(props => ({
   }
 `;
 
-export default function Main({ isLogin, setIsLogin }) {
+export default function Main({ isLogin, setIsLogin, logoutHandler }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
 
@@ -71,7 +71,6 @@ export default function Main({ isLogin, setIsLogin }) {
   //화면에 표시되는 게시글: 검색된 게시글일 수도 있고, 서버가 기본적으로 보내주는 게시글일 수도 있다.
   const [currentArticle, setCurrentArticle] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [pageQuery, setPageQuery] = useState({ start: 1, limit: 10 });
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
   };
@@ -80,28 +79,22 @@ export default function Main({ isLogin, setIsLogin }) {
     setIsMember(!isMember);
   };
 
-  const logoutHandler = () => {
-    axios.post('http://15.164.104.171:80/auth/logout').then(response => {
-      if (response.status === 200) {
-        console.log('logout ok');
-        setIsLogin(!isLogin);
-      }
-    });
-  };
-
   //! 충돌
   // 정태영 페이지네이션 핸들러
-  const paginationHandler = page => {
-    const [S, L] = [page * 10 - 9, page * 10];
+  const paginationHandler = currentPage => {
+    //* start, limit : 게시물 시작 번호와 끝 번호. (1페이지 이상, 10페이지 이하)
+    const [S, L] = [currentPage * 10 - 9, currentPage * 10];
+
     axios
-      .get(`http://15.164.104.171/?start=${S}&limit=${L}`, {
+      .get(`http://15.164.104.171/?page=1&limit=10`, {
+        ///?page={페이지넘버}&limit=10
         // 페이지, 페이지 시작번호는  상태로 관리 필요. 최신순으로 화면에 구현
         headers: { Accept: 'application/json' },
       })
       .then(response => {
         console.log('axios 요청 횟수', response.data.boards);
         if (response.status === 200) {
-          setCurrentArticle(response.data.boards); // 키 값은 board인가요?
+          setCurrentArticle(response.data.boards);
 
           //! 추후 서버에서 받은 총 게시물 수로 대체
           setTotalArticles(15);
@@ -110,10 +103,10 @@ export default function Main({ isLogin, setIsLogin }) {
         } else {
           console.log('게시물부르기실패');
           setIsLoading(false); //일단 로딩화면 종료
-          //게시물 불러오기에 실패했다는 화면 보여주기
+          //전체 게시물 불러오기 실패
         }
       })
-      .catch(console.log);
+      .catch(() => setIsLoading(false));
   };
 
   //! 충돌 정태영 유스이펙트
@@ -125,13 +118,29 @@ export default function Main({ isLogin, setIsLogin }) {
     paginationHandler(currentPage);
   }, [currentPage]);
 
+  console.log(typeof currentArticle, '현재 전체 게시글 상태');
+
   return (
-    <div>
+    <>
       <Navbar
         isLogin={isLogin}
         logoutHandler={logoutHandler}
         openLoginModalHandler={openLoginModalHandler}
-      ></Navbar>
+      >
+        {isLogin ? (
+          <ul className="loggedin-menu">
+            <li>
+              <Link to="mypage">마이페이지</Link>
+            </li>
+            <li>
+              <Link to="write">글쓰기</Link>
+            </li>
+            <li onClick={logoutHandler}>로그아웃</li>
+          </ul>
+        ) : (
+          <li onClick={openLoginModalHandler}>로그인</li>
+        )}
+      </Navbar>
       {isOpen === true ? (
         <ModalBackdrop onClick={openLoginModalHandler}>
           <ModalView onClick={e => e.stopPropagation()}>
@@ -156,28 +165,26 @@ export default function Main({ isLogin, setIsLogin }) {
           </ModalView>
         </ModalBackdrop>
       ) : null}
-      <Searchbar
-        setCurrentArticle={setCurrentArticle}
-        pageQuery={pageQuery}
-        setTotalArticles={setTotalArticles}
-      />
-      <section className="articles">
-        <div className="main-errlog-list-title">트렌딩</div>
-        {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
-        {isLoading ? (
-          <LoadingIndicator />
-        ) : currentArticle.length !== 0 ? (
-          currentArticle.map(article => (
-            <ErrorLog key={article.id} article={article} />
-          ))
-        ) : (
-          <FailIndicator />
-        )}
-        <Pagination
-          totalArticles={totalArticles}
-          paginate={setCurrentPage}
-        ></Pagination>
-      </section>
-    </div>
+      <div className="main-content">
+        <Searchbar setCurrentArticle={setCurrentArticle} />
+        <section className="articles">
+          <div className="main-errlog-list-title">트렌딩</div>
+          {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
+          {isLoading ? (
+            <LoadingIndicator />
+          ) : currentArticle.length !== 0 ? (
+            currentArticle.map(article => (
+              <ErrorLog key={article.id} article={article} />
+            ))
+          ) : (
+            <FailIndicator />
+          )}
+          <Pagination
+            totalArticles={totalArticles}
+            paginate={setCurrentPage}
+          ></Pagination>
+        </section>
+      </div>
+    </>
   );
 }
