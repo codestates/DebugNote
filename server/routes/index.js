@@ -17,14 +17,21 @@ const Op = sequelize.Op;
 // 메인 페이지 불러오기
 
 router.get('/', async (req, res) => {
-  const { page, start, limit } = req.query;
+  // const { page, start, limit } = req.query;
+  let { page, limit } = req.query;
+  page = Number(req.query.page || 1);
 
-  // start + 10
+  // // start + 10
+  // const boards = await Board.findAll({
+  //   order: [['id', 'desc']],
+  //   where: {
+  //     id: { [Op.between]: [start, limit] },
+  //   },
+  // });
   const boards = await Board.findAll({
     order: [['id', 'desc']],
-    where: {
-      id: { [Op.between]: [start, limit] },
-    },
+    limit: Number(limit),
+    offset: (page - 1) * 10,
   });
 
   if (boards.length === 0) {
@@ -33,7 +40,7 @@ router.get('/', async (req, res) => {
 
   res
     .status(200)
-    .json({ boards, message: `${page}페이지 게시물들을 가져왔습니다.` });
+    .json({ boards, message: `${page}번 페이지 게시물들을 가져왔습니다.` });
 });
 
 module.exports = router;
