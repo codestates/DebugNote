@@ -43,7 +43,7 @@ export default function Searchbar({
         } else {
           //서버에 요청 보내기 실패하였음. 검색결과 없다고 할것
           console.log('검색결과없음');
-          // setCurrentArticle([]);
+          setCurrentArticle([]);
         }
       })
       .catch(error => {

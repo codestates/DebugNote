@@ -10,6 +10,8 @@ import MypageLayout from './Pages/MyPage/MyPageLayout';
 import Logs from './Pages/MyPage/Logs';
 import Info from './Pages/MyPage/Info';
 import Bookmarks from './Pages/MyPage/Bookmarks';
+import Write from './Pages/Article/Write';
+import Article from './Pages/Article/Article';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -49,6 +51,11 @@ function App() {
           <Route path="info" element={<Info />} />
           <Route path="bookmarks" element={<Bookmarks />} />
         </Route>
+<<<<<<< HEAD
+=======
+        <Route path="article" element={<Article />} />
+        <Route path="write" element={<Write />} />
+>>>>>>> 4e86df5 (Client [ADD] merge conflict handling)
       </Routes>
       {/* 메인페이지, 마이페이지(회원정보,북마크,게시글:기본), 게시글 상세페이지: article, 게2379시글 작성 */}
     </BrowserRouter>
