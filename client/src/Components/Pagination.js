@@ -39,10 +39,10 @@ const PageSpan = styled.span`
     background-color: #263a6c;
   }
 `;
-
+//페이지 하단의 1-10까지 탐색할 수 있는 바.
 const Pagination = ({ totalArticles, paginate }) => {
   console.log('페이지네이션 컴포넌트 렌더 횟수', totalArticles);
-  if (totalArticles === 0) return;
+  if (totalArticles === 0) return; //null 추천합니다
   //* 페이지 수
   const pageNumbers = [];
   //* 예를 들어 articles가 100개면 1~10 페이지를 넣음

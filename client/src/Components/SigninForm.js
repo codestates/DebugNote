@@ -36,7 +36,9 @@ export default function SigninForm({
       )
       .then(response => {
         if (response.status === 201) {
-          //console.log(response.data.accToken, '응답');
+          axios.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${response.data.accToken}`;
           setIsLogin(!isLogin);
           //모달 창 닫기
           openLoginModalHandler();
