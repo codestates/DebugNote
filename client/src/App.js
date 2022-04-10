@@ -38,8 +38,6 @@ function App() {
             />
           }
         />
-        <Route path="article" element={<Article />} />
-        <Route path="write" element={<Write />} />
         <Route
           path="mypage"
           element={
@@ -51,11 +49,8 @@ function App() {
           <Route path="info" element={<Info />} />
           <Route path="bookmarks" element={<Bookmarks />} />
         </Route>
-<<<<<<< HEAD
-=======
         <Route path="article" element={<Article />} />
         <Route path="write" element={<Write />} />
->>>>>>> 4e86df5 (Client [ADD] merge conflict handling)
       </Routes>
       {/* 메인페이지, 마이페이지(회원정보,북마크,게시글:기본), 게시글 상세페이지: article, 게2379시글 작성 */}
     </BrowserRouter>
