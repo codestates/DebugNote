@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.js')[env];
-// console.log(config)
 const User = require('./user');
 const Board = require('./board');
 
@@ -21,7 +20,10 @@ db.Board = Board;
 User.init(sequelize);
 Board.init(sequelize);
 
+<<<<<<< HEAD
 // Comment.associate()
+=======
+>>>>>>> 9da0f7f6d22519ee77fd3af19b58702a562937a4
 const comment = sequelize.define(
   'Comment',
   {
