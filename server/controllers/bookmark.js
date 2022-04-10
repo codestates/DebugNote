@@ -2,7 +2,7 @@ const db = require('../models');
 
 module.exports = {
   post: async (req, res) => {
-    // 게시글 PK 
+    // 게시글 PK
     const { id } = req.params;
 
     await db.sequelize.models.Bookmark.create({
@@ -16,7 +16,7 @@ module.exports = {
   },
 
   remove: async (req, res) => {
-    // 게시글 PK 
+    // 게시글 PK
     const { id } = req.params;
 
     await db.sequelize.models.Bookmark.destroy({

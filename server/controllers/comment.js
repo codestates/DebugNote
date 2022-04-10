@@ -25,7 +25,6 @@ module.exports = {
     // res.status(200)
   },
   put: async (req, res) => {
-
     const { id } = req.params;
     const { commentId, comment } = req.body;
 
@@ -45,7 +44,6 @@ module.exports = {
     res.status(200).json({ message: 'Comment Succesfully modified' });
   },
   remove: async (req, res) => {
-
     const { id } = req.params;
     const { commentId, comment } = req.body;
 
