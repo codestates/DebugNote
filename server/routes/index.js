@@ -13,7 +13,7 @@ router.use('/board', boardRouter);
 router.use('/comment', commentRouter);
 router.use('/bookmark', bookmarkRouter);
 router.use('/search', searchRouter);
-router.use('/mypage', mypageRouter);
+router.use('/users', mypageRouter);
 
 const pagenation = require('../middlewares/pagenation');
 // 메인 페이지 불러오기
@@ -25,7 +25,7 @@ router.get('/', async (req, res) => {
 
   const boards = await pagenation.getBoards(page, limit);
 
-  if (boards.length === 0) {
+  if (boards.count === 0) {
     return res.status(404).json({ message: '게시물이 존재하지 않습니다.' });
   }
 

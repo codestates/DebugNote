@@ -1,4 +1,5 @@
 const Board = require('../models/board');
+const db = require('../models');
 
 module.exports = {
   post: async (req, res) => {
@@ -23,10 +24,17 @@ module.exports = {
       return res.status(403).json({ message: 'param이 없습니다.' });
     }
 
-    const board = await Board.findAll({
+    const board = await Board.findOne({
       where: {
         id: id,
       },
+      include: [
+        {
+          model: db.sequelize.models.Comment,
+          attributes: ['id', 'comment', 'createdAt'],
+        },
+      ],
+      order: [[db.sequelize.models.Comment, 'createdAt', 'desc']],
     });
 
     if (board.length === 0) {
