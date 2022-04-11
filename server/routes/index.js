@@ -5,11 +5,15 @@ const authRouter = require('./auth');
 const boradRouter = require('./board');
 const commentRouter = require('./comment');
 const bookmarkRouter = require('./bookmark');
+const searchRouter = require('./search');
+const userRouter = require('./user');
 
 router.use('/auth', authRouter);
 router.use('/board', boradRouter);
 router.use('/comment', commentRouter);
 router.use('/bookmark', bookmarkRouter);
+router.use('/search', searchRouter);
+router.use('/user', userRouter);
 
 const Board = require('../models/board');
 const sequelize = require('sequelize');
