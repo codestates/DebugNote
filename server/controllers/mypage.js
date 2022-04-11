@@ -34,31 +34,39 @@ module.exports = {
   put: async (req, res) => {
     const { email, nickname, name, job, password } = req.body;
 
-    if (!req.userId) {
-      return res.status(401).json({ message: '해당 유저 id가 없습니다.' });
+    const userFind = await User.findByPk(req.userId);
+
+    if (!userFind) {
+      return res.status(400).json({ message: 'User not Found ' });
     }
 
+    // 기존 비밀번호 확인 절차, 협의 필요
+    //   const isValidPassword = await bcrypt
+    //   .compare(originPassword, userFind.password)
+    //   .catch(err => console.log(err));
+
+    //   if (!isValidPassword) {
+    //     return res.status(401).json({ message: '비밀번호가 일치하지 않습니다.' });
+    //   }
+
+    // 유저 정보 업데이트
     const hashedPassword = await bcrypt
       .hash(password, config.bcrypt.saltRounds)
       .catch(err => console.log(err));
 
-    const updateUser = await User.update(
+    await User.update(
       {
         email,
+        password: hashedPassword,
         nickname,
         name,
         job,
-        password: hashedPassword,
       },
       {
-        where: {
-          id: req.userId,
-        },
+        where: { id: req.userId },
       },
     );
 
-    return res
-      .status(200)
-      .json({ updateUser, message: '회원 정보를 수정하였습니다.' });
+    res.status(200).json({ message: '유저 정보가 수정되었습니다.' });
   },
 };

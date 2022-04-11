@@ -21,12 +21,18 @@ sequelize
 const app = express();
 
 const corsOption = {
-  origin: '*',
-  optionsSuccessStatus: 200,
+  origin: 'http://localhost:3000',
+  // optionsSuccessStatus: 200,
   credentials: true, // allow the Access-Control-Allow-Credentials
 };
 
-app.use(express.json());
+// app.use('/img', express.static(path.join(__dirname, 'uploads')));
+app.use(express.json({}));
+app.use(
+  express.urlencoded({
+    extended: false,
+  }),
+);
 app.use(cookieParser());
 app.use(helmet());
 app.use(cors(corsOption));

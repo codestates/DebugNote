@@ -3,6 +3,8 @@ const User = require('../models/user');
 require('dotenv').config();
 
 module.exports = async (req, res, next) => {
+  // console.log(req.cookies)
+  // console.log(typeof req.headers.cookies)
   let token;
   // 토큰이 헤더로 전달되었을 때
   const authHeader = req.get('Authorization');
@@ -14,6 +16,8 @@ module.exports = async (req, res, next) => {
   if (!token) {
     token = req.cookies['token'];
   }
+
+  console.log(token);
 
   if (!token) {
     return res.status(401).json({ message: 'It is not User' });
@@ -28,7 +32,7 @@ module.exports = async (req, res, next) => {
       return res.status(401).json({ message: 'Authentication Error' });
     }
     req.userId = user.id; // req.customData
-    console.log(req.userId);
+    // console.log(req.userId)
     req.token = token;
     next();
   });

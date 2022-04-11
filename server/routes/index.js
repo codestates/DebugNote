@@ -13,7 +13,7 @@ router.use('/board', boardRouter);
 router.use('/comment', commentRouter);
 router.use('/bookmark', bookmarkRouter);
 router.use('/search', searchRouter);
-router.use('/users', mypageRouter);
+router.use('/mypage', mypageRouter);
 
 const pagenation = require('../middlewares/pagenation');
 // 메인 페이지 불러오기
