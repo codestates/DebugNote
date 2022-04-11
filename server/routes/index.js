@@ -2,22 +2,20 @@ const express = require('express');
 const router = express.Router();
 
 const authRouter = require('./auth');
-const boradRouter = require('./board');
+const boardRouter = require('./board');
 const commentRouter = require('./comment');
 const bookmarkRouter = require('./bookmark');
 const searchRouter = require('./search');
-const userRouter = require('./user');
+const mypageRouter = require('./mypage');
 
 router.use('/auth', authRouter);
-router.use('/board', boradRouter);
+router.use('/board', boardRouter);
 router.use('/comment', commentRouter);
 router.use('/bookmark', bookmarkRouter);
 router.use('/search', searchRouter);
-router.use('/user', userRouter);
+router.use('/mypage', mypageRouter);
 
-const Board = require('../models/board');
-const sequelize = require('sequelize');
-const Op = sequelize.Op;
+const pagenation = require('../middlewares/pagenation');
 // 메인 페이지 불러오기
 
 router.get('/', async (req, res) => {
@@ -25,20 +23,9 @@ router.get('/', async (req, res) => {
   let { page, limit } = req.query;
   page = Number(req.query.page || 1);
 
-  // // start + 10
-  // const boards = await Board.findAll({
-  //   order: [['id', 'desc']],
-  //   where: {
-  //     id: { [Op.between]: [start, limit] },
-  //   },
-  // });
-  const boards = await Board.findAll({
-    order: [['id', 'desc']],
-    limit: Number(limit),
-    offset: (page - 1) * 10,
-  });
+  const boards = await pagenation.getBoards(page, limit);
 
-  if (boards.length === 0) {
+  if (boards.count === 0) {
     return res.status(404).json({ message: '게시물이 존재하지 않습니다.' });
   }
 

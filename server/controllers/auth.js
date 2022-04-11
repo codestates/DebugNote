@@ -42,7 +42,7 @@ module.exports = {
         email,
       },
     });
- 
+
     if (!user) {
       return res.status(401).json({ message: '해당 유저가 없습니다.' });
     }

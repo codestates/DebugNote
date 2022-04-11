@@ -1,4 +1,5 @@
 const Board = require('../models/board');
+const db = require('../models');
 
 module.exports = {
   post: async (req, res) => {
@@ -20,10 +21,17 @@ module.exports = {
       return res.status(403).json({ message: 'param이 없습니다.' });
     }
 
-    const board = await Board.findAll({
+    const board = await Board.findOne({
       where: {
         id: id,
       },
+      include: [
+        {
+          model: db.sequelize.models.Comment,
+          attributes: ['id', 'comment', 'createdAt'],
+        },
+      ],
+      order: [[db.sequelize.models.Comment, 'createdAt', 'desc']],
     });
 
     if (board.length === 0) {
@@ -58,7 +66,7 @@ module.exports = {
       },
     );
 
-    res.status(200).json({ message: '게시물이 수정 되었습니다' })
+    res.status(200).json({ message: '게시물이 수정 되었습니다' });
   },
   // 게시글 삭제
   remove: async (req, res) => {
@@ -76,6 +84,6 @@ module.exports = {
         id,
       },
     });
-    res.status(200).json({ message: '게시물이 삭제 되었습니다' })
+    res.status(200).json({ message: '게시물이 삭제 되었습니다' });
   },
 };

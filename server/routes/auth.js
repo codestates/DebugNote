@@ -44,17 +44,16 @@ router.post('/logout', authController.logout);
 
 // 회원탈퇴
 router.delete('/:id', isAuth, async (req, res) => {
-  const { id } = req.params
-  if ( req.userId === id ) {
-    return res.status(400).json({ message: '유저가 일치하지 않습니다'})
+  const { id } = req.params;
+  if (req.userId === id) {
+    return res.status(400).json({ message: '유저가 일치하지 않습니다' });
   }
 
   await User.destroy({
-    where: { id: req.userId }
-  })
+    where: { id: req.userId },
+  });
 
-  res.status(204).json({ message: `회원이 탈퇴처리 되었습니다.`})
-
+  res.status(204).json({ message: `회원이 탈퇴처리 되었습니다.` });
 });
 
 // 인증

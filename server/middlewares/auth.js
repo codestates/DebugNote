@@ -5,7 +5,7 @@ require('dotenv').config();
 module.exports = async (req, res, next) => {
   // console.log(req.cookies)
   // console.log(typeof req.headers.cookies)
-  let token;  
+  let token;
   // 토큰이 헤더로 전달되었을 때
   const authHeader = req.get('Authorization');
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
     token = req.cookies['token'];
   }
 
-  console.log(token)
+  console.log(token);
 
   if (!token) {
     return res.status(401).json({ message: 'It is not User' });
