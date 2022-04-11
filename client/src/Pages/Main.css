@@ -1,0 +1,18 @@
+.loggedin-menu {
+  width: 20%;
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+}
+
+.main-content {
+  height: 96%;
+}
+
+.search {
+}
+
+.articles {
+  font-size: 0.5rem;
+  /* height: 300px; */
+}
