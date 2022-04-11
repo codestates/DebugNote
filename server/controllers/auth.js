@@ -33,8 +33,6 @@ module.exports = {
       .status(201)
       .json({ id: newUser.id, message: '유저가 생성 되었습니다.' });
   },
-  // 회원탈퇴
-  signout: async (req, res) => {},
   // 로그인
   login: async (req, res) => {
     const { email, password } = req.body;
@@ -44,7 +42,7 @@ module.exports = {
         email,
       },
     });
-
+ 
     if (!user) {
       return res.status(401).json({ message: '해당 유저가 없습니다.' });
     }
@@ -59,13 +57,13 @@ module.exports = {
 
     const accToken = await createJwtToken(user.id);
     // console.log(accToken);
-
+    // console.log(res)
     return res
       .status(201)
       .cookie('token', accToken, {
-        httpOnly: true,
+        // httpOnly: true,
         // secure: true,
-        sameSite: 'none',
+        // sameSite: 'Lax',
       })
       .json({ accToken, message: '로그인 성공했습니다.' });
   },
