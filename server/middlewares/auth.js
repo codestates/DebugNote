@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
       return res.status(401).json({ message: 'Authentication Error' });
     }
     req.userId = user.id; // req.customData
-    console.log(req.userId)
+    console.log(req.userId);
     req.token = token;
     next();
   });

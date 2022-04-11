@@ -1,7 +1,6 @@
 const Board = require('../models/board');
 const User = require('../models/user');
-const sequelize = require('sequelize');
-const Op = sequelize.Op;
+const pagenation = require('../middlewares/pagenation');
 
 module.exports = {
   get: async (req, res) => {
@@ -13,18 +12,11 @@ module.exports = {
         return res.status(400).json({ message: '제목을 입력 해주세요.' });
       }
 
-      const findBoard = await Board.findAll({
-        order: [['id', 'desc']],
-        where: {
-          title: {
-            [Op.like]: '%' + titles + '%', // 유사 검색
-          },
-        },
-      });
+      const findBoard = await pagenation.searchBoard(titles);
 
       if (findBoard.length === 0) {
         return res
-          .status(404)
+          .status(400)
           .json({ message: '검색 결과 게시물이 없습니다.' });
       }
 
@@ -37,18 +29,11 @@ module.exports = {
       if (!contents) {
         return res.status(400).json({ message: '본문을 입력 해주세요.' });
       }
-      const findBoard = await Board.findAll({
-        order: [['id', 'desc']],
-        where: {
-          content: {
-            [Op.like]: '%' + contents + '%', // 유사 검색
-          },
-        },
-      });
+      const findBoard = await pagenation.searchBoard(contents);
 
       if (findBoard.length === 0) {
         return res
-          .status(404)
+          .status(400)
           .json({ message: '검색 결과 게시물이 없습니다.' });
       }
 
