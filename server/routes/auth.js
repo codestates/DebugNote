@@ -11,7 +11,7 @@ router.post(
   '/signup',
   [
     // isEmail
-    body('email').exists().isEmail().trim().bail(),
+    body('email').exists().isEmail().trim().bail(), // 이메일 형식
     body('password')
       .exists()
       .isLength({ min: 8, max: 20 })
@@ -26,26 +26,17 @@ router.post(
   authController.signup,
 );
 
-// 로그인
-// router.post(
-//   '/login',
-//   [
-//     body('email').exists().isEmail().bail(),
-//     body('password').exists().isLength({ min: 8, max: 20 }).bail(),
-//     validation,
-//   ],
-//   authController.login,
-// );
-
 router.post('/login', authController.login);
 
 // 로그아웃
 router.post('/logout', authController.logout);
 
 // 회원탈퇴
-router.delete('/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
-  if (req.userId === id) {
+router.delete('/:userId', isAuth, async (req, res) => {
+  const { userId } = req.params;
+  // console.log(typeof userId);
+
+  if (req.userId != userId) {
     return res.status(400).json({ message: '유저가 일치하지 않습니다' });
   }
 
@@ -53,7 +44,7 @@ router.delete('/:id', isAuth, async (req, res) => {
     where: { id: req.userId },
   });
 
-  res.status(204).json({ message: `회원이 탈퇴처리 되었습니다.` });
+  res.status(204).json({ message: '회원이 탈퇴처리 되었습니다.' });
 });
 
 // 인증

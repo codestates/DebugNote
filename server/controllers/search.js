@@ -5,15 +5,17 @@ const pagenation = require('../middlewares/pagenation');
 module.exports = {
   get: async (req, res) => {
     const searchType = req.query.search_type;
-    const { titles, contents, page, limit } = req.query;
-    // console.log(page, limit);
+    const { titles, contents, pages, limit } = req.query;
+    // console.log(pages, limit);
+    console.log(titles);
     if (searchType === 'titles') {
       if (!titles) {
         return res.status(400).json({ message: '제목을 입력 해주세요.' });
       }
 
-      const findBoard = await pagenation.searchBoard(titles, page, limit);
+      const findBoard = await pagenation.searchTitle(titles, pages, limit);
 
+      console.log(findBoard);
       if (findBoard.count === 0) {
         return res
           .status(400)
@@ -29,7 +31,7 @@ module.exports = {
       if (!contents) {
         return res.status(400).json({ message: '본문을 입력 해주세요.' });
       }
-      const findBoard = await pagenation.searchBoard(contents, page, limit);
+      const findBoard = await pagenation.searchContent(contents, pages, limit);
 
       if (findBoard.count === 0) {
         return res

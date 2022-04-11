@@ -4,10 +4,6 @@ const config = require('../config');
 
 module.exports = {
   get: async (req, res) => {
-    if (!req.userId) {
-      return res.status(401).json({ message: '해당 유저 id가 없습니다.' });
-    }
-
     const user = await User.findOne({
       where: {
         id: req.userId,
@@ -37,7 +33,7 @@ module.exports = {
     const userFind = await User.findByPk(req.userId);
 
     if (!userFind) {
-      return res.status(400).json({ message: 'User not Found ' });
+      return res.status(400).json({ message: '유저가 존재 하지 않습니다.' });
     }
 
     // 기존 비밀번호 확인 절차, 협의 필요
