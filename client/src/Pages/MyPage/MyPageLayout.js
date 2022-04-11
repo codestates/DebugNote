@@ -1,4 +1,4 @@
-import { Link, Outlet, Navigate } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import './MyPageLayout.css';
 import '../../App.css';
 import NavBar from '../../Components/NavBar';

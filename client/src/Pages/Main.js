@@ -1,6 +1,6 @@
 import './Main.css';
 import { useState, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -79,7 +79,7 @@ export default function Main({
 
   const paginationHandler = currentPage => {
     //* start, limit : 게시물 시작 번호와 끝 번호. (1페이지 이상, 10페이지 이하)
-    const [S, L] = [currentPage * 10 - 9, currentPage * 10];
+    // const [S, L] = [currentPage * 10 - 9, currentPage * 10];
 
     axios
       .get(`http://15.164.104.171/?page=1&limit=10`, {

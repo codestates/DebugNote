@@ -85,7 +85,3 @@ export default function Logs() {
     </div>
   );
 }
-
-{
-  /*여기서도 페이지네이션이 필요하다*/
-}

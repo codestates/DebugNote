@@ -39,12 +39,12 @@ export default function Article() {
       });
   };
 
-  // 게시물 수정 요청
-  const editArticle = () => {
-    // 에디터 페이지로 이동 시킨다
-  };
+  // // 게시물 수정 요청
+  // const editArticle = () => {
+  //   // 에디터 페이지로 이동 시킨다
+  // };
 
-  const handleCommentRequest = () => {};
+  // const handleCommentRequest = () => {};
 
   useEffect(() => {
     loadArticle();
