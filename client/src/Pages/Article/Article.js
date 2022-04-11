@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Comment from '../../Components/Comment';
 
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -10,6 +11,8 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
 export default function Article() {
+  let { id } = useParams();
+  //전체 게시글 프롭스로 받아서 정확하게 아이디가 일치라는 게시글만 뷰어에게 내려준다.
   const [article, setArticle] = useState({
     id: undefined,
     title: '',
@@ -21,7 +24,7 @@ export default function Article() {
   // 게시물 상세 정보 불러오기
   const loadArticle = () => {
     axios
-      .get('http://15.164.104.171/board/1', {
+      .get(`http://15.164.104.171/board/${id}`, {
         headers: { Accept: 'application/json' },
       })
       .then(resp => {
@@ -62,10 +65,7 @@ export default function Article() {
       </div>
       <div className="viewer-wraper">
         <Viewer
-          initialValue={`# helloWrold  
-            ## helloWrold 
-            
-          `}
+          initialValue={article}
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
         />
       </div>

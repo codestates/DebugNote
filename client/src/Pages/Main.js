@@ -1,8 +1,10 @@
 import './Main.css';
 import { useState, useEffect } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
+import Article from '../Pages/Article/Article';
 import Searchbar from '../Components/Searchbar';
 import LoadingIndicator from '../Components/LoadingIndicator';
 import FailIndicator from '../Components/FailIndicator';
@@ -114,26 +116,34 @@ export default function Main({
 
   return (
     <>
-      <div className="main-content">
-        <Searchbar setCurrentArticle={setCurrentArticle} />
-        <section className="articles">
-          <div className="main-errlog-list-title">트렌딩</div>
-          {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
-          {isLoading ? (
-            <LoadingIndicator />
-          ) : currentArticle.length !== 0 ? (
-            currentArticle.map(article => (
-              <ErrorLog key={article.id} article={article} />
-            ))
-          ) : (
-            <FailIndicator />
-          )}
-          <Pagination
-            totalArticles={totalArticles}
-            paginate={setCurrentPage}
-          ></Pagination>
-        </section>
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="main-content">
+              <Searchbar setCurrentArticle={setCurrentArticle} />
+              <section className="articles">
+                <div className="main-errlog-list-title">트렌딩</div>
+                {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
+                {isLoading ? (
+                  <LoadingIndicator />
+                ) : currentArticle.length !== 0 ? (
+                  currentArticle.map(article => (
+                    <ErrorLog key={article.id} article={article} />
+                  ))
+                ) : (
+                  <FailIndicator />
+                )}
+                <Pagination
+                  totalArticles={totalArticles}
+                  paginate={setCurrentPage}
+                ></Pagination>
+              </section>
+            </div>
+          }
+        />
+        <Route path="/:id" element={<Article />} />
+      </Routes>
     </>
   );
 }

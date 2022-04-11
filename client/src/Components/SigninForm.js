@@ -6,8 +6,8 @@ axios.defaults.withCredentials = true;
 export default function SigninForm({
   modalToggleHandler,
   openLoginModalHandler,
-  isLogin,
-  setIsLogin,
+  isLogin, //충돌
+  setIsLogin, //충돌
 }) {
   const [signinInfo, setSigninInfo] = useState({
     email: '',

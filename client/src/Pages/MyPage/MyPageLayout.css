@@ -4,6 +4,13 @@
   padding: 0;
 }
 
+.mypage-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
 .mypage-menu {
   list-style: none;
   display: flex;
@@ -15,10 +22,12 @@
 .tabmenu-content {
   display: flex;
   justify-content: center;
-  height: 96%;
+  width: 100%;
+  height: 100%;
 }
 
 aside {
+  border: 1px solid black;
   flex: 2;
 }
 
@@ -29,4 +38,6 @@ aside {
   justify-content: center;
   align-items: center;
   border: 1px solid black;
+  height: 100%;
+  padding: 2rem;
 }

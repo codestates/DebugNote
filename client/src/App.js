@@ -12,6 +12,7 @@ import MypageLayout from './Pages/MyPage/MyPageLayout';
 import Logs from './Pages/MyPage/Logs';
 import Info from './Pages/MyPage/Info';
 import Bookmarks from './Pages/MyPage/Bookmarks';
+import PrivateRoute from './Routes/Privateroute';
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
