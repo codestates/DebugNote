@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Menunav = styled.nav`
+  width: 100%;
   border: 1px solid orange;
   display: flex;
   justify-content: center;

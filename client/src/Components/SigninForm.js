@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 axios.defaults.withCredentials = true;
 
 export default function SigninForm({
   modalToggleHandler,
   openLoginModalHandler,
-  isLogin,
-  setIsLogin,
 }) {
   const [signinInfo, setSigninInfo] = useState({
     email: '',
@@ -32,6 +33,7 @@ export default function SigninForm({
         },
         {
           headers: { Accept: 'application/json' },
+          //withCredentials: 'true', 이거해도 안됨
         },
       )
       .then(response => {
@@ -39,7 +41,10 @@ export default function SigninForm({
           axios.defaults.headers.common[
             'Authorization'
           ] = `Bearer ${response.data.accToken}`;
-          setIsLogin(!isLogin);
+          //쿠키저장코드: withCredentials: 'include', 서버측 오리진은 3000포트로 설정해두고 쿠키 저장 성공 시 아래 코드 불필요
+          // cookies.set('accToken', response.data.accToken, { maxAge: '6h' });
+          // 인증으로 받은 쿠키로 화면 권한 설정을 위해 리액트 쿠키모듈 썼습니다.
+          //브라우저 자체적으로 저장되는 거라 유효기간도 다시 설정했어요ㅠㅠ
           //모달 창 닫기
           openLoginModalHandler();
         }

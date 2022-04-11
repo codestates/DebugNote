@@ -20,10 +20,10 @@ export default function Tab() {
     <aside>
       <Tabul>
         <Tabli>
-          <Link to="logs">내 에러 로그</Link>
+          <Link to="logs/">내 에러 로그</Link>
         </Tabli>
         <Tabli>
-          <Link to="bookmarks">북마크</Link>
+          <Link to="bookmarks/">북마크</Link>
         </Tabli>
         <Tabli>
           <Link to="info">회원정보 수정</Link>
