@@ -1,13 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-export default function ErrorLog({ article }) {
+export default function ErrorLog(props) {
   return (
-    <article key="" className="errlog">
-      <div className="bookmark-count">북마크 수</div>
-      <div>
-        <div className="errlog-title-summary">{article.title}</div>
-        <div className="errlog-content-summary">{article.content}</div>
-      </div>
+    <article className="errlog">
+      <Link to={`${props.article.id}`}>
+        <div className="bookmark-count">북마크 수</div>
+        <div>
+          <div className="errlog-title-summary">{props.article.title}</div>
+        </div>
+      </Link>
     </article>
   );
 }
