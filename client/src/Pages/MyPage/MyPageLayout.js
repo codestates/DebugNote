@@ -1,15 +1,18 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, Navigate } from 'react-router-dom';
 import './MyPageLayout.css';
+import '../../App.css';
 import NavBar from '../../Components/NavBar';
 import Tab from '../../Components/Tab';
-import Pagination from '../../Components/Pagination';
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 export default function MyPageLayout({ logoutHandler }) {
+  // if (cookies.get('accToken')) {
   return (
-    <>
+    <div className="mypage-layout">
       <NavBar logoutHandler={logoutHandler}>
         <ul className="mypage-menu">
           <li>
-            <Link to="">글쓰기</Link>
+            <Link to="/write">글쓰기</Link>
           </li>
           <li onClick={logoutHandler}>
             <Link to="/">로그아웃</Link>
@@ -21,12 +24,13 @@ export default function MyPageLayout({ logoutHandler }) {
         <section className="content">
           <Outlet />
         </section>
-        <Pagination />
       </section>
-    </>
+    </div>
   );
+  // } else {
+  //   return <div>접근 권한이 없습니다</div>;
+  // }
+  //return <Navigate to="/" />;
 }
-
-{
-  /*마이페이지의 경우, 로그인 없이도 현재 접속이 가능하기 때문에 막아야 함*/
-}
+//여기서 내가 쓴 게시글이랑, 내가 북마크한 게시글 받는다
+//

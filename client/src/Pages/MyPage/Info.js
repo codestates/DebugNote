@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   idValidator,
@@ -20,12 +20,31 @@ export default function Info() {
     job: '직업을 선택하세요',
   });
 
-  const handleSignupInputValue = key => e => {
+  useEffect(() => {
+    //서버로부터 기존에 저장되어 있던 사용자 정보 불러와서, 입력칸에 채워 줄 것.
+    axios
+      .get('http://15.164.104.171:80/users', {
+        //헤더
+      })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response.data, '사용자 정보');
+          //인풋 칸에 사용자 정보 입력한다. 비밀번호는 빼고
+          setChangeInfo(response.data); //응답 바디?
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        console.log('회원정보 불러오기 실패');
+      });
+  }, []);
+
+  const handleUserInputValue = key => e => {
     setChangeInfo({ ...changeInfo, [key]: e.target.value });
   };
 
   const { email, password, passwordConfirm, nickname, name, job } = changeInfo;
-
+  //수정 처리
   const infoChangeHandler = () => {
     console.log('회원정보 수정요청');
     //사용자 입력값이 하나라도 비어 있으면 리턴할 것.
@@ -37,6 +56,7 @@ export default function Info() {
       name === '' ||
       job === ''
     ) {
+      //모달 창 띄워주면 더 좋고.
       return;
     }
     axios
@@ -58,14 +78,17 @@ export default function Info() {
       .then(response => {
         if (response.status === 200) {
           //정보 수정 성공
+          console.log('수정 성공했습니다');
           //성공했다고 모달 창 띄워주기
         } else {
           //정보 수정 실패
+          console.log('수정 실패했습니다');
           //수정에 실패했다고 모달 창 띄워주기
         }
       })
       .catch(() => {
         //수정에 실패했다고 모달 창 띄워주기
+        console.log('수정 실패했습니다');
       });
   };
   //탈퇴 처리
@@ -74,20 +97,23 @@ export default function Info() {
     //정말로 탈퇴할 건지 물어보는 모달 창 필요
     //조건 묻지 않고 탈퇴 처리
     axios
-      .delete('http://15.164.104.171:80/auth/dropout', {
+      .delete(`http://15.164.104.171:80//auth/${email}`, {
         headers: { accept: 'application/json' },
       })
       .then(response => {
         if (response.status === 204) {
           //탈퇴 잘 됨
+          console.log('탈퇴되었습니다');
           //탈퇴 잘 되었다고 모달 창 띄워주기
         } else {
           //탈퇴 실패
+          console.log('탈퇴 실패했습니다');
           //탈퇴 실패 모달 창 띄우기
         }
       })
       .catch(() => {
         //탈퇴에 실패했다고 모달 창 띄워주기
+        console.log('탈퇴 실패했습니다');
       });
   };
 
@@ -98,7 +124,7 @@ export default function Info() {
         <div>email</div>
         <input
           placeholder="이메일을 입력하세요"
-          onChange={handleSignupInputValue('email')}
+          onChange={handleUserInputValue('email')}
         ></input>
         <div>
           {idValidator(changeInfo.email)
@@ -111,7 +137,7 @@ export default function Info() {
         <input
           type="password"
           placeholder="비밀번호를 입력하세요"
-          onChange={handleSignupInputValue('password')}
+          onChange={handleUserInputValue('password')}
         ></input>
         <div>
           {pwValidator(changeInfo.password)
@@ -124,7 +150,7 @@ export default function Info() {
         <input
           type="password"
           placeholder="비밀번호를 한번 더 입력하세요"
-          onChange={handleSignupInputValue('passwordConfirm')}
+          onChange={handleUserInputValue('passwordConfirm')}
         ></input>
         <div>
           {pwMatchValidator(password, passwordConfirm)
@@ -136,7 +162,7 @@ export default function Info() {
         <div>nickname</div>
         <input
           placeholder="닉네임을 입력하세요"
-          onChange={handleSignupInputValue('nickname')}
+          onChange={handleUserInputValue('nickname')}
         ></input>
         <div>
           {nicknameValidator(nickname)
@@ -148,7 +174,7 @@ export default function Info() {
         <div>name</div>
         <input
           placeholder="이름을 입력하세요"
-          onChange={handleSignupInputValue('name')}
+          onChange={handleUserInputValue('name')}
         ></input>
         <div>
           {nameValidator(name) ? '올바른 이름입니다' : '이름을 입력해주세요'}
@@ -156,7 +182,7 @@ export default function Info() {
       </div>
       <div>
         <div>job</div>
-        <select onChange={handleSignupInputValue('job')}>
+        <select onChange={handleUserInputValue('job')}>
           <option value="직업을 선택하세요">직업을 선택하세요</option>
           <option value="개발자">개발자</option>
           <option value="학생">학생</option>

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const PageUl = styled.ul`
+  margin-top: 20px;
   float: left;
   list-style: none;
   text-align: center;
