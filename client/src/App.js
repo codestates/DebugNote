@@ -15,23 +15,24 @@ import Bookmarks from './Pages/MyPage/Bookmarks';
 import Edit from './Pages/Article/Edit';
 
 function App() {
+  //* 로그인 후 받은 id
+  const [myId, setMyId] = useState('');
   const [isLogin, setIsLogin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
   // 컴포넌트가 렌더링된 후  불러온 게시물 10개
   const [loadedArticles, setLoadedArticles] = useState([]);
   // 상세 페이지에서 조회중인 게시글 제목, 본문 상태
-  const [crurentArticle, setCurrentArticle] = useState({
-    id: 'test',
+  const [currentArticle, setCurrentArticle] = useState({
+    id: '',
     title: '',
     content: '',
-    comments: [],
     createdAt: '',
+    nickname: '',
   });
-  // 조회중인 게시글의 id
-  const [boardId, setBoardId] = useState('');
-
-  console.log(crurentArticle);
+  //! 조회중인 게시글의 id
+  //! 필요 없을시 삭제
+  // const [boardId, setBoardId] = useState('');
 
   // modalHandler
   const openLoginModalHandler = () => {
@@ -53,6 +54,12 @@ function App() {
       }
     });
   };
+
+  console.log(
+    '<App /> 상세페이지 로드 후 끌어올린 게시물 상세 정보',
+    currentArticle,
+  );
+  console.log('myId->', myId);
 
   return (
     <BrowserRouter>
@@ -94,12 +101,13 @@ function App() {
           path={':id'}
           element={
             <Article
-              crurentArticle={crurentArticle}
+              currentArticle={currentArticle}
               setCurrentArticle={setCurrentArticle}
+              myId={myId}
             />
           }
         />
-        <Route path="edit" element={<Edit currentArticle={crurentArticle} />} />
+        <Route path="edit" element={<Edit currentArticle={currentArticle} />} />
         <Route
           path="mypage"
           element={
@@ -111,7 +119,11 @@ function App() {
           <Route path="info" element={<Info />} />
           <Route path="bookmarks" element={<Bookmarks />} />
         </Route>
-        <Route path="write" element={<Write setBoardId={setBoardId} />} />
+        <Route path="write" element={<Write />} />
+        <Route
+          path="notfound"
+          element={<h1>404 Not Found - 게시물이 없습니다.</h1>}
+        />
       </Routes>
       {isOpen === true ? (
         <LoginModal
@@ -120,6 +132,7 @@ function App() {
           setIsLogin={setIsLogin}
           openLoginModalHandler={openLoginModalHandler}
           modalToggleHandler={modalToggleHandler}
+          setMyId={setMyId}
         />
       ) : null}
     </BrowserRouter>

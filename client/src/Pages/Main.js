@@ -7,7 +7,6 @@ import FailIndicator from '../Components/FailIndicator';
 import ErrorLog from '../Components/ErrorLog';
 //* practice
 import Pagination from '../Components/Pagination';
-import dummy from '../temp/dummy';
 
 export default function Main({
   isLogin,
@@ -35,15 +34,11 @@ export default function Main({
         headers: { Accept: 'application/json' },
       })
       .then(response => {
-        console.log('메인페이지 게시물 로딩 응답', response.data);
+        console.log('메인페이지 게시물 로딩 응답-->', response);
         if (response.status === 200) {
           console.log('응답 토탈카운트', response.data.boards.count);
-          // setLoadedArticles(response.data.boards.rows);
-          // setTotalArticles(response.data.boards.count);
-          // setIsLoading(false); //로딩 종료
-          //! dummy
-          setLoadedArticles(dummy);
-          setTotalArticles(dummy.length);
+          setLoadedArticles(response.data.boards.rows);
+          setTotalArticles(response.data.boards.count);
           setIsLoading(false); //로딩 종료
         } else {
           console.log('게시물부르기실패');
@@ -60,8 +55,6 @@ export default function Main({
     setIsLoading(true);
     paginationHandler(currentPage);
   }, [currentPage]);
-
-  console.log(loadedArticles);
 
   return (
     <div className="main-content">
@@ -85,12 +78,4 @@ export default function Main({
       </section>
     </div>
   );
-}
-
-{
-  /* <LoadingIndicator />
-) : loadedArticles.length !== 0 ? (
-  loadedArticles.map(article => (
-    <ErrorLog key={article.id} article={article} />
-  )) */
 }

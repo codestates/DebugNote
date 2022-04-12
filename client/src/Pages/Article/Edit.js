@@ -34,20 +34,19 @@ export default function Edit({ currentArticle }) {
   const handleSubmit = () => {
     axios
       .put(
-        'http://15.164.104.171/board',
+        `http://15.164.104.171/boards/${currentArticle.id}`,
         {
           title: article.title,
           content: article.content,
         },
         {
           headers: { Accept: 'application/json' },
-          withCredentials: true,
         },
       )
       .then(resp => {
         console.log(resp.data);
         //* 수정 전 조회중이던 게시글 상세페이지로 이동
-        navigate(currentArticle.id);
+        navigate(`/${currentArticle.id}`);
       })
       .catch(console.log);
   };
