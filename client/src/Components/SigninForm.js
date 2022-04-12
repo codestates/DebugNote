@@ -18,11 +18,10 @@ export default function SigninForm({
     setSigninInfo({ ...signinInfo, [key]: e.target.value });
   };
 
-  const loginHandler = () => {
+  const loginHandler = ({ setMyId }) => {
     if (signinInfo.email === '' || signinInfo.password === '') {
       return;
     }
-
     axios
       .post(
         'http://15.164.104.171:80/auth/login',
@@ -35,6 +34,7 @@ export default function SigninForm({
         },
       )
       .then(response => {
+        console.log('$$$$$$$로그인 응답--->', response.data.id);
         if (response.status === 201) {
           axios.defaults.headers.common[
             'Authorization'
@@ -42,6 +42,7 @@ export default function SigninForm({
           setIsLogin(!isLogin);
           //모달 창 닫기
           openLoginModalHandler();
+          setMyId(`${response.data.id}`);
         }
       })
       .catch(console.log);
