@@ -60,6 +60,7 @@ export default function Bookmarks() {
         console.log('게시글 못받음');
       });
   };
+
   useEffect(() => {
     setIsLoading(true);
     paginationHandler(currentPage);

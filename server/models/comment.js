@@ -5,15 +5,15 @@ module.exports = class Comment extends Sequelize.Model {
     return super.init(
       {
         id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-          },
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+          autoIncrement: true,
+        },
         comment: {
-            type: Sequelize.STRING(50),
-            allowNull: false,
-            unique: false,
-          },
+          type: Sequelize.STRING(50),
+          allowNull: false,
+          unique: false,
+        },
       },
       {
         sequelize,
@@ -28,9 +28,9 @@ module.exports = class Comment extends Sequelize.Model {
       },
     );
   }
- 
+
   static associate(db) {
-    db.Comment.belongsTo(db.User)
-    db.Comment.belongsTo(db.Board)
+    db.Comment.belongsTo(db.User);
+    db.Comment.belongsTo(db.Board);
   }
 };

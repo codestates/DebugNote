@@ -9,7 +9,6 @@ const { sequelize } = require('./models');
 dotenv.config();
 const app = express();
 
-
 // 데이터베이스 연결
 sequelize
   .sync({ force: false })
@@ -27,9 +26,6 @@ const corsOption = {
   credentials: true, // allow the Access-Control-Allow-Credentials
   // withcredentials: true, // allow the Access-Control-Allow-Credentials
 };
-
-
-
 
 app.use(cors(corsOption));
 

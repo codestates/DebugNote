@@ -37,5 +37,6 @@ module.exports = class Board extends Sequelize.Model {
     db.Board.belongsToMany(db.User, {
       through: 'Bookmark',
     });
+    db.Board.hasMany(db.Comment, { onDelete: 'cascade' });
   }
 };
