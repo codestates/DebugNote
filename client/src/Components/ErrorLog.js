@@ -63,7 +63,7 @@ export default function ErrorLog({ article }) {
           </div>
           <Bookmark className="bookmark-count">북마크 수</Bookmark>
         </Icon>
-        <Title>{article.Boards[0].title}</Title>
+        <Title>{article.title}</Title>
       </Link>
     </Article>
   );
