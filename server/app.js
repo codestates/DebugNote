@@ -21,7 +21,10 @@ sequelize
 const app = express();
 
 const corsOption = {
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'http://debugnote-client.s3-website.ap-northeast-2.amazonaws.com/',
+  ],
   // optionsSuccessStatus: 200,
   credentials: true, // allow the Access-Control-Allow-Credentials
 };

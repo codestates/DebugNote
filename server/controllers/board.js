@@ -1,23 +1,28 @@
 const Board = require('../models/board');
-const db = require('../models');
+const Comment = require('../models/comment');
 const User = require('../models/User');
+const Sequelize = require('sequelize');
+const SequelModel = Sequelize.Sequelize;
 
 module.exports = {
   post: async (req, res) => {
     const { title, content } = req.body;
 
-    await Board.create({
+    const board = await Board.create({
       title,
       content,
       UserId: req.userId,
       picture: 'dummy',
     });
 
-    res.status(203).json({ message: '게시물 생성 되었습니다.' });
+    // console.log(board.id);
+
+    res
+      .status(203)
+      .json({ boardId: board.id, message: '게시물 생성 되었습니다.' });
   },
   get: async (req, res) => {
     const { id } = req.params;
-
     // 댓글 단 유저 닉네임 표시
     const board = await Board.findOne({
       where: {
@@ -25,17 +30,43 @@ module.exports = {
       },
       include: [
         {
-          model: db.sequelize.models.Comment,
-          attributes: ['id', 'comment', 'UserId', 'createdAt', 'updatedAt'],
-          // include: [
-          //   {
-          //     model: User,
-          //   },
-          // ],
+          model: Comment,
+          // attributes: ['id', 'comment', 'UserId', 'createdAt', 'updatedAt'],
         },
       ],
-      order: [[db.sequelize.models.Comment, 'createdAt', 'desc']],
+      order: [[Comment, 'createdAt', 'desc']],
     });
+
+    // const comment = await Comment.findAll({
+    //   where: {
+    //     BoardId: id,
+    //   },
+    //   include: [
+    //     {
+    //       model: User,
+    //     },
+    //   ],
+    // });
+
+    const comment = await Comment.findAll({
+      where: {
+        BoardId: id,
+      },
+      attributes: [
+        'id',
+        'comment',
+        'createdAt',
+        'updatedAt',
+        [SequelModel.col('User.nickname'), 'nickname'],
+      ],
+      include: [
+        {
+          model: User,
+          attributes: [],
+        },
+      ],
+    });
+    console.log(comment);
 
     if (board.length === 0) {
       return res
