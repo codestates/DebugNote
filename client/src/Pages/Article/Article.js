@@ -49,7 +49,7 @@ export default function Article({ currentArticle, setCurrentArticle }) {
         setCurrentArticle();
       });
   };
-
+  //게시물 삭제
   const deleteArticle = () => {
     console.log('삭제 요청');
     axios
@@ -65,7 +65,7 @@ export default function Article({ currentArticle, setCurrentArticle }) {
   };
 
   console.log('----->', currentArticle);
-
+  //댓글 수정
   const commentEditCallback = editedComment => {
     const idx = comments.findindex(el => el.id === editedComment.id);
 
@@ -75,10 +75,10 @@ export default function Article({ currentArticle, setCurrentArticle }) {
       ...comments.slice(idx + 1),
     ]);
   };
-
+  //화면에 게시글 로딩
   useEffect(() => {
     loadArticle();
-  }, []);
+  }, [currentArticle]);
 
   return (
     <section className="article-wrapper">
@@ -88,9 +88,9 @@ export default function Article({ currentArticle, setCurrentArticle }) {
         <span>작성일</span>
       </div>
       <div className="article-modify-button-wrapper">
-        <div>
+        <button onClick={commentEditCallback}>
           <Link to="edit">수정</Link>
-        </div>
+        </button>
         <button onClick={deleteArticle}>삭제</button>
       </div>
       <div className="viewer-wraper">
@@ -119,7 +119,6 @@ export default function Article({ currentArticle, setCurrentArticle }) {
                   />
                 ))
               : null}
-            <Comment />
           </div>
         </div>
       </section>

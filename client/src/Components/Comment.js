@@ -2,7 +2,7 @@ import { useState } from 'react';
 import CommentEdit from './CommentEdit';
 //! API 댓글 내용 content인지 comment인지 -> comment로 확인 받음
 //! 댓글 수정 삭제에 commentId 요청으로 필요함
-export default function Comment({ comment, setComents }) {
+export default function Comment({ comment, setComments }) {
   console.log('comment---->', comment);
   /**
   comment {
@@ -28,14 +28,14 @@ export default function Comment({ comment, setComents }) {
         <CommentEdit
           comment={comment}
           setIsEditing={setIsEditing}
-          setComents={setComents}
+          setComents={setComments}
         />
       ) : (
         <div className="comment-content"></div>
       )}
       <div className="comment-button-wrapper">
-        <span>수정</span>
-        <span>삭제</span>
+        <button>수정</button>
+        <button>삭제</button>
       </div>
     </section>
   );

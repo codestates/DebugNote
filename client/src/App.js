@@ -21,7 +21,7 @@ function App() {
   // 컴포넌트가 렌더링된 후  불러온 게시물 10개
   const [loadedArticles, setLoadedArticles] = useState([]);
   // 상세 페이지에서 조회중인 게시글 제목, 본문 상태
-  const [crurentArticle, setCurrentArticle] = useState({
+  const [currentArticle, setCurrentArticle] = useState({
     id: 'test',
     title: '',
     content: '',
@@ -31,7 +31,7 @@ function App() {
   // 조회중인 게시글의 id
   const [boardId, setBoardId] = useState('');
 
-  console.log(crurentArticle);
+  console.log(currentArticle);
 
   // modalHandler
   const openLoginModalHandler = () => {
@@ -83,6 +83,7 @@ function App() {
               isLogin={isLogin}
               setIsLogin={setIsLogin}
               logoutHandler={logoutHandler}
+              openLoginModalHandler={openLoginModalHandler}
               isOpen={isOpen}
               isMember={isMember}
               loadedArticles={loadedArticles}
@@ -94,12 +95,12 @@ function App() {
           path={':id'}
           element={
             <Article
-              crurentArticle={crurentArticle}
+              crurentArticle={currentArticle}
               setCurrentArticle={setCurrentArticle}
             />
           }
         />
-        <Route path="edit" element={<Edit currentArticle={crurentArticle} />} />
+        <Route path="edit" element={<Edit currentArticle={currentArticle} />} />
         <Route
           path="mypage"
           element={
@@ -107,9 +108,9 @@ function App() {
           }
         >
           <Route index element={<Logs />} />
-          <Route path="logs" element={<Logs />} />
+          <Route path="logs/*" element={<Logs />} />
           <Route path="info" element={<Info />} />
-          <Route path="bookmarks" element={<Bookmarks />} />
+          <Route path="bookmarks/*" element={<Bookmarks />} />
         </Route>
         <Route path="write" element={<Write setBoardId={setBoardId} />} />
       </Routes>
