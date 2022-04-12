@@ -62,9 +62,9 @@ module.exports = {
     return res
       .status(201)
       .cookie('token', accToken, {
-        // httpOnly: true,
+        httpOnly: true,
         // secure: true,
-        // sameSite: 'Lax',
+        sameSite: 'Lax',
       })
       .json({ id: user.id, accToken, message: '로그인 성공했습니다.' });
   },
