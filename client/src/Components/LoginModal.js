@@ -55,6 +55,7 @@ export default function LoginModal({
   isMember,
   isLogin,
   setIsLogin,
+  setMyId,
 }) {
   return (
     <ModalBackdrop onClick={openLoginModalHandler}>
@@ -74,6 +75,7 @@ export default function LoginModal({
               openLoginModalHandler={openLoginModalHandler}
               isLogin={isLogin}
               setIsLogin={setIsLogin}
+              setMyId={setMyId}
             />
           )}
         </section>

@@ -34,7 +34,7 @@ export default function Main({
         headers: { Accept: 'application/json' },
       })
       .then(response => {
-        console.log('메인페이지 게시물 로딩 응답', response.data);
+        console.log('메인페이지 게시물 로딩 응답-->', response);
         if (response.status === 200) {
           console.log('응답 토탈카운트', response.data.boards.count);
           setLoadedArticles(response.data.boards.rows);
@@ -55,8 +55,6 @@ export default function Main({
     setIsLoading(true);
     paginationHandler(currentPage);
   }, [currentPage]);
-
-  console.log(loadedArticles);
 
   return (
     <div className="main-content">
@@ -80,12 +78,4 @@ export default function Main({
       </section>
     </div>
   );
-}
-
-{
-  /* <LoadingIndicator />
-) : loadedArticles.length !== 0 ? (
-  loadedArticles.map(article => (
-    <ErrorLog key={article.id} article={article} />
-  )) */
 }
