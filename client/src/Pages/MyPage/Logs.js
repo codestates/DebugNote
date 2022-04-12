@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import axios from 'axios';
 import LoadingIndicator from '../../Components/LoadingIndicator';
 import ErrorLog from '../../Components/ErrorLog';
@@ -38,16 +38,19 @@ export default function Logs() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
   const [currentArticle, setCurrentArticle] = useState([]);
+
   const paginationHandler = currentPage => {
+    // 서버에 데이터를 받아서 데이터 처리
     axios
       .get(`http://15.164.104.171/users/boards?pages=${currentPage}&limit=10`, {
         headers: { Accept: 'application/json' },
       })
       .then(response => {
-        console.log('axios 요청', response.data.boards);
+        console.log('axios 요청', response.data.board);
         if (response.status === 200) {
-          setCurrentArticle(response.data.boards.rows);
-          setTotalArticles(response.data.boards.count);
+          // console.log(response.data.board.count);
+          setCurrentArticle(response.data.board.rows);
+          setTotalArticles(response.data.board.count);
         } else {
           console.log('게시물부르기실패');
         }
@@ -56,15 +59,20 @@ export default function Logs() {
         console.log('게시글 못받음');
       });
   };
+
+  // console.log('currentArticle', currentArticle);
+  // console.log('totalArticles', totalArticles);
+
   useEffect(() => {
     setIsLoading(true);
     paginationHandler(currentPage);
     setIsLoading(false);
   }, [currentPage]);
+
   return (
     <Box className="logs">
       <Routes>
-        <Route path="/:id" element={<Article />} /> {/*전체 게시글 프롭스뺌*/}
+        {/* <Route path="/:id" element={<Article />} /> 전체 게시글 프롭스뺌 */}
         <Route
           path="/*"
           element={

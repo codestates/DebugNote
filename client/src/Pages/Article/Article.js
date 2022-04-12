@@ -31,6 +31,7 @@ export default function Article({
         // console.log('댓글 노테이션 맞니', resp.data.comment);
 
         if (resp.status === 200) {
+          console.log('axios');
           const { id, title, content, createdAt, nickname } = resp.data.board;
           const { comment } = resp.data;
 
@@ -49,7 +50,7 @@ export default function Article({
 
   console.log('<Article /> 상세 조회중인 게시물 정보----->', currentArticle);
   console.log('<Article /> 상세 조회중인 댓글 배열 정보----->', comments);
-  console.log('뷰어에서 볼 컨텐트 ------>', currentArticle.content);
+  // console.log('뷰어에서 볼 컨텐트 ------>', currentArticle.content);
 
   //* 삭제 핸들러
   const deleteArticle = () => {
