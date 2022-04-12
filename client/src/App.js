@@ -100,7 +100,7 @@ function App() {
           path={':id'}
           element={
             <Article
-              crurentArticle={currentArticle}
+              currentArticle={currentArticle}
               setCurrentArticle={setCurrentArticle}
               myId={myId}
             />
