@@ -19,7 +19,6 @@ export default function Article({
 }) {
   let { id } = useParams();
   const navigate = useNavigate();
-  //! 전역에서 링하고 {...} 객체 복사 해서 상태 업데이트 해야할 듯 하다
   const [comments, setComments] = useState([]);
 
   const loadArticle = () => {
@@ -84,7 +83,7 @@ export default function Article({
 
   useEffect(() => {
     loadArticle();
-  }, [currentArticle.content]);
+  }, []);
 
   return (
     <div>
