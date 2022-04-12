@@ -53,7 +53,6 @@ export default function Article({
   console.log('<Article /> 상세 조회중인 게시물 정보----->', currentArticle);
   console.log('<Article /> 상세 조회중인 댓글 배열 정보----->', comments);
   console.log('뷰어에서 볼 컨텐트 ------>', currentArticle.content);
-
   //* 삭제 핸들러
   const deleteArticle = () => {
     console.log('삭제 요청');
@@ -68,7 +67,8 @@ export default function Article({
       })
       .catch(err => console.log(err));
   };
-  // 댓글 수정 콜백
+
+
   const commentEditCallback = editedComment => {
     const idx = comments.findindex(el => el.id === editedComment.id);
 
@@ -78,6 +78,7 @@ export default function Article({
       ...comments.slice(idx + 1),
     ]);
   };
+
 
   // 댓글 작성
   const submitComment = () => {
@@ -96,7 +97,6 @@ export default function Article({
           <span>{currentArticle.nickname}</span>
           <span>{currentArticle.createdAt}</span>
         </div>
-
         <div className="article-modify-button-wrapper">
           <div>
             <Link to="/edit">수정</Link>
