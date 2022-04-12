@@ -17,19 +17,19 @@ module.exports = async (req, res, next) => {
     token = req.cookies['token'];
   }
 
-  console.log(token);
+  // console.log(token);
 
   if (!token) {
-    return res.status(401).json({ message: 'It is not User' });
+    return res.status(401).json({ message: '유저가 아닙니다.' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (error, decoded) => {
     if (error) {
-      return res.status(401).json({ message: 'Invalid Token' });
+      return res.status(401).json({ message: '인증되지 않은 토큰입니다.' });
     }
     const user = await User.findByPk(decoded.id);
     if (!user) {
-      return res.status(401).json({ message: 'Authentication Error' });
+      return res.status(401).json({ message: '인증되지 않았습니다.' });
     }
     req.userId = user.id; // req.customData
     // console.log(req.userId)

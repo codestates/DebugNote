@@ -7,6 +7,8 @@ const cookieParser = require('cookie-parser');
 const indexRouter = require('./routes/index');
 const { sequelize } = require('./models');
 dotenv.config();
+const app = express();
+
 
 // 데이터베이스 연결
 sequelize
@@ -18,13 +20,18 @@ sequelize
     console.error(err);
   });
 
-const app = express();
-
 const corsOption = {
-  origin: 'http://localhost:3000',
+  // origin: 'http://debugnote-client.s3-website.ap-northeast-2.amazonaws.com',
+  origin: '*',
   // optionsSuccessStatus: 200,
   credentials: true, // allow the Access-Control-Allow-Credentials
+  // withcredentials: true, // allow the Access-Control-Allow-Credentials
 };
+
+
+
+
+app.use(cors(corsOption));
 
 // app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json({}));
@@ -35,7 +42,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use(helmet());
-app.use(cors(corsOption));
+
 app.use(morgan('dev'));
 
 app.use('/', indexRouter);

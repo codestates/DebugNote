@@ -36,9 +36,9 @@ const PageSpan = styled.span`
   }
 `;
 //페이지 하단의 1-10까지 탐색할 수 있는 바.
-const Pagination = ({ totalArticles, paginate }) => {
-  console.log('페이지네이션 컴포넌트 렌더 횟수', totalArticles);
-  if (totalArticles === 0) return; //null 추천합니다
+const Pagination = ({ totalArticles, setCurrentPage }) => {
+  console.log('페이지네이션 컴포넌트 총 게시글 수', totalArticles);
+  if (totalArticles === 0) return null;
   //* 페이지 수
   const pageNumbers = [];
   //* 예를 들어 articles가 100개면 1~10 페이지를 넣음
@@ -55,7 +55,7 @@ const Pagination = ({ totalArticles, paginate }) => {
           {/* {pageNumbers.map(page => (
             <PageLi
               key={page}
-              onClick={() => paginate(page)}
+              onClick={() => setCurrentPage(page)}
               className="page-item"
             >
               <PageSpan className="page-link">{page}</PageSpan>
