@@ -12,7 +12,6 @@ import 'prismjs/themes/prism.css';
 
 export default function Article() {
   let { id } = useParams();
-  //전체 게시글 프롭스로 받아서 정확하게 아이디가 일치라는 게시글만 뷰어에게 내려준다.
   const [article, setArticle] = useState({
     id: undefined,
     title: '',
@@ -36,7 +35,8 @@ export default function Article() {
           comments: [],
           createdAt: '',
         });
-      });
+      })
+      .catch(err => console.log(err, '게시물 받기 에러'));
   };
 
   // // 게시물 수정 요청

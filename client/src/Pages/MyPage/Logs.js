@@ -9,8 +9,29 @@ import Article from '../Article/Article';
 
 import styled from 'styled-components';
 
-const H3 = styled.h3`
-  font-weight: bold;
+const Box = styled.div`
+  padding: 0 0.5rem;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  > h2 {
+    /* border: 1px solid black; */
+    padding: 0 0.3rem;
+    margin-bottom: 15px;
+    width: 97%;
+    text-align: start;
+  }
 `;
 
 export default function Logs() {
@@ -25,7 +46,7 @@ export default function Logs() {
     //const [S, L] = [currentPage * 10 - 9, currentPage * 10];
 
     axios
-      .get(`http://15.164.104.171/boards?page=${1}&limit=10`, {
+      .get(`http://15.164.104.171/users/boards?page=${1}&limit=10`, {
         ///?page={페이지넘버}&limit=10
         // 페이지, 페이지 시작번호는  상태로 관리 필요. 최신순으로 화면에 구현
         headers: { Accept: 'application/json' },
@@ -59,15 +80,16 @@ export default function Logs() {
     paginationHandler(currentPage);
   }, [currentPage]);
   return (
-    <div className="logs">
-      <H3>나의 에러 로그</H3>
+    <Box className="logs">
       {/*마이페이지는 마이페이지대로 라우팅..*/}
+
       <Routes>
         <Route path="/:id" element={<Article />} /> {/*전체 게시글 프롭스뺌*/}
         <Route
-          path="/"
+          path="/*"
           element={
-            <section>
+            <Section>
+              <h2>My Error Logs</h2>
               {isLoading ? (
                 <LoadingIndicator />
               ) : currentArticle.length !== 0 ? (
@@ -81,10 +103,10 @@ export default function Logs() {
                 totalArticles={totalArticles}
                 paginate={setCurrentPage}
               ></Pagination>
-            </section>
+            </Section>
           }
         />
       </Routes>
-    </div>
+    </Box>
   );
 }

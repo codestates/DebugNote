@@ -30,6 +30,7 @@ function App() {
 
   // logoutHandler
   const logoutHandler = () => {
+    console.log('로그아웃 버튼 눌림');
     axios.post('http://15.164.104.171:80/auth/logout').then(response => {
       if (response.status === 200) {
         console.log('logout ok');
@@ -61,7 +62,7 @@ function App() {
       </Navbar>
       <Routes>
         <Route
-          path="/"
+          path="*"
           element={
             <Main
               isLogin={isLogin}
@@ -72,17 +73,15 @@ function App() {
             />
           }
         />
-        <Route
-          path="mypage"
-          element={
-            <MypageLayout isLogin={isLogin} logoutHandler={logoutHandler} />
-          }
-        >
-          <Route index element={<Logs />} />
-          <Route path="logs" element={<Logs />} />
-          <Route path="info" element={<Info />} />
-          <Route path="bookmarks" element={<Bookmarks />} />
+        <Route path="/*">
+          <Route path="mypage" element={<MypageLayout isLogin={isLogin} />}>
+            <Route index element={<Logs />} />
+            <Route path="logs/*" element={<Logs />} />
+            <Route path="info" element={<Info />} />
+            <Route path="bookmarks/*" element={<Bookmarks />} />
+          </Route>
         </Route>
+
         <Route path="article" element={<Article />} />
         <Route path="write" element={<Write />} />
       </Routes>
