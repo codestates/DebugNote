@@ -1,6 +1,6 @@
 const Board = require('../models/board');
 const Comment = require('../models/comment');
-const User = require('../models/User');
+const User = require('../models/user');
 const Sequelize = require('sequelize');
 const SequelModel = Sequelize.Sequelize;
 
@@ -15,38 +15,34 @@ module.exports = {
       picture: 'dummy',
     });
 
-    // console.log(board.id);
-
     res
       .status(203)
       .json({ boardId: board.id, message: '게시물 생성 되었습니다.' });
   },
   get: async (req, res) => {
     const { id } = req.params;
-    // 댓글 단 유저 닉네임 표시
+
     const board = await Board.findOne({
       where: {
         id: id,
       },
+      attributes: [
+        'id',
+        [SequelModel.col('User.nickname'), 'nickname'],
+        'title',
+        'content',
+        'picture',
+        'createdAt',
+        'updatedAt',
+        'userId',
+      ],
       include: [
         {
-          model: Comment,
-          // attributes: ['id', 'comment', 'UserId', 'createdAt', 'updatedAt'],
+          model: User,
+          attributes: [],
         },
       ],
-      order: [[Comment, 'createdAt', 'desc']],
     });
-
-    // const comment = await Comment.findAll({
-    //   where: {
-    //     BoardId: id,
-    //   },
-    //   include: [
-    //     {
-    //       model: User,
-    //     },
-    //   ],
-    // });
 
     const comment = await Comment.findAll({
       where: {
@@ -66,15 +62,15 @@ module.exports = {
         },
       ],
     });
-    console.log(comment);
-
     if (board.length === 0) {
       return res
         .status(404)
         .json({ message: '해당 게시물이 존재하지 않습니다.' });
     }
 
-    return res.status(200).json({ board, message: '게시물을 가져왔습니다.' });
+    return res
+      .status(200)
+      .json({ board, comment, message: '게시물을 가져왔습니다.' });
   },
   // 게시글 수정
   put: async (req, res) => {
