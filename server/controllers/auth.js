@@ -18,6 +18,7 @@ module.exports = {
     if (user) {
       return res.status(409).json({ message: '중복된 유저 입니다.' });
     }
+
     const hashedPassword = await bcrypt
       .hash(password, config.bcrypt.saltRounds)
       .catch(err => console.log(err));
@@ -36,7 +37,7 @@ module.exports = {
   // 로그인
   login: async (req, res) => {
     const { email, password } = req.body;
-
+    // const {id}
     const user = await User.findOne({
       where: {
         email,
@@ -61,16 +62,16 @@ module.exports = {
     return res
       .status(201)
       .cookie('token', accToken, {
-        // httpOnly: true,
+        httpOnly: true,
         // secure: true,
-        // sameSite: 'Lax',
+        sameSite: 'Lax',
       })
-      .json({ accToken, message: '로그인 성공했습니다.' });
+      .json({ id: user.id, accToken, message: '로그인 성공했습니다.' });
   },
   // 로그아웃
   logout: async (req, res) => {
     res.cookie('token', '');
-    res.status(200).json({ message: 'User has been logged out' });
+    res.status(200).json({ message: '로그아웃에 성공했습니다.' });
   },
   // 인증
   me: async (req, res) => {

@@ -9,6 +9,7 @@ import axios from 'axios';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
+
 import Comment from '../../Components/Comment';
 
 export default function Article({
@@ -17,6 +18,7 @@ export default function Article({
   currentArticleCallback,
   myId,
 }) {
+
   let { id } = useParams();
   const navigate = useNavigate();
   //! 전역에서 링하고 {...} 객체 복사 해서 상태 업데이트 해야할 듯 하다
@@ -94,6 +96,7 @@ export default function Article({
           <span>{currentArticle.nickname}</span>
           <span>{currentArticle.createdAt}</span>
         </div>
+
         <div className="article-modify-button-wrapper">
           <div>
             <Link to="/edit">수정</Link>

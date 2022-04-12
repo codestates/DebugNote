@@ -3,6 +3,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config.js')[env];
 const User = require('./user');
 const Board = require('./board');
+const Comment = require('./comment');
 
 const db = {};
 const sequelize = new Sequelize(
@@ -16,35 +17,15 @@ db.sequelize = sequelize;
 
 db.User = User;
 db.Board = Board;
+db.Comment = Comment;
 
 User.init(sequelize);
 Board.init(sequelize);
-
-const comment = sequelize.define(
-  'Comment',
-  {
-    id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    comment: {
-      type: Sequelize.STRING(50),
-      allowNull: false,
-      unique: false,
-    },
-  },
-  {
-    sequelize,
-    timestamps: true,
-    modelName: 'Comment',
-    tableName: 'comments',
-  },
-);
-User.hasMany(comment);
-Board.hasMany(comment);
+Comment.init(sequelize);
 
 User.associate(db);
 Board.associate(db);
+Comment.associate(db);
+
 
 module.exports = db;
