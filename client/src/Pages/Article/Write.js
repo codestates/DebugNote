@@ -45,9 +45,9 @@ export default function Write() {
       )
       .then(resp => {
         console.log(resp.data);
-        //! 응답으로 board pk 받아야함 -> 백엔드에 추가 요청함
+        //! 응답으로 board pk 받아야함 -> 백엔드에 추가 요청함 -> boardId 받음
         //! 작성한 글 상세페이지로 이동
-        // navigate(`${resp.data.id}`);
+        navigate(`/${resp.data.boardId}`);
       })
       .catch(console.log);
   };
