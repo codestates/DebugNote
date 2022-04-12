@@ -49,9 +49,9 @@ export default function Bookmarks() {
       .then(response => {
         console.log('axios 요청', response.data.boards);
         if (response.status === 200) {
-          // setCurrentArticle(response.data.boards.rows);
-          setCurrentArticle([{ id: 1, Boards: [{ title: 'hello' }] }]);
+          setCurrentArticle(response.data.boards.rows[0].Boards);
           setTotalArticles(response.data.boards.count);
+          //console.log(response.data.boards.rows[0].Boards, '응답');
         } else {
           console.log('게시물부르기실패');
         }
@@ -67,7 +67,6 @@ export default function Bookmarks() {
     setIsLoading(false);
   }, []);
 
-  console.log(currentArticle, '현재 게시글 개수');
   return (
     <Box>
       <Routes>
