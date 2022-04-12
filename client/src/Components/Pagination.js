@@ -2,15 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 const PageUl = styled.ul`
+  margin-top: 20px;
   float: left;
   list-style: none;
   text-align: center;
-  border-radius: 3px;
   color: white;
   padding: 1px;
-  border-top: 3px solid #186ead;
-  border-bottom: 3px solid #186ead;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: #a3cca3;
 `;
 
 const PageLi = styled.li`
@@ -18,25 +16,23 @@ const PageLi = styled.li`
   font-size: 17px;
   font-weight: 600;
   padding: 5px;
-  border-radius: 5px;
-  width: 25px;
+  width: 30px;
   &:hover {
     cursor: pointer;
     color: white;
-    background-color: #263a6c;
+    background-color: #688268;
   }
   &:focus::after {
     color: white;
-    background-color: #263a6c;
+    background-color: #688268;
   }
 `;
 
 const PageSpan = styled.span`
   &:hover::after,
   &:focus::after {
-    border-radius: 100%;
     color: white;
-    background-color: #263a6c;
+    background-color: #688268;
   }
 `;
 //페이지 하단의 1-10까지 탐색할 수 있는 바.
@@ -56,7 +52,7 @@ const Pagination = ({ totalArticles, setCurrentPage }) => {
         <PageUl className="pagination">
           {/* 위에서 만들어진 페이지를 map으로 뿌리고, 
           클릭이벤트로 Main에서 받은 setter로 현재 페이지 상태값 변경*/}
-          {pageNumbers.map(page => (
+          {/* {pageNumbers.map(page => (
             <PageLi
               key={page}
               onClick={() => setCurrentPage(page)}
@@ -64,7 +60,19 @@ const Pagination = ({ totalArticles, setCurrentPage }) => {
             >
               <PageSpan className="page-link">{page}</PageSpan>
             </PageLi>
-          ))}
+          ))} */}
+          <PageLi>
+            <PageSpan>1</PageSpan>
+          </PageLi>
+          <PageLi>
+            <PageSpan>2</PageSpan>
+          </PageLi>
+          <PageLi>
+            <PageSpan>3</PageSpan>
+          </PageLi>
+          <PageLi>
+            <PageSpan>4</PageSpan>
+          </PageLi>
         </PageUl>
       </nav>
     </div>

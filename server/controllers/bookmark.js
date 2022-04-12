@@ -9,10 +9,10 @@ module.exports = {
       UserId: req.userId,
       BoardId: id,
     }).catch(err =>
-      res.status(404).json({ message: `Bookmark can be done only once` }),
+      res.status(404).json({ message: '이미 북마크가 되어있습니다.' }),
     );
 
-    res.status(203).json({ message: `${id} successfully bookmarked` });
+    res.status(203).json({ message: '북마크 되었습니다.' });
   },
 
   remove: async (req, res) => {
@@ -26,6 +26,6 @@ module.exports = {
       },
     });
 
-    res.status(200).json({ message: `${id} bookmark canceled` });
+    res.status(200).json({ message: '북마크가 삭제 되었습니다.' });
   },
 };

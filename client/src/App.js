@@ -30,10 +30,8 @@ function App() {
     createdAt: '',
     nickname: '',
   });
-  //! 조회중인 게시글의 id
-  //! 필요 없을시 삭제
-  // const [boardId, setBoardId] = useState('');
 
+  const [boardId, setBoardId] = useState('');
   // modalHandler
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
@@ -46,6 +44,7 @@ function App() {
 
   // logoutHandler
   const logoutHandler = () => {
+    console.log('로그아웃 버튼 눌림');
     axios.post('http://15.164.104.171:80/auth/logout').then(response => {
       if (response.status === 200) {
         console.log('logout ok');
@@ -83,12 +82,13 @@ function App() {
       </Navbar>
       <Routes>
         <Route
-          path="/"
+          path="*"
           element={
             <Main
               isLogin={isLogin}
               setIsLogin={setIsLogin}
               logoutHandler={logoutHandler}
+              openLoginModalHandler={openLoginModalHandler}
               isOpen={isOpen}
               isMember={isMember}
               loadedArticles={loadedArticles}
@@ -100,7 +100,7 @@ function App() {
           path={':id'}
           element={
             <Article
-              currentArticle={currentArticle}
+              crurentArticle={currentArticle}
               setCurrentArticle={setCurrentArticle}
               myId={myId}
             />
@@ -122,9 +122,9 @@ function App() {
           }
         >
           <Route index element={<Logs />} />
-          <Route path="logs" element={<Logs />} />
+          <Route path="logs/*" element={<Logs />} />
           <Route path="info" element={<Info />} />
-          <Route path="bookmarks" element={<Bookmarks />} />
+          <Route path="bookmarks/*" element={<Bookmarks />} />
         </Route>
         <Route
           path="write"
