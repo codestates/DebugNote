@@ -10,7 +10,6 @@ import axios from 'axios';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
-import dummy from '../../temp/dummy';
 
 export default function Article({ currentArticle, setCurrentArticle }) {
   let { id } = useParams();

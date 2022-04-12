@@ -45,6 +45,7 @@ function App() {
 
   // logoutHandler
   const logoutHandler = () => {
+    console.log('로그아웃 버튼 눌림');
     axios.post('http://15.164.104.171:80/auth/logout').then(response => {
       if (response.status === 200) {
         console.log('logout ok');
@@ -76,7 +77,7 @@ function App() {
       </Navbar>
       <Routes>
         <Route
-          path="/"
+          path="*"
           element={
             <Main
               isLogin={isLogin}

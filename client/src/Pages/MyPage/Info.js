@@ -12,14 +12,40 @@ import styled from 'styled-components';
 
 const Box = styled.div`
   height: 100%;
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  > h2 {
+    /* border: 1px solid orange; */
+    width: 96%;
+  }
 `;
 
-const H3 = styled.h3`
-  font-weight: bold;
+const InfoSection = styled.section`
+  /* border: 1px solid blue; */
+  width: 96%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1rem;
+`;
+
+const Important = styled.section`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Namebox = styled.section`
+  display: flex;
+  justify-content: space-around;
+  width: 45%;
+  padding: 0 0.4rem;
 `;
 
 const Legend = styled.h5`
@@ -27,6 +53,7 @@ const Legend = styled.h5`
 `;
 
 const Infobox = styled.div`
+  margin: 0.5rem 0;
   display: flex;
   flex-direction: column;
   /* align-items: flex-start; */
@@ -34,16 +61,29 @@ const Infobox = styled.div`
 
 const Input = styled.input`
   margin-top: 0.3rem;
-  height: 25px;
-  width: 200px;
+  height: 35px;
+  width: 500px;
+  padding: 0rem 0.4rem;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  background-color: #cfe2f3;
+`;
+
+const Name = styled.input`
+  margin-top: 0.3rem;
+  height: 35px;
+  width: 240px;
+  padding: 0rem 0.4rem;
   border: 1px solid #cccccc;
   border-radius: 3px;
   background-color: #cfe2f3;
 `;
 
 const Select = styled.select`
-  height: 25px;
-  width: 200px;
+  margin-top: 0.3rem;
+  height: 35px;
+  width: 500px;
+  padding: 0rem 0.4rem;
 `;
 
 const GuideText = styled.div`
@@ -51,8 +91,13 @@ const GuideText = styled.div`
 `;
 
 const Btnsection = styled.section`
+  width: 96%;
+  height: 18%;
+  /* border: 1px solid green; */
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Button = styled.button`
@@ -61,10 +106,11 @@ const Button = styled.button`
   border: none;
   border-radius: 3px;
   color: white;
+  text-align: center;
   background-color: #a3cca3;
-  width: 4rem;
+  width: 32rem;
   height: 2rem;
-  margin-left: 1rem;
+  margin-bottom: 0.6rem;
   &:hover {
     background-color: #82a382;
   }
@@ -87,9 +133,11 @@ export default function Info() {
   });
 
   useEffect(() => {
+    console.log('사용자 정보 불러와!');
     //서버로부터 기존에 저장되어 있던 사용자 정보 불러와서, 입력칸에 채워 줄 것.
+    //http://15.164.104.171:80/mypage
     axios
-      .get('http://15.164.104.171:80/mypage', {
+      .get('http://15.164.104.171:80/users', {
         //헤더
       })
       .then(response => {
@@ -127,7 +175,7 @@ export default function Info() {
     }
     axios
       .put(
-        'http://15.164.104.171:80/mypage',
+        'http://15.164.104.171:80/users',
         {
           email,
           nickname,
@@ -165,7 +213,7 @@ export default function Info() {
     //파라미터는 테이블의 pk값으로 하여 보낸다! 모든 인증절차 보내는 요청은 pk값을 필요로한다.:추후 논의예정
 
     axios
-      .delete(`http://15.164.104.171:80/auth/`, {
+      .delete(`http://15.164.104.171:80/users`, {
         headers: { accept: 'application/json' },
       })
       .then(response => {
@@ -187,78 +235,91 @@ export default function Info() {
 
   return (
     <Box>
-      <H3>회원정보 수정</H3>
-      <Infobox>
-        <Legend>이메일</Legend>
-        <Input
-          placeholder="이메일을 입력하세요"
-          onChange={handleUserInputValue('email')}
-        ></Input>
-        <GuideText>
-          {idValidator(changeInfo.email)
-            ? '올바른 이메일 형식입니다'
-            : '이메일 형식에 맞지 않습니다'}
-        </GuideText>
-      </Infobox>
-      <Infobox>
-        <Legend>비밀번호</Legend>
-        <Input
-          type="password"
-          placeholder="비밀번호를 입력하세요"
-          onChange={handleUserInputValue('password')}
-        ></Input>
-        <GuideText>
-          {pwValidator(changeInfo.password)
-            ? '올바른 비밀번호 형식입니다'
-            : '비밀번호 형식에 맞지 않습니다'}
-        </GuideText>
-      </Infobox>
-      <Infobox>
-        <Legend>비밀번호 확인</Legend>
-        <Input
-          type="password"
-          placeholder="비밀번호를 한번 더 입력하세요"
-          onChange={handleUserInputValue('passwordConfirm')}
-        ></Input>
-        <GuideText>
-          {pwMatchValidator(password, passwordConfirm)
-            ? '비밀번호가 일치합니다'
-            : '비밀번호가 일치하지 않습니다'}
-        </GuideText>
-      </Infobox>
-      <Infobox>
-        <Legend>닉네임</Legend>
-        <Input
-          placeholder="닉네임을 입력하세요"
-          onChange={handleUserInputValue('nickname')}
-        ></Input>
-        <GuideText>
-          {nicknameValidator(nickname)
-            ? '올바른 닉네임입니다'
-            : '닉네임은 3-20글자 사이여야 합니다'}
-        </GuideText>
-      </Infobox>
-      <Infobox>
-        <Legend>이름</Legend>
-        <Input
-          placeholder="이름을 입력하세요"
-          onChange={handleUserInputValue('name')}
-        ></Input>
-        <GuideText>
-          {nameValidator(name) ? '올바른 이름입니다' : '이름을 입력해주세요'}
-        </GuideText>
-      </Infobox>
-      <Infobox>
-        <Legend>직업</Legend>
-        <Select onChange={handleUserInputValue('job')}>
-          <option value="직업을 선택하세요">직업을 선택하세요</option>
-          <option value="개발자">개발자</option>
-          <option value="학생">학생</option>
-        </Select>
-        <GuideText>
-          {selectValidator(job) ? '올바른 형식입니다' : '직업을 선택해주세요'}
-        </GuideText>
-      </Infobox>
+      <h2>회원정보</h2>
+      <InfoSection>
+        <Important>
+          <Infobox>
+            <Legend>이메일</Legend>
+            <Input
+              value={email}
+              placeholder="이메일을 입력하세요"
+              onChange={handleUserInputValue('email')}
+            ></Input>
+            <GuideText>
+              {idValidator(changeInfo.email)
+                ? '올바른 이메일 형식입니다'
+                : '이메일 형식에 맞지 않습니다'}
+            </GuideText>
+          </Infobox>
+          <Infobox>
+            <Legend>비밀번호</Legend>
+            <Input
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              onChange={handleUserInputValue('password')}
+            ></Input>
+            <GuideText>
+              {pwValidator(changeInfo.password)
+                ? '올바른 비밀번호 형식입니다'
+                : '비밀번호 형식에 맞지 않습니다'}
+            </GuideText>
+          </Infobox>
+          <Infobox>
+            <Legend>비밀번호 확인</Legend>
+            <Input
+              type="password"
+              placeholder="비밀번호를 한번 더 입력하세요"
+              onChange={handleUserInputValue('passwordConfirm')}
+            ></Input>
+            <GuideText>
+              {pwMatchValidator(password, passwordConfirm)
+                ? '비밀번호가 일치합니다'
+                : '비밀번호가 일치하지 않습니다'}
+            </GuideText>
+          </Infobox>
+          <Infobox>
+            <Legend>직업</Legend>
+            <Select onChange={handleUserInputValue('job')} value={job}>
+              <option value="직업을 선택하세요">직업을 선택하세요</option>
+              <option value="개발자">개발자</option>
+              <option value="학생">학생</option>
+            </Select>
+            <GuideText>
+              {selectValidator(job)
+                ? '올바른 형식입니다'
+                : '직업을 선택해주세요'}
+            </GuideText>
+          </Infobox>
+        </Important>
+        <Namebox>
+          <Infobox>
+            <Legend>닉네임</Legend>
+            <Name
+              value={nickname}
+              placeholder="닉네임을 입력하세요"
+              onChange={handleUserInputValue('nickname')}
+            ></Name>
+            <GuideText>
+              {nicknameValidator(nickname)
+                ? '올바른 닉네임입니다'
+                : '닉네임은 3-20글자 사이여야 합니다'}
+            </GuideText>
+          </Infobox>
+          <Infobox>
+            <Legend>이름</Legend>
+            <Name
+              value={name}
+              placeholder="이름을 입력하세요"
+              onChange={handleUserInputValue('name')}
+            ></Name>
+            <GuideText>
+              {nameValidator(name)
+                ? '올바른 이름입니다'
+                : '이름을 입력해주세요'}
+            </GuideText>
+          </Infobox>
+        </Namebox>
+      </InfoSection>
       <Btnsection className="userBtn">
         <Button onClick={infoChangeHandler}>수정</Button>
         <Button onClick={withdrawalHanlder}>회원탈퇴</Button>
