@@ -55,7 +55,7 @@ const Title = styled.div`
 export default function ErrorLog({ article }) {
   return (
     <Article className="errlog">
-      <Link to={`${article.id}`}>
+      <Link to={`/${article.id}`}>
         <Icon>
           <div>
             <i className="fa-solid fa-bookmark"></i>
