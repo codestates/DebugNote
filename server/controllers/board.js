@@ -1,60 +1,57 @@
-const { User, Board } = require('../models/');
-const db = require('../models');
+const Board  = require('../models/board');
+const Comment  = require('../models/comment');
+const User = require('../models/user');
+const Sequelize = require('sequelize');
+const SequelModel = Sequelize.Sequelize;
 
 module.exports = {
   post: async (req, res) => {
     const { title, content } = req.body;
 
-    await Board.create({
+   const board = await Board.create({
       title,
       content,
       UserId: req.userId,
       picture: 'dummy',
     });
 
-    res.status(203).json({ message: '게시물 생성 되었습니다.' });
+    res.status(203).json({ boardId: board.id, message: '게시물 생성 되었습니다.' });
   },
   get: async (req, res) => {
     const { id } = req.params;
 
-    const board = await db.sequelize.models.Board.findAll({
+  
+    const board = await Board.findOne({
       where: {
         id: id,
       },
+      attributes: ['id', [SequelModel.col('User.nickname'), 'nickname'], 'title', 'content', 'picture', 'createdAt', 'updatedAt', 'userId' ],
       include: [{
-          model: db.sequelize.models.Comment,
-          // as: 'comment',
-          attributes: ['id', 'comment', 'updatedAt','createdAt'],
-          include: [{
-            model: db.sequelize.models.User,
-            attributes: ['nickname'],
-          }],
-        }],
-      // order: [[db.sequelize.models.Comment, 'createdAt', 'desc']],
-    });
+          model: User,
+          attributes: [],
+        }]
+      })
 
-    // const is = await User.findOne({
-    //   where: {
-    //     id: '4'
-    //   },
-    //   include: [{
-    //     model: Board,
-    //     // include: [{
-    //     //   model: Board
-    //     // }]
-    //   },
-    // ]
-    // })
-
-    // console.log(is)
+    const comment = await Comment.findAll({
+        where: {
+          BoardId: id
+        },
+        attributes:['id','comment','createdAt','updatedAt', [SequelModel.col('User.nickname'), 'nickname']],
+        include: [
+          {
+            model: User,
+            attributes: []
+          }
+        ]
+      })
 
     if (board.length === 0) {
       return res
         .status(404)
-        .json({ messgae: '해당 게시물이 존재하지 않습니다.' });
+        .json({ message: '해당 게시물이 존재하지 않습니다.' });
     }
 
-    return res.status(201).json({ board, message: '게시물을 가져왔습니다.' });
+    return res.status(200).json({ board, comment, message: '게시물을 가져왔습니다.' });
   },
   // 게시글 수정
   put: async (req, res) => {
@@ -62,6 +59,10 @@ module.exports = {
     const { title, content } = req.body;
 
     const findBoard = await Board.findByPk(id);
+
+    if (findBoard.UserId != req.userId) {
+      return res.status(400).json({ message: '유저가 일치하지 않습니다' });
+    }
 
     if (!findBoard)
       return res
@@ -87,6 +88,10 @@ module.exports = {
     const { id } = req.params;
 
     const findBoard = await Board.findByPk(id);
+
+    if (findBoard.UserId != req.userId) {
+      return res.status(400).json({ message: '유저가 일치하지 않습니다' });
+    }
 
     if (!findBoard)
       return res

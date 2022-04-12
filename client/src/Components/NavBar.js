@@ -24,7 +24,7 @@ const Menuli = styled.li`
 `;
 
 export default function Navbar(props) {
-  console.log(props, '프롭스로 내려준것들');
+  // console.log(props, '프롭스로 내려준것들');
   return (
     <Menunav className="menubar">
       <Menuul>

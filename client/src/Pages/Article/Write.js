@@ -1,4 +1,5 @@
-import { useRef, useState, useEfect } from 'react';
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
@@ -16,6 +17,7 @@ export default function Write() {
     content: '',
   });
   const editorRef = useRef();
+  const navigate = useNavigate();
 
   const onChangeIntroFunction = () => {
     setArticle({
@@ -30,10 +32,17 @@ export default function Write() {
 
   const handleSubmit = () => {
     axios
-      .post('http://15.164.104.171/board', article, {
-        headers: { Accept: 'application/json' },
-        withCredentials: true,
-      })
+      .post(
+        'http://15.164.104.171/board',
+        {
+          title: article.title,
+          content: article.content,
+        },
+        {
+          headers: { Accept: 'application/json' },
+          withCredentials: true,
+        },
+      )
       .then(resp => {
         console.log(resp.data);
       })
@@ -60,7 +69,7 @@ export default function Write() {
           ref={editorRef}
         />
       </div>
-      <button>나가기</button>
+      <button onClick={() => navigate(-1)}>나가기</button>
       <button onClick={handleSubmit}>작성완료</button>
     </section>
   );

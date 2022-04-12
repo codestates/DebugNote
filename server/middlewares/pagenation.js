@@ -5,7 +5,19 @@ const db = require('../models');
 const User = require('../models/user');
 module.exports = {
   // 검색 페이지
-  searchBoard: async (option, page, limit) => {
+  searchTitle: async (option, page, limit) => {
+    return await Board.findAndCountAll({
+      order: [['id', 'desc']],
+      where: {
+        title: {
+          [Op.like]: '%' + option + '%', // 유사 검색
+        },
+      },
+      limit: Number(limit),
+      offset: (page - 1) * 10,
+    });
+  },
+  searchContent: async (option, page, limit) => {
     return await Board.findAndCountAll({
       order: [['id', 'desc']],
       where: {
@@ -13,8 +25,8 @@ module.exports = {
           [Op.like]: '%' + option + '%', // 유사 검색
         },
       },
-      // limit: Number(limit),
-      // offset: (page - 1) * 10,
+      limit: Number(limit),
+      offset: (page - 1) * 10,
     });
   },
   // 메인 페이지
@@ -54,7 +66,8 @@ module.exports = {
           // order: [[db.sequelize.models.Bookmark, 'createdAt', 'desc']],
         },
       ],
-      limit: Number(limit),
+      limit: Number(limit), // 한 페이지에 몇개를 보여줄 것인가
+      // 시작점 1페이지 = 0 / 2페이지  = 10 / 3페이지 = 20
       offset: (page - 1) * 10,
       subQuery: false,
     });

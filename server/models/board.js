@@ -33,7 +33,8 @@ module.exports = class Board extends Sequelize.Model {
  
   static associate(db) {
     db.Board.belongsTo(db.User);
-    db.User.belongsToMany(db.Board, {
+    db.Board.hasMany(db.Comment);
+    db.Board.belongsToMany(db.User, {
       through: 'Bookmark',
     });
   }
