@@ -121,7 +121,7 @@ function App() {
             <MypageLayout isLogin={isLogin} logoutHandler={logoutHandler} />
           }
         >
-          <Route index element={<Logs />} />
+          <Route index element={<Info />} />
           <Route path="logs/*" element={<Logs />} />
           <Route path="info" element={<Info />} />
           <Route path="bookmarks/*" element={<Bookmarks />} />

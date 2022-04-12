@@ -37,7 +37,7 @@ export default function Logs() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
-  const [currentArticle, setCurrentArticle] = useState([]);
+  const [currentArticle, setCurrentArticle] = useState([]); // 화면상에 렌더할 실제 게시물 배열
   const paginationHandler = currentPage => {
     axios
       .get(`http://15.164.104.171/users/boards?pages=${currentPage}&limit=10`, {
@@ -72,7 +72,7 @@ export default function Logs() {
               <h2>My Error Logs</h2>
               {isLoading ? (
                 <LoadingIndicator />
-              ) : currentArticle.length !== 0 ? (
+              ) : currentArticle.length ? (
                 currentArticle.map(article => (
                   <ErrorLog key={article.id} article={article} />
                 ))
