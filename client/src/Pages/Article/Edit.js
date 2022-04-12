@@ -11,24 +11,25 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 import axios from 'axios';
 
-export default function Edit({ currentArticle }) {
+export default function Edit({ currentArticle, setCurrentArticle }) {
   console.log('/edit으로 내려준 게시글 정보', currentArticle);
-  const [article, setArticle] = useState({
-    title: '',
-    content: '',
-  });
+  // const [article, setArticle] = useState({
+  //   title: '',
+  //   content: '',
+  // });
   const editorRef = useRef();
   const navigate = useNavigate();
 
-  const onChangeIntroFunction = () => {
-    setArticle({
-      ...article,
+  //* 입력한 본문으로 전역 상태 값 변경
+  const changeContentInput = () => {
+    setCurrentArticle({
+      ...currentArticle,
       content: editorRef.current.getInstance().getMarkdown(),
     });
   };
-
-  const handleArticleInputValue = key => e => {
-    setArticle({ ...article, [key]: e.target.value });
+  //* 입력한 제목으로 전역 상태 값 변경
+  const handleTitleInput = e => {
+    setCurrentArticle({ ...currentArticle, title: e.target.value });
   };
 
   const handleSubmit = () => {
@@ -36,8 +37,8 @@ export default function Edit({ currentArticle }) {
       .put(
         `http://15.164.104.171/boards/${currentArticle.id}`,
         {
-          title: article.title,
-          content: article.content,
+          title: currentArticle.title,
+          content: currentArticle.content,
         },
         {
           headers: { Accept: 'application/json' },
@@ -54,10 +55,7 @@ export default function Edit({ currentArticle }) {
   return (
     <section className="wrtie">
       <div>
-        <textarea
-          placeholder="제목을 입력하세요"
-          onChange={handleArticleInputValue('title')}
-        >
+        <textarea placeholder="제목을 입력하세요" onChange={handleTitleInput}>
           {currentArticle.title}
         </textarea>
       </div>
@@ -69,7 +67,7 @@ export default function Edit({ currentArticle }) {
           initialEditType="markdown"
           useCommandShortcut={true}
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
-          onChange={onChangeIntroFunction}
+          onClick={changeContentInput}
           ref={editorRef}
         />
       </div>

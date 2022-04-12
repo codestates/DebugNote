@@ -106,7 +106,15 @@ function App() {
             />
           }
         />
-        <Route path="edit" element={<Edit currentArticle={currentArticle} />} />
+        <Route
+          path="edit"
+          element={
+            <Edit
+              currentArticle={currentArticle}
+              setCurrentArticle={setCurrentArticle}
+            />
+          }
+        />
         <Route
           path="mypage"
           element={
@@ -118,7 +126,10 @@ function App() {
           <Route path="info" element={<Info />} />
           <Route path="bookmarks/*" element={<Bookmarks />} />
         </Route>
-        <Route path="write" element={<Write />} />
+        <Route
+          path="write"
+          element={<Write setCurrentArticle={setCurrentArticle} />}
+        />
         <Route
           path="notfound"
           element={<h1>404 Not Found - 게시물이 없습니다.</h1>}
