@@ -55,9 +55,11 @@ export default function Edit({ currentArticle, setCurrentArticle }) {
   return (
     <section className="wrtie">
       <div>
-        <textarea placeholder="제목을 입력하세요" onChange={handleTitleInput}>
-          {currentArticle.title}
-        </textarea>
+        <input
+          value={currentArticle.title}
+          placeholder="제목을 입력하세요"
+          onChange={handleTitleInput}
+        ></input>
       </div>
       <div>
         <Editor
@@ -67,7 +69,7 @@ export default function Edit({ currentArticle, setCurrentArticle }) {
           initialEditType="markdown"
           useCommandShortcut={true}
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
-          onClick={changeContentInput}
+          onChange={changeContentInput}
           ref={editorRef}
         />
       </div>

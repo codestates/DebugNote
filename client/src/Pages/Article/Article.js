@@ -9,7 +9,6 @@ import axios from 'axios';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
-
 import Comment from '../../Components/Comment';
 
 export default function Article({
@@ -18,7 +17,6 @@ export default function Article({
   currentArticleCallback,
   myId,
 }) {
-
   let { id } = useParams();
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
@@ -52,6 +50,7 @@ export default function Article({
   console.log('<Article /> 상세 조회중인 게시물 정보----->', currentArticle);
   console.log('<Article /> 상세 조회중인 댓글 배열 정보----->', comments);
   console.log('뷰어에서 볼 컨텐트 ------>', currentArticle.content);
+
   //* 삭제 핸들러
   const deleteArticle = () => {
     console.log('삭제 요청');
@@ -66,8 +65,7 @@ export default function Article({
       })
       .catch(err => console.log(err));
   };
-
-
+  // 댓글 수정 콜백
   const commentEditCallback = editedComment => {
     const idx = comments.findindex(el => el.id === editedComment.id);
 
@@ -78,10 +76,13 @@ export default function Article({
     ]);
   };
 
-
   // 댓글 작성
   const submitComment = () => {
     // axios.
+  };
+
+  const moveToEdit = () => {
+    navigate('/edit');
   };
 
   useEffect(() => {
@@ -97,9 +98,7 @@ export default function Article({
           <span>{currentArticle.createdAt}</span>
         </div>
         <div className="article-modify-button-wrapper">
-          <div>
-            <Link to="/edit">수정</Link>
-          </div>
+          <div onClick={moveToEdit}>수정</div>
           <button onClick={deleteArticle}>삭제</button>
         </div>
         <div className="viewer-wraper">
