@@ -9,16 +9,6 @@ export default function MyPageLayout({ logoutHandler }) {
   // if (cookies.get('accToken')) {
   return (
     <div className="mypage-layout">
-      <NavBar logoutHandler={logoutHandler}>
-        <ul className="mypage-menu">
-          <li>
-            <Link to="/write">글쓰기</Link>
-          </li>
-          <li onClick={logoutHandler}>
-            <Link to="/">로그아웃</Link>
-          </li>
-        </ul>
-      </NavBar>
       <section className="tabmenu-content">
         <Tab />
         <section className="content">
