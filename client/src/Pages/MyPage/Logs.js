@@ -89,7 +89,7 @@ export default function Logs() {
               )}
               <Pagination
                 totalArticles={totalArticles}
-                paginate={setCurrentPage}
+                setCurrentPage={setCurrentPage}
               ></Pagination>
             </Section>
           }

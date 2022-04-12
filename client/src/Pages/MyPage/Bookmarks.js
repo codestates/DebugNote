@@ -87,7 +87,7 @@ export default function Bookmarks() {
               )}
               <Pagination
                 totalArticles={totalArticles}
-                paginate={setCurrentPage}
+                setCurrentPage={setCurrentPage}
               ></Pagination>
             </Section>
           }
