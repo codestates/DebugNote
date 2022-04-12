@@ -11,13 +11,14 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 import axios from 'axios';
 
-export default function Write() {
-  const editorRef = useRef();
-  const navigate = useNavigate();
+export default function Edit({ currentArticle }) {
+  console.log('/edit으로 내려준 게시글 정보', currentArticle);
   const [article, setArticle] = useState({
     title: '',
     content: '',
   });
+  const editorRef = useRef();
+  const navigate = useNavigate();
 
   const onChangeIntroFunction = () => {
     setArticle({
@@ -32,22 +33,21 @@ export default function Write() {
 
   const handleSubmit = () => {
     axios
-      .post(
-        'http://15.164.104.171/boards',
+      .put(
+        'http://15.164.104.171/board',
         {
           title: article.title,
           content: article.content,
         },
         {
           headers: { Accept: 'application/json' },
-          // withCredentials: true,
+          withCredentials: true,
         },
       )
       .then(resp => {
         console.log(resp.data);
-        //! 응답으로 board pk 받아야함 -> 백엔드에 추가 요청함
-        //! 작성한 글 상세페이지로 이동
-        // navigate(`${resp.data.id}`);
+        //* 수정 전 조회중이던 게시글 상세페이지로 이동
+        navigate(currentArticle.id);
       })
       .catch(console.log);
   };
@@ -58,11 +58,13 @@ export default function Write() {
         <textarea
           placeholder="제목을 입력하세요"
           onChange={handleArticleInputValue('title')}
-        ></textarea>
+        >
+          {currentArticle.title}
+        </textarea>
       </div>
       <div>
         <Editor
-          initialValue="helloWorld!"
+          initialValue={currentArticle.content}
           previewStyle="vertical"
           height="600px"
           initialEditType="markdown"
@@ -73,7 +75,7 @@ export default function Write() {
         />
       </div>
       <button onClick={() => navigate(-1)}>나가기</button>
-      <button onClick={handleSubmit}>작성완료</button>
+      <button onClick={handleSubmit}>수정 완료</button>
     </section>
   );
 }
