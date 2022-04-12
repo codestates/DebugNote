@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-scripts start",
-    "build": "react-scripts build",
+    "build": "node --max_old_space_size=8192 node_modules/.bin/react-scripts start --progress --env.prod",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -10,7 +10,6 @@ import axios from 'axios';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
-
 export default function Article({ currentArticle, setCurrentArticle }) {
   let { id } = useParams();
   //! 전역에서 링하고 {...} 객체 복사 해서 상태 업데이트 해야할 듯 하다
@@ -47,8 +46,22 @@ export default function Article({ currentArticle, setCurrentArticle }) {
       })
       .catch(() => {
         console.log('캐치했니');
-        setCurrentArticle(dummy);
+        setCurrentArticle();
       });
+  };
+
+  const deleteArticle = () => {
+    console.log('삭제 요청');
+    axios
+      .delete(`http://15.164.104.171/boards/${id}`)
+      .then(response => {
+        if (response.status === 200) {
+          console.log('삭제 성공');
+        } else {
+          console.log('삭제 실패');
+        }
+      })
+      .catch(err => console.log(err));
   };
 
   console.log('----->', currentArticle);
@@ -78,7 +91,7 @@ export default function Article({ currentArticle, setCurrentArticle }) {
         <div>
           <Link to="edit">수정</Link>
         </div>
-        <button>삭제</button>
+        <button onClick={deleteArticle}>삭제</button>
       </div>
       <div className="viewer-wraper">
         <Viewer
