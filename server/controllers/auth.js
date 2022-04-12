@@ -42,7 +42,7 @@ module.exports = {
         email,
       },
     });
- 
+
     if (!user) {
       return res.status(401).json({ message: '해당 유저가 없습니다.' });
     }
@@ -61,9 +61,9 @@ module.exports = {
     return res
       .status(201)
       .cookie('token', accToken, {
-        // httpOnly: true,
+        httpOnly: true,
         // secure: true,
-        // sameSite: 'Lax',
+        sameSite: 'Lax',
       })
       .json({ accToken, message: '로그인 성공했습니다.' });
   },

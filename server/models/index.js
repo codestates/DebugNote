@@ -43,8 +43,12 @@ const comment = sequelize.define(
 );
 User.hasMany(comment);
 Board.hasMany(comment);
+ 
+// db.Comment = comment;
 
+// Comment.associate(db)
 User.associate(db);
 Board.associate(db);
+// Comment.associate(db);
 
 module.exports = db;

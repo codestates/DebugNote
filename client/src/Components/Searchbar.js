@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-export default function Searchbar({ setCurrentArticle }) {
+export default function Searchbar({
+  setCurrentArticle,
+  pageQuery,
+  setTotalArticles,
+}) {
   //검색 옵션 상태 관리
   const [option, setOption] = useState('제목');
   const optionChangeHandler = event => {
@@ -19,9 +23,9 @@ export default function Searchbar({ setCurrentArticle }) {
     if (searchKeyword === '') return;
     let endpoint;
     if (searchOption === '제목') {
-      endpoint = `http://15.164.104.171:80/boards/search?titles=${searchKeyword}`;
+      endpoint = `http://15.164.104.171:80/search?titles=${searchKeyword}&search_type=titles`;
     } else {
-      endpoint = `http://15.164.104.171:80/boards/search?contents=${searchKeyword}(&pages={페이지넘버}&start={한 페이지 당 처음 시작 하는 게시물 번호})`;
+      endpoint = `http://15.164.104.171:80/search?contents=${searchKeyword}&search_type=contents`;
     }
 
     //검색창 비우기
@@ -35,13 +39,18 @@ export default function Searchbar({ setCurrentArticle }) {
       .then(response => {
         if (response.status === 201) {
           //서버에 요청 보내기 성공하여 데이터를 잘 받아옴.
-          setCurrentArticle(response.data.boards);
+          setCurrentArticle(response.data.findBoard);
         } else {
           //서버에 요청 보내기 실패하였음. 검색결과 없다고 할것
+          console.log('검색결과없음');
           setCurrentArticle([]);
         }
       })
-      .catch(error => console.log(error, '에러 내용'));
+      .catch(error => {
+        //검색결과없음
+        console.log(error, '에러 내용');
+        setCurrentArticle([]);
+      });
   };
 
   const searchClickHandler = () => {

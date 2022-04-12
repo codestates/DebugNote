@@ -12,7 +12,7 @@ module.exports = {
       comment: comment,
     });
 
-    res.status(200).json({ message: 'Comment Succesfully added' });
+    res.status(200).json({ message: '댓글을 추가했습니다' });
   },
   get: async (req, res) => {
     // const result = await User.findOne({
@@ -41,24 +41,19 @@ module.exports = {
       },
     );
 
-    res.status(200).json({ message: 'Comment Succesfully modified' });
+    res.status(200).json({ message: '댓글을 수정했습니다' });
   },
   remove: async (req, res) => {
     const { id } = req.params;
-    const { commentId, comment } = req.body;
+    const { commentId } = req.body;
 
-    await db.sequelize.models.Comment.destroy(
-      {
-        comment: comment,
+    await db.sequelize.models.Comment.destroy({
+      where: {
+        id: commentId,
+        UserId: req.userId,
+        BoardId: id,
       },
-      {
-        where: {
-          id: commentId,
-          UserId: req.userId,
-          BoardId: id,
-        },
-      },
-    );
+    });
 
     res.status(200).json({ message: 'Comment Succesfully deleted' });
   },

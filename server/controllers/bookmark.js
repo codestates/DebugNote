@@ -12,7 +12,7 @@ module.exports = {
       res.status(404).json({ message: `Bookmark can be done only once` }),
     );
 
-    res.status(203).json({ message: `${id} successfully bookmarked` });
+    res.status(203).json({ message: `북마크 되었습니다` });
   },
 
   remove: async (req, res) => {
@@ -26,6 +26,6 @@ module.exports = {
       },
     });
 
-    res.status(200).json({ message: `${id} bookmark canceled` });
+    res.status(200).json({ message: `북마크 삭제되었습니다` });
   },
 };

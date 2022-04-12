@@ -4,7 +4,7 @@ const boardController = require('../controllers/board');
 const isAuth = require('../middlewares/auth');
 
 // 게시물 작성
-router.post('/',isAuth, boardController.post);
+router.post('/', isAuth, boardController.post);
 
 // 게시물 상세 가져오기
 router.get('/:id', boardController.get);
@@ -17,8 +17,6 @@ router.delete('/:id', isAuth, boardController.remove);
 
 module.exports = router;
 
-
-
 // const multer = require('multer');
 // const path = require('path');
 // const fs = require('fs');
@@ -29,7 +27,7 @@ module.exports = router;
 //     console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
 //     fs.mkdirSync('uploads');
 //   }
-  
+
 //   const upload = multer({
 //     // 저장할 위치: uploads
 //     storage: multer.diskStorage({
@@ -46,7 +44,7 @@ module.exports = router;
 //     // 파일용량: 5MB, 1024x1024사이즈
 //     limits: { fileSize: 5 * 1024 * 1024 },
 //   });
-     
+
 //   // 웹: <input id="img" type="file" accept="image/*"
 //   // 서버: upload.single('img')
 //   // 웹 id="img" 와 upload.single('img')에서 'img 값이 같아야함
