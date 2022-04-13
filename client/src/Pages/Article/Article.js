@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Cookies } from 'react-cookie';
+
 import { useParams, useNavigate } from 'react-router-dom';
+
 
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
@@ -10,6 +13,12 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
 import Comment from '../../Components/Comment';
+
+const cookies = new Cookies();
+
+axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
+  'accToken',
+)}`;
 
 export default function Article({
   currentArticle,
@@ -179,10 +188,14 @@ export default function Article({
           <span>{currentArticle.nickname}</span>
           <span>{currentArticle.createdAt}</span>
         </div>
-        <div className="article-modify-button-wrapper">
-          <div onClick={moveToEdit}>수정</div>
-          <button onClick={deleteArticle}>삭제</button>
-        </div>
+
+        {cookies.get('accToken') ? (
+          <div className="article-modify-button-wrapper">
+            <div onClick={moveToEdit}>수정</div>
+            <button onClick={deleteArticle}>삭제</button>{' '}
+          </div>
+        ) : null}
+
         <div className="viewer-wraper">
           <Viewer
             initialValue={currentArticle.content}
