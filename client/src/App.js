@@ -1,4 +1,4 @@
-import './App.css';
+import GlobalStyle from './GlobalStyle';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
@@ -17,7 +17,7 @@ import Edit from './Pages/Article/Edit';
 function App() {
   //* 로그인 후 받은 id
   const [myId, setMyId] = useState('');
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
   // 컴포넌트가 렌더링된 후  불러온 게시물 10개
@@ -61,6 +61,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <GlobalStyle />
       <Navbar
         isLogin={isLogin}
         logoutHandler={logoutHandler}
@@ -68,12 +69,12 @@ function App() {
       >
         {isLogin ? (
           <ul className="loggedin-menu">
-            <li>
-              <Link to="mypage">마이페이지</Link>
-            </li>
-            <li>
-              <Link to="write">글쓰기</Link>
-            </li>
+            <Link to="mypage">
+              <li>마이페이지</li>
+            </Link>
+            <Link to="write">
+              <li>글쓰기</li>
+            </Link>
             <li onClick={logoutHandler}>로그아웃</li>
           </ul>
         ) : (
@@ -103,6 +104,7 @@ function App() {
               currentArticle={currentArticle}
               setCurrentArticle={setCurrentArticle}
               myId={myId}
+              isLogin={isLogin}
             />
           }
         />
