@@ -21,8 +21,9 @@ const pagenation = require('../middlewares/pagenation');
 router.get('/', async (req, res) => {
   // const { page, start, limit } = req.query;
   let { pages, limit } = req.query;
-  page = Number(req.query.pages || 1);
-  console.log(page);
+
+  pages = Number(req.query.pages || 1);
+
   const boards = await pagenation.getBoards(pages, limit);
 
   if (boards.rows.length === 0) {
