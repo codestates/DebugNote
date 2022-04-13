@@ -11,14 +11,8 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 import axios from 'axios';
 
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
-  'accToken',
-)}`;
-
-export default function Edit({ currentArticle, setCurrentArticle }) {
+export default function Edit({ currentArticle, setCurrentArticle, isLogin }) {
   console.log('/edit으로 내려준 게시글 정보', currentArticle);
   // const [article, setArticle] = useState({
   //   title: '',
@@ -59,7 +53,7 @@ export default function Edit({ currentArticle, setCurrentArticle }) {
       .catch(console.log);
   };
 
-  return cookies.get('accToken') ? (
+  return isLogin ? (
     <section className="wrtie">
       <div>
         <input

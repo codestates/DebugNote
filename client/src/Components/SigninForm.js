@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
 
 axios.defaults.withCredentials = true;
 
@@ -45,7 +43,6 @@ export default function SigninForm({
 
           setIsLogin(!isLogin);
           //쿠키 저장
-          cookies.set('accToken', response.data.accToken, { maxAge: 21600 }); // 6시간.
           //모달 창 닫기
           openLoginModalHandler();
           setMyId(`${response.data.id}`);

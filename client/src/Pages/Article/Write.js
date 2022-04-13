@@ -11,14 +11,8 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 import axios from 'axios';
 
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
-  'accToken',
-)}`;
-
-export default function Write({ setCurrentArticle }) {
+export default function Write({ setCurrentArticle, isLogin }) {
   const editorRef = useRef();
   const navigate = useNavigate();
   const [article, setArticle] = useState({
@@ -60,7 +54,7 @@ export default function Write({ setCurrentArticle }) {
       .catch(console.log);
   };
 
-  return cookies.get('accToken') ? (
+  return isLogin ? (
     <section className="wrtie">
       <div>
         <textarea

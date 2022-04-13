@@ -10,10 +10,11 @@ export default function Comment({
   commentContent,
   setIsEditing,
   setComments,
+  isLogin
 }) {
   console.log('<Comment /> props로 내려받은 댓글 상세 정보', comment);
   const [isClicked, setIsCliked] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const id = boardId;
   /**
   comment {
@@ -33,12 +34,15 @@ export default function Comment({
       })
       .then(response => {
         if (response.status === 400) {
-          return alert('댓글 삭제 불가합니다');
+          console.log('삭제 요청완료')
+          return alert('다른 사람의 글은 삭제할 수 없슨니다.');
         }
-        console.log(response.data.comment);
+        else {
+          setComments(response.data.comment);
+        }
+     
         // 삭제된 댓글 제외한 모든 댓글 응답으로 옴
-
-        setComments(response.data.comment);
+      
       })
       .catch(err => console.log(err));
   };
@@ -59,12 +63,19 @@ export default function Comment({
       ) : (
         <div>
           <div className="comment-content">내용: {comment.comment}</div>
-          <div className="comment-button-wrapper">
-            <span onClick={() => setIsCliked(true)}>[수정] </span>
-            <span onClick={deleteComment}>[삭제]</span>
-          </div>
         </div>
-      )}
+      )} 
+    {
+      isLogin
+      ? (
+        <div className="comment-button-wrapper">
+          <span onClick={() => setIsCliked(true)}>[수정] </span>
+          <span onClick={deleteComment}>[삭제]</span>
+        </div>
+        )
+    : null
+    }
+
     </section>
   );
 }

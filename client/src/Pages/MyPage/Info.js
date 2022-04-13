@@ -11,9 +11,6 @@ import {
 } from '../../Utils/validator';
 import styled from 'styled-components';
 
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
-
 const Box = styled.div`
   height: 100%;
   width: 100%;
@@ -122,7 +119,7 @@ const Button = styled.button`
 
 axios.defaults.withCredentials = false;
 
-export default function Info() {
+export default function Info({isLogin}) {
   const [changeInfo, setChangeInfo] = useState({
     email: '',
     password: '',
@@ -233,7 +230,7 @@ export default function Info() {
       });
   };
 
-  return cookies.get('accToken') ? (
+  return isLogin ? (
     <Box>
       <h2>회원정보</h2>
       <InfoSection>
