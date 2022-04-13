@@ -21,7 +21,6 @@ export default function Article({
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
 
   const loadArticle = () => {
     axios
@@ -99,7 +98,6 @@ export default function Article({
         // 응답으로 작성한 댓글 정보가 온다
         // textarea 내용을 지운다
         setCommentContent('');
-        setIsEditing(false);
         const { id, comment, createdAt, updatedAt } = resp.data.comment;
         const commentObj = {
           id,
@@ -168,8 +166,6 @@ export default function Article({
                       commentEditCallback={commentEditCallback}
                       boardId={id}
                       commentContent={commentContent}
-                      isEditing={isEditing}
-                      setIsEditing={setIsEditing}
                       setComments={setComments}
                     />
                   ))

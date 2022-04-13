@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 export default function Comment({
   comment,
-  setIsEditing,
   commentEditCallback,
   boardId,
   commentContent,

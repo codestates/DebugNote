@@ -8,7 +8,6 @@ export default function Comment({
   commentEditCallback,
   boardId,
   commentContent,
-  isEditing,
   setIsEditing,
   setComments,
 }) {
