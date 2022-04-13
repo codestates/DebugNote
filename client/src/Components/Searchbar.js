@@ -40,7 +40,11 @@ const SearchSection = styled.div`
   }
 `;
 
-export default function Searchbar({ setLoadedArticles }) {
+export default function Searchbar({
+  currentPage,
+  setLoadedArticles,
+  setTotalArticles,
+}) {
   //검색 옵션 상태 관리
   const [option, setOption] = useState('제목');
   const optionChangeHandler = event => {
@@ -58,9 +62,9 @@ export default function Searchbar({ setLoadedArticles }) {
     if (searchKeyword === '') return;
     let endpoint;
     if (searchOption === '제목') {
-      endpoint = `http://15.164.104.171:80/search?titles=${searchKeyword}&search_type=titles`;
+      endpoint = `http://15.164.104.171:80/search?titles=${searchKeyword}&search_type=titles&pages=${currentPage}&limit=10`;
     } else {
-      endpoint = `http://15.164.104.171:80/search?contents=${searchKeyword}&search_type=contents`;
+      endpoint = `http://15.164.104.171:80/search?contents=${searchKeyword}&search_type=contents&pages=${currentPage}&limit=10`;
     }
 
     //검색창 비우기
@@ -74,7 +78,8 @@ export default function Searchbar({ setLoadedArticles }) {
       .then(response => {
         if (response.status === 201) {
           //서버에 요청 보내기 성공하여 데이터를 잘 받아옴.
-          setLoadedArticles(response.data.findBoard);
+          setLoadedArticles(response.data.findBoard.rows);
+          setTotalArticles(response.data.findBoard.count);
         } else {
           //서버에 요청 보내기 실패하였음. 검색결과 없다고 할것
           console.log('검색결과없음');
