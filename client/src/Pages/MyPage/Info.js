@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   idValidator,
@@ -9,6 +10,9 @@ import {
   selectValidator,
 } from '../../Utils/validator';
 import styled from 'styled-components';
+
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 const Box = styled.div`
   height: 100%;
@@ -116,9 +120,9 @@ const Button = styled.button`
   }
 `;
 
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ5NjY1OTk0LCJleHAiOjE2NDk4Mzg3OTR9.yFKxQ5RMJhX7ELh8fdLDCKFoXy_vZt6FcyfVynoivHQ';
-axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
+  'accToken',
+)}`;
 
 axios.defaults.withCredentials = false;
 
@@ -233,7 +237,7 @@ export default function Info() {
       });
   };
 
-  return (
+  return cookies.get('accToken') ? (
     <Box>
       <h2>회원정보</h2>
       <InfoSection>
@@ -325,5 +329,7 @@ export default function Info() {
         <Button onClick={withdrawalHanlder}>회원탈퇴</Button>
       </Btnsection>
     </Box>
+  ) : (
+    <Navigate to="/" />
   );
 }

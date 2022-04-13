@@ -23,10 +23,6 @@ const Menuul = styled.ul`
 
 const Menuli = styled.li`
   flex: 1;
-
-  /* > a {
-    margin-left: 1rem;
-  } */
 `;
 
 export default function Navbar(props) {

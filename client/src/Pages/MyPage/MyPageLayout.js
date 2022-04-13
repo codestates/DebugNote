@@ -1,12 +1,11 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import './MyPageLayout.css';
 import '../../App.css';
 import Tab from '../../Components/Tab';
-// import { Cookies } from 'react-cookie';
-// const cookies = new Cookies();
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 export default function MyPageLayout() {
-  // if (cookies.get('accToken')) {
-  return (
+  return cookies.get('accToken') ? (
     <div className="mypage-layout">
       <section className="tabmenu-content">
         <Tab />
@@ -15,8 +14,7 @@ export default function MyPageLayout() {
         </section>
       </section>
     </div>
+  ) : (
+    <Navigate to="/" />
   );
-  // } else {
-  //   return <div>접근 권한이 없습니다</div>;
-  // }
 }
