@@ -65,6 +65,7 @@ module.exports = {
         httpOnly: true,
         // secure: true,
         sameSite: 'Lax',
+        domain: '*'
       })
       .json({ id: user.id, accToken, message: '로그인 성공했습니다.' });
   },
