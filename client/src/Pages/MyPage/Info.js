@@ -120,10 +120,6 @@ const Button = styled.button`
   }
 `;
 
-axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
-  'accToken',
-)}`;
-
 axios.defaults.withCredentials = false;
 
 export default function Info() {

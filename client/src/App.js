@@ -1,4 +1,4 @@
-import GlobalStyle from './GlobalStyle';
+// import GlobalStyle from './GlobalStyle';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
@@ -20,7 +20,7 @@ const cookies = new Cookies();
 function App() {
   //* 로그인 후 받은 id
   const [myId, setMyId] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
   // 컴포넌트가 렌더링된 후  불러온 게시물 10개
@@ -63,7 +63,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <GlobalStyle />
+      {/* <GlobalStyle /> */}
       <Navbar
         isLogin={isLogin}
         logoutHandler={logoutHandler}

@@ -33,6 +33,10 @@ export default function Comment({
         // 수정 중인 상태 false로 바꾸고
         // 전역(article)에 있는 핸들러에 현재 입력된 코멘트 밸류 전달
         // 핸들러 안에서 setcomments
+
+        if (resp.status === 400) {
+          return alert('댓글 수정 불가합니다');
+        }
         commentEditCallback(resp.data.comment[0]);
         setIsClicked(false);
         setCurrentCommentInput('');

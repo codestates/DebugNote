@@ -23,7 +23,6 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
 export default function Article({
   currentArticle,
   setCurrentArticle,
-  currentArticleCallback,
   myId,
   isLogin,
 }) {
@@ -46,10 +45,11 @@ export default function Article({
           console.log('axios');
           const { id, title, content, createdAt, nickname } = resp.data.board;
           const { comment } = resp.data;
-          const { BoardId } = resp.data.bookmark;
+          const { Bookmark } = resp.data;
 
-          if (BoardId == id) {
-            setBookmarks(resp.data.bookmark.boardId);
+          if (Bookmark !== null) {
+            // console.log('ㅎㅎ')
+            setBookmarks(Bookmark.BoardId);
           }
 
           setCurrentArticle({
@@ -60,6 +60,7 @@ export default function Article({
             nickname,
           });
           setComments(comment);
+          console.log('axios 요청 후 게시글', currentArticle);
         }
       })
       .catch(() => console.log);
@@ -87,8 +88,10 @@ export default function Article({
 
   // 댓글 수정 콜백
   const commentEditCallback = editedComment => {
+
     // console.log('이거 맞나', editedComment);
     console.log('comments는 뭔데', comments);
+
     const idx = comments.findIndex(el => el.id === editedComment.id);
 
     setComments([
@@ -97,11 +100,17 @@ export default function Article({
       ...comments.slice(idx + 1),
     ]);
   };
+  // 댓글 인풋 상태에 반영
+  const handleInputValue = e => {
+    setCommentContent(e.target.value);
+  };
+
 
   // 댓글 인풋 상태에 반영
   const handleInputValue = e => {
     setCommentContent(e.target.value);
   };
+
 
   // 댓글 제출
   const submitComment = () => {
@@ -208,8 +217,8 @@ export default function Article({
         <section className="write-comments-wrapper">
           <div className="write-comment-wrapper">
             <textarea
-              onChange={handleInputValue}
               placeholder="댓글을 작성하세요"
+              onChange={handleInputValue}
               value={commentContent}
             ></textarea>
             <div>
@@ -218,7 +227,7 @@ export default function Article({
           </div>
           <div className="comments-list-wrapper">
             <div className="comments-list">
-              {comments.length
+              {comments.length !== 0
                 ? comments.map(comment => (
                     <Comment
                       key={comment.id}

@@ -32,6 +32,9 @@ export default function Comment({
         data: { commentId: comment.id },
       })
       .then(response => {
+        if (response.status === 400) {
+          return alert('댓글 삭제 불가합니다');
+        }
         console.log(response.data.comment);
         // 삭제된 댓글 제외한 모든 댓글 응답으로 옴
 
@@ -65,13 +68,3 @@ export default function Comment({
     </section>
   );
 }
-
-// <section className="comment-wrapper">
-// <div className="comment-nick">{comment.nickname}</div>
-// <div className="comment-content">{comment.content}</div>
-// <div className="comment-timestamp">{comment.createdAt}</div>
-// <div className="comment-button-wrapper">
-//   <span>수정</span>
-//   <span>삭제</span>
-// </div>
-// </section>
