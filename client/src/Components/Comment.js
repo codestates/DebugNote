@@ -1,11 +1,21 @@
 import { useState } from 'react';
 import CommentEdit from './CommentEdit';
-//! API 댓글 내용 content인지 comment인지 -> comment로 확인 받음
-//! 댓글 수정 삭제에 commentId 요청으로 필요함
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-export default function Comment({ comment, commentEditCallback }) {
+export default function Comment({
+  comment,
+  commentEditCallback,
+  boardId,
+  commentContent,
+  isEditing,
+  setIsEditing,
+  setComments,
+}) {
   console.log('<Comment /> props로 내려받은 댓글 상세 정보', comment);
-
+  const [isClicked, setIsCliked] = useState(false);
+  const navigate = useNavigate();
+  const id = boardId;
   /**
   comment {
   id,
@@ -16,28 +26,40 @@ export default function Comment({ comment, commentEditCallback }) {
   }
    */
 
-  const [isEditing, setIsEditing] = useState(false);
+  // 댓글 삭제
+  const deleteComment = () => {
+    axios
+      .delete(`http://15.164.104.171/comments/${id}`, {
+        data: { commentId: comment.id },
+      })
+      .then(response => {
+        console.log(response.data.comment);
+        // 삭제된 댓글 제외한 모든 댓글 응답으로 옴
 
-  // const handleCommentButton (value) => (e) => {
-
-  // }
+        setComments(response.data.comment);
+      })
+      .catch(err => console.log(err));
+  };
 
   return (
     <section className="comment-wrapper">
-      <div className="comment-nick"></div>
-      <div className="comment-timestamp"></div>
-      {isEditing ? (
+      <div className="comment-nick">닉네임: {comment.nickname}</div>
+      <div className="comment-timestamp">타임스탬프: {comment.createdAt}</div>
+      {isClicked ? (
         <CommentEdit
           comment={comment}
           setIsEditing={setIsEditing}
           commentEditCallback={commentEditCallback}
+          boardId={boardId}
+          commentContent={commentContent}
+          setIsClicked={setIsCliked}
         />
       ) : (
         <div>
-          <div className="comment-content"></div>
+          <div className="comment-content">내용: {comment.comment}</div>
           <div className="comment-button-wrapper">
-            <span>수정</span>
-            <span>삭제</span>
+            <span onClick={() => setIsCliked(true)}>[수정] </span>
+            <span onClick={deleteComment}>[삭제]</span>
           </div>
         </div>
       )}

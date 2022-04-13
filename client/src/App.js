@@ -31,8 +31,6 @@ function App() {
     nickname: '',
   });
 
-  const [boardId, setBoardId] = useState('');
-  // modalHandler
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
   };

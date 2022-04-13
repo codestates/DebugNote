@@ -52,7 +52,7 @@ const Pagination = ({ totalArticles, setCurrentPage }) => {
         <PageUl className="pagination">
           {/* 위에서 만들어진 페이지를 map으로 뿌리고, 
           클릭이벤트로 Main에서 받은 setter로 현재 페이지 상태값 변경*/}
-          {/* {pageNumbers.map(page => (
+          {pageNumbers.map(page => (
             <PageLi
               key={page}
               onClick={() => setCurrentPage(page)}
@@ -60,19 +60,7 @@ const Pagination = ({ totalArticles, setCurrentPage }) => {
             >
               <PageSpan className="page-link">{page}</PageSpan>
             </PageLi>
-          ))} */}
-          <PageLi>
-            <PageSpan>1</PageSpan>
-          </PageLi>
-          <PageLi>
-            <PageSpan>2</PageSpan>
-          </PageLi>
-          <PageLi>
-            <PageSpan>3</PageSpan>
-          </PageLi>
-          <PageLi>
-            <PageSpan>4</PageSpan>
-          </PageLi>
+          ))}
         </PageUl>
       </nav>
     </div>

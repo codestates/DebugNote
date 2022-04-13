@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
@@ -20,6 +20,8 @@ export default function Article({
   let { id } = useParams();
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
+  const [commentContent, setCommentContent] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
 
   const loadArticle = () => {
     axios
@@ -47,10 +49,6 @@ export default function Article({
       .catch(() => console.log);
   };
 
-  console.log('<Article /> 상세 조회중인 게시물 정보----->', currentArticle);
-  console.log('<Article /> 상세 조회중인 댓글 배열 정보----->', comments);
-  console.log('뷰어에서 볼 컨텐트 ------>', currentArticle.content);
-
   //* 삭제 핸들러
   const deleteArticle = () => {
     console.log('삭제 요청');
@@ -59,15 +57,19 @@ export default function Article({
       .then(response => {
         if (response.status === 200) {
           console.log('삭제 성공');
+          navigate('/');
         } else {
           console.log('삭제 실패');
         }
       })
       .catch(err => console.log(err));
   };
+
   // 댓글 수정 콜백
   const commentEditCallback = editedComment => {
-    const idx = comments.findindex(el => el.id === editedComment.id);
+    // console.log('이거 맞나', editedComment);
+    console.log('comments는 뭔데', comments);
+    const idx = comments.findIndex(el => el.id === editedComment.id);
 
     setComments([
       ...comments.slice(0, idx),
@@ -76,18 +78,53 @@ export default function Article({
     ]);
   };
 
-  // 댓글 작성
+  // 댓글 인풋 상태에 반영
+  const handleInputValue = e => {
+    setCommentContent(e.target.value);
+  };
+
+  // 댓글 제출
   const submitComment = () => {
-    // axios.
+    console.log('댓글요청');
+    axios
+      .post(
+        `http://15.164.104.171/comments/${id}`,
+        { comment: commentContent },
+        {
+          headers: { Accept: 'application/json' },
+        },
+      )
+      .then(resp => {
+        console.log('댓글 요청 완료 후', resp.data);
+        // 응답으로 작성한 댓글 정보가 온다
+        // textarea 내용을 지운다
+        setCommentContent('');
+        setIsEditing(false);
+        const { id, comment, createdAt, updatedAt } = resp.data.comment;
+        const commentObj = {
+          id,
+          comment,
+          createdAt,
+          updatedAt,
+          nickname: resp.data.nickname,
+        };
+
+        setComments([commentObj, ...comments]);
+      })
+      .catch(console.log);
   };
 
   const moveToEdit = () => {
     navigate('/edit');
   };
 
+  //!
   useEffect(() => {
     loadArticle();
   }, []);
+
+  console.log('<Article /> 상세 조회중인 댓글 배열', comments);
+  console.log('<Article /> props로 받은 currentArticle 상태: ', currentArticle);
 
   return (
     <div>
@@ -112,9 +149,13 @@ export default function Article({
         <h4>{comments.length}</h4>
         <section className="write-comments-wrapper">
           <div className="write-comment-wrapper">
-            <textarea placeholder="댓글을 작성하세요"></textarea>
+            <textarea
+              onChange={handleInputValue}
+              placeholder="댓글을 작성하세요"
+              value={commentContent}
+            ></textarea>
             <div>
-              <button onClick={''}>댓글 달기</button>
+              <button onClick={submitComment}>댓글 달기</button>
             </div>
           </div>
           <div className="comments-list-wrapper">
@@ -125,6 +166,11 @@ export default function Article({
                       key={comment.id}
                       comment={comment}
                       commentEditCallback={commentEditCallback}
+                      boardId={id}
+                      commentContent={commentContent}
+                      isEditing={isEditing}
+                      setIsEditing={setIsEditing}
+                      setComments={setComments}
                     />
                   ))
                 : null}
