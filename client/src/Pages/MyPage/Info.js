@@ -116,10 +116,6 @@ const Button = styled.button`
   }
 `;
 
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjQ5NjY1OTk0LCJleHAiOjE2NDk4Mzg3OTR9.yFKxQ5RMJhX7ELh8fdLDCKFoXy_vZt6FcyfVynoivHQ';
-axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
 axios.defaults.withCredentials = false;
 
 export default function Info() {
