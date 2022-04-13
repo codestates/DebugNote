@@ -11,44 +11,43 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 import axios from 'axios';
 
-export default function Write({ setCurrentArticle }) {
+export default function Edit({ currentArticle, setCurrentArticle }) {
+  console.log('/edit으로 내려준 게시글 정보', currentArticle);
+  // const [article, setArticle] = useState({
+  //   title: '',
+  //   content: '',
+  // });
   const editorRef = useRef();
   const navigate = useNavigate();
-  const [article, setArticle] = useState({
-    title: '',
-    content: '',
-  });
 
-  const onChangeIntroFunction = () => {
-    setArticle({
-      ...article,
+  //* 입력한 본문으로 전역 상태 값 변경
+  const changeContentInput = () => {
+    setCurrentArticle({
+      ...currentArticle,
       content: editorRef.current.getInstance().getMarkdown(),
     });
   };
-
-  const handleArticleInputValue = key => e => {
-    setArticle({ ...article, [key]: e.target.value });
+  //* 입력한 제목으로 전역 상태 값 변경
+  const handleTitleInput = e => {
+    setCurrentArticle({ ...currentArticle, title: e.target.value });
   };
 
   const handleSubmit = () => {
     axios
-      .post(
-        'http://15.164.104.171/boards',
+      .put(
+        `http://15.164.104.171/boards/${currentArticle.id}`,
         {
-          title: article.title,
-          content: article.content,
+          title: currentArticle.title,
+          content: currentArticle.content,
         },
         {
           headers: { Accept: 'application/json' },
-          // withCredentials: true,
         },
       )
       .then(resp => {
-        setCurrentArticle(article);
         console.log(resp.data);
-        //! 응답으로 board pk 받아야함 -> 백엔드에 추가 요청함 -> boardId 받음
-        //! 작성한 글 상세페이지로 이동
-        navigate(`/${resp.data.boardId}`);
+        //* 수정 전 조회중이던 게시글 상세페이지로 이동
+        navigate(`/${currentArticle.id}`);
       })
       .catch(console.log);
   };
@@ -56,24 +55,26 @@ export default function Write({ setCurrentArticle }) {
   return (
     <section className="wrtie">
       <div>
-        <textarea
+        <input
+          value={currentArticle.title}
           placeholder="제목을 입력하세요"
-          onChange={handleArticleInputValue('title')}
-        ></textarea>
+          onChange={handleTitleInput}
+        ></input>
       </div>
       <div>
         <Editor
+          initialValue={currentArticle.content}
           previewStyle="vertical"
           height="600px"
           initialEditType="markdown"
           useCommandShortcut={true}
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
-          onChange={onChangeIntroFunction}
+          onChange={changeContentInput}
           ref={editorRef}
         />
       </div>
       <button onClick={() => navigate(-1)}>나가기</button>
-      <button onClick={handleSubmit}>작성완료</button>
+      <button onClick={handleSubmit}>수정 완료</button>
     </section>
   );
 }

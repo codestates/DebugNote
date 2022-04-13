@@ -1,4 +1,4 @@
-import './App.css';
+import GlobalStyle from './GlobalStyle';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
@@ -12,12 +12,26 @@ import MypageLayout from './Pages/MyPage/MyPageLayout';
 import Logs from './Pages/MyPage/Logs';
 import Info from './Pages/MyPage/Info';
 import Bookmarks from './Pages/MyPage/Bookmarks';
+import Edit from './Pages/Article/Edit';
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
+  //* 로그인 후 받은 id
+  const [myId, setMyId] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [isMember, setIsMember] = useState(false);
+  // 컴포넌트가 렌더링된 후  불러온 게시물 10개
+  const [loadedArticles, setLoadedArticles] = useState([]);
+  // 상세 페이지에서 조회중인 게시글 제목, 본문 상태
+  const [currentArticle, setCurrentArticle] = useState({
+    id: '',
+    title: '',
+    content: '',
+    createdAt: '',
+    nickname: '',
+  });
 
+  const [boardId, setBoardId] = useState('');
   // modalHandler
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
@@ -30,6 +44,7 @@ function App() {
 
   // logoutHandler
   const logoutHandler = () => {
+    console.log('로그아웃 버튼 눌림');
     axios.post('http://15.164.104.171:80/auth/logout').then(response => {
       if (response.status === 200) {
         console.log('logout ok');
@@ -38,8 +53,15 @@ function App() {
     });
   };
 
+  console.log(
+    '<App /> 상세페이지 로드 후 끌어올린 게시물 상세 정보',
+    currentArticle,
+  );
+  console.log('myId->', myId);
+
   return (
     <BrowserRouter>
+      <GlobalStyle />
       <Navbar
         isLogin={isLogin}
         logoutHandler={logoutHandler}
@@ -47,12 +69,12 @@ function App() {
       >
         {isLogin ? (
           <ul className="loggedin-menu">
-            <li>
-              <Link to="mypage">마이페이지</Link>
-            </li>
-            <li>
-              <Link to="write">글쓰기</Link>
-            </li>
+            <Link to="mypage">
+              <li>마이페이지</li>
+            </Link>
+            <Link to="write">
+              <li>글쓰기</li>
+            </Link>
             <li onClick={logoutHandler}>로그아웃</li>
           </ul>
         ) : (
@@ -61,14 +83,37 @@ function App() {
       </Navbar>
       <Routes>
         <Route
-          path="/"
+          path="*"
           element={
             <Main
               isLogin={isLogin}
               setIsLogin={setIsLogin}
               logoutHandler={logoutHandler}
+              openLoginModalHandler={openLoginModalHandler}
               isOpen={isOpen}
               isMember={isMember}
+              loadedArticles={loadedArticles}
+              setLoadedArticles={setLoadedArticles}
+            />
+          }
+        />
+        <Route
+          path={':id'}
+          element={
+            <Article
+              currentArticle={currentArticle}
+              setCurrentArticle={setCurrentArticle}
+              myId={myId}
+              isLogin={isLogin}
+            />
+          }
+        />
+        <Route
+          path="edit"
+          element={
+            <Edit
+              currentArticle={currentArticle}
+              setCurrentArticle={setCurrentArticle}
             />
           }
         />
@@ -78,13 +123,19 @@ function App() {
             <MypageLayout isLogin={isLogin} logoutHandler={logoutHandler} />
           }
         >
-          <Route index element={<Logs />} />
-          <Route path="logs" element={<Logs />} />
+          <Route index element={<Info />} />
+          <Route path="logs/*" element={<Logs />} />
           <Route path="info" element={<Info />} />
-          <Route path="bookmarks" element={<Bookmarks />} />
+          <Route path="bookmarks/*" element={<Bookmarks />} />
         </Route>
-        <Route path="article" element={<Article />} />
-        <Route path="write" element={<Write />} />
+        <Route
+          path="write"
+          element={<Write setCurrentArticle={setCurrentArticle} />}
+        />
+        <Route
+          path="notfound"
+          element={<h1>404 Not Found - 게시물이 없습니다.</h1>}
+        />
       </Routes>
       {isOpen === true ? (
         <LoginModal
@@ -93,6 +144,7 @@ function App() {
           setIsLogin={setIsLogin}
           openLoginModalHandler={openLoginModalHandler}
           modalToggleHandler={modalToggleHandler}
+          setMyId={setMyId}
         />
       ) : null}
     </BrowserRouter>

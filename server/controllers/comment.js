@@ -1,3 +1,4 @@
+
 const Comment = require('../models/comment');
 const User = require('../models/user');
 const Sequelize = require('sequelize');
@@ -14,6 +15,7 @@ module.exports = {
       BoardId: id,
       comment: comment,
     });
+
     const nickname = await newComment.getUser({ attributes: ['nickname'] });
     // console.log(nickname.nickname);
     res.status(200).json({
@@ -21,6 +23,7 @@ module.exports = {
       nickname: nickname.nickname,
       message: '댓글을 추가했습니다.',
     });
+
   },
   get: async (req, res) => {},
   put: async (req, res) => {

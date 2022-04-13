@@ -1,9 +1,48 @@
 import { useState } from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
+
+const SearchSection = styled.div`
+  border: 1px solid pink;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > select {
+    width: 6rem;
+    height: 2rem;
+    padding: 0.4rem;
+  }
+  > .input-icon-wrapper {
+    margin-left: 40px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    width: 50%;
+    height: 2.7rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    &:focus {
+      border: 1px solid #a3cca3;
+    }
+    > input {
+      border: none;
+      width: 85%;
+      height: 85%;
+      margin-right: 1rem;
+      &:focus {
+        outline: none;
+      }
+    }
+    > div {
+      font-size: 1.5rem;
+      color: #a3cca3;
+    }
+  }
+`;
 
 export default function Searchbar({
-  setCurrentArticle,
-  pageQuery,
+  currentPage,
+  setLoadedArticles,
   setTotalArticles,
 }) {
   //검색 옵션 상태 관리
@@ -23,9 +62,9 @@ export default function Searchbar({
     if (searchKeyword === '') return;
     let endpoint;
     if (searchOption === '제목') {
-      endpoint = `http://15.164.104.171:80/search?titles=${searchKeyword}&search_type=titles`;
+      endpoint = `http://15.164.104.171:80/search?titles=${searchKeyword}&search_type=titles&pages=${currentPage}&limit=10`;
     } else {
-      endpoint = `http://15.164.104.171:80/search?contents=${searchKeyword}&search_type=contents`;
+      endpoint = `http://15.164.104.171:80/search?contents=${searchKeyword}&search_type=contents&pages=${currentPage}&limit=10`;
     }
 
     //검색창 비우기
@@ -39,17 +78,18 @@ export default function Searchbar({
       .then(response => {
         if (response.status === 201) {
           //서버에 요청 보내기 성공하여 데이터를 잘 받아옴.
-          setCurrentArticle(response.data.findBoard);
+          setLoadedArticles(response.data.findBoard.rows);
+          setTotalArticles(response.data.findBoard.count);
         } else {
           //서버에 요청 보내기 실패하였음. 검색결과 없다고 할것
           console.log('검색결과없음');
-          setCurrentArticle([]);
+          setLoadedArticles([]);
         }
       })
       .catch(error => {
         //검색결과없음
         console.log(error, '에러 내용');
-        setCurrentArticle([]);
+        setLoadedArticles([]);
       });
   };
 
@@ -66,12 +106,12 @@ export default function Searchbar({
   };
 
   return (
-    <section className="search">
+    <SearchSection>
       <select onChange={optionChangeHandler}>
         <option value="제목">제목</option>
         <option value="내용">내용</option>
       </select>
-      <div>
+      <div className="input-icon-wrapper">
         <input
           placehoder="검색어를 입력하세요"
           type="text"
@@ -83,6 +123,6 @@ export default function Searchbar({
           <i className="fa-solid fa-magnifying-glass"></i>
         </div>
       </div>
-    </section>
+    </SearchSection>
   );
 }
