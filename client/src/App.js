@@ -1,4 +1,4 @@
-// import GlobalStyle from './GlobalStyle';
+import GlobalStyle from './GlobalStyle';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
@@ -13,9 +13,6 @@ import Logs from './Pages/MyPage/Logs';
 import Info from './Pages/MyPage/Info';
 import Bookmarks from './Pages/MyPage/Bookmarks';
 import Edit from './Pages/Article/Edit';
-//메뉴바 권한을 위한 쿠키
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
 
 function App() {
   //* 로그인 후 받은 id
@@ -49,7 +46,7 @@ function App() {
     axios.post('http://15.164.104.171:80/auth/logout').then(response => {
       if (response.status === 200) {
         console.log('logout ok');
-        cookies.remove('accToken');
+
         setIsLogin(!isLogin);
       }
     });
@@ -63,13 +60,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* <GlobalStyle /> */}
+      <GlobalStyle />
       <Navbar
         isLogin={isLogin}
         logoutHandler={logoutHandler}
         openLoginModalHandler={openLoginModalHandler}
       >
-        {cookies.get('accToken') ? (
+        {isLogin ? (
           <ul className="loggedin-menu">
             <Link to="mypage">
               <li>마이페이지</li>
@@ -115,6 +112,7 @@ function App() {
             <Edit
               currentArticle={currentArticle}
               setCurrentArticle={setCurrentArticle}
+              isLogin={isLogin}
             />
           }
         />
@@ -124,14 +122,16 @@ function App() {
             <MypageLayout isLogin={isLogin} logoutHandler={logoutHandler} />
           }
         >
-          <Route index element={<Info />} />
-          <Route path="info" element={<Info />} />
-          <Route path="logs/*" element={<Logs />} />
-          <Route path="bookmarks/*" element={<Bookmarks />} />
+          <Route index element={<Info />} isLogin={isLogin} />
+          <Route path="info" element={<Info />} isLogin={isLogin} />
+          <Route path="logs/*" element={<Logs />} isLogin={isLogin} />
+          <Route path="bookmarks/*" element={<Bookmarks />} isLogin={isLogin} />
         </Route>
         <Route
           path="write"
-          element={<Write setCurrentArticle={setCurrentArticle} />}
+          element={
+            <Write setCurrentArticle={setCurrentArticle} isLogin={isLogin} />
+          }
         />
         <Route
           path="notfound"

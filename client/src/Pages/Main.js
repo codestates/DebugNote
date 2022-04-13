@@ -7,6 +7,15 @@ import FailIndicator from '../Components/FailIndicator';
 import ErrorLog from '../Components/ErrorLog';
 //* practice
 import Pagination from '../Components/Pagination';
+import styled from 'styled-components';
+
+const Box = styled.div`
+  border: 1px solid red;
+  /* padding: 1.5rem 1.5rem 0rem 1.5rem; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 export default function Main({
   isLogin,
@@ -57,7 +66,7 @@ export default function Main({
   }, [currentPage]);
 
   return (
-    <div className="main-content">
+    <Box className="main-content">
       <Searchbar
         setLoadedArticles={setLoadedArticles}
         setTotalArticles={setTotalArticles}
@@ -80,6 +89,6 @@ export default function Main({
           setCurrentPage={setCurrentPage}
         ></Pagination>
       </section>
-    </div>
+    </Box>
   );
 }

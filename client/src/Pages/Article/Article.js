@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Cookies } from 'react-cookie';
-
 import { useParams, useNavigate } from 'react-router-dom';
-
-
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
@@ -14,11 +10,6 @@ import 'prismjs/themes/prism.css';
 
 import Comment from '../../Components/Comment';
 
-const cookies = new Cookies();
-
-axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
-  'accToken',
-)}`;
 
 export default function Article({
   currentArticle,
@@ -33,6 +24,7 @@ export default function Article({
   let [bookmarks, setBookmarks] = useState(null);
 
   const loadArticle = () => {
+    console.log('게시물 불러온다.');
     axios
       .get(`http://15.164.104.171/boards/${id}`, {
         headers: { Accept: 'application/json' },
@@ -44,14 +36,18 @@ export default function Article({
         if (resp.status === 200) {
           console.log('axios');
           const { id, title, content, createdAt, nickname } = resp.data.board;
+          console.log('1');
           const { comment } = resp.data;
+          console.log('2');
           const { Bookmark } = resp.data;
+          console.log('3');
+          console.log(Bookmark)
 
-          if (Bookmark !== null) {
-            // console.log('ㅎㅎ')
+          if (Bookmark !== undefined ) {
+            console.log('ㅎㅎ')
             setBookmarks(Bookmark.BoardId);
           }
-
+          console.log('51번째')
           setCurrentArticle({
             id,
             title,
@@ -88,10 +84,8 @@ export default function Article({
 
   // 댓글 수정 콜백
   const commentEditCallback = editedComment => {
-
     // console.log('이거 맞나', editedComment);
     console.log('comments는 뭔데', comments);
-
     const idx = comments.findIndex(el => el.id === editedComment.id);
 
     setComments([
@@ -104,13 +98,6 @@ export default function Article({
   const handleInputValue = e => {
     setCommentContent(e.target.value);
   };
-
-
-  // 댓글 인풋 상태에 반영
-  const handleInputValue = e => {
-    setCommentContent(e.target.value);
-  };
-
 
   // 댓글 제출
   const submitComment = () => {
@@ -198,7 +185,7 @@ export default function Article({
           <span>{currentArticle.createdAt}</span>
         </div>
 
-        {cookies.get('accToken') ? (
+        {isLogin ? (
           <div className="article-modify-button-wrapper">
             <div onClick={moveToEdit}>수정</div>
             <button onClick={deleteArticle}>삭제</button>{' '}
@@ -212,21 +199,28 @@ export default function Article({
             height={'600px'}
           />
         </div>
-
+      
         <h4>{comments.length}</h4>
         <section className="write-comments-wrapper">
           <div className="write-comment-wrapper">
-            <textarea
-              placeholder="댓글을 작성하세요"
-              onChange={handleInputValue}
-              value={commentContent}
-            ></textarea>
-            <div>
-              <button onClick={submitComment}>댓글 달기</button>
-            </div>
+              { 
+              isLogin
+              ? <>
+                  <textarea
+                    placeholder="댓글을 작성하세요"
+                    onChange={handleInputValue}
+                    value={commentContent}
+                  ></textarea>
+                  <div>
+                    <button onClick={submitComment}>댓글 달기</button>
+                  </div>
+                </>
+              : null
+            }
           </div>
           <div className="comments-list-wrapper">
             <div className="comments-list">
+    
               {comments.length !== 0
                 ? comments.map(comment => (
                     <Comment
@@ -236,6 +230,7 @@ export default function Article({
                       boardId={id}
                       commentContent={commentContent}
                       setComments={setComments}
+                      isLogin={isLogin}
                     />
                   ))
                 : null}

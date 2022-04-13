@@ -8,12 +8,6 @@ import FailIndicator from '../../Components/FailIndicator';
 import Article from '../Article/Article';
 
 import styled from 'styled-components';
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
-
-axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
-  'accToken',
-)}`;
 
 const Box = styled.div`
   height: 100%;
@@ -38,7 +32,7 @@ const Section = styled.section`
   }
 `;
 
-export default function Bookmarks() {
+export default function Bookmarks({isLogin}) {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
@@ -73,7 +67,7 @@ export default function Bookmarks() {
     setIsLoading(false);
   }, []);
 
-  return cookies.get('accToken') ? (
+  return isLogin ? (
     <Box>
       <Routes>
         <Route path="/:id" element={<Article />} />
