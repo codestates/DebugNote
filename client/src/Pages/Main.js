@@ -58,7 +58,11 @@ export default function Main({
 
   return (
     <div className="main-content">
-      <Searchbar setLoadedArticles={setLoadedArticles} />
+      <Searchbar
+        setLoadedArticles={setLoadedArticles}
+        setTotalArticles={setTotalArticles}
+        currentPage={currentPage}
+      />
       <section className="articles">
         <div className="main-errlog-list-title">최신순</div>
         {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
