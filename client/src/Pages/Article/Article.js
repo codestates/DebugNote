@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
+
+import { useParams, useNavigate } from 'react-router-dom';
+
 
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Viewer } from '@toast-ui/react-editor';
@@ -10,6 +13,12 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
 import Comment from '../../Components/Comment';
+
+const cookies = new Cookies();
+
+axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
+  'accToken',
+)}`;
 
 export default function Article({
   currentArticle,
@@ -22,6 +31,7 @@ export default function Article({
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState('');
   let [bookmarks, setBookmarks] = useState(null);
+
   const loadArticle = () => {
     axios
       .get(`http://15.164.104.171/boards/${id}`, {
@@ -68,14 +78,20 @@ export default function Article({
       .then(response => {
         if (response.status === 200) {
           console.log('삭제 성공');
+          navigate('/');
         } else {
           console.log('삭제 실패');
         }
       })
       .catch(err => console.log(err));
   };
+
   // 댓글 수정 콜백
   const commentEditCallback = editedComment => {
+
+    // console.log('이거 맞나', editedComment);
+    console.log('comments는 뭔데', comments);
+
     const idx = comments.findIndex(el => el.id === editedComment.id);
 
     setComments([
@@ -88,6 +104,13 @@ export default function Article({
   const handleInputValue = e => {
     setCommentContent(e.target.value);
   };
+
+
+  // 댓글 인풋 상태에 반영
+  const handleInputValue = e => {
+    setCommentContent(e.target.value);
+  };
+
 
   // 댓글 제출
   const submitComment = () => {
@@ -123,9 +146,13 @@ export default function Article({
     navigate('/edit');
   };
 
+  //!
   useEffect(() => {
     loadArticle();
   }, []);
+
+  console.log('<Article /> 상세 조회중인 댓글 배열', comments);
+  console.log('<Article /> props로 받은 currentArticle 상태: ', currentArticle);
 
   const addBookmark = () => {
     axios
@@ -170,10 +197,14 @@ export default function Article({
           <span>{currentArticle.nickname}</span>
           <span>{currentArticle.createdAt}</span>
         </div>
-        <div className="article-modify-button-wrapper">
-          <div onClick={moveToEdit}>수정</div>
-          <button onClick={deleteArticle}>삭제</button>
-        </div>
+
+        {cookies.get('accToken') ? (
+          <div className="article-modify-button-wrapper">
+            <div onClick={moveToEdit}>수정</div>
+            <button onClick={deleteArticle}>삭제</button>{' '}
+          </div>
+        ) : null}
+
         <div className="viewer-wraper">
           <Viewer
             initialValue={currentArticle.content}

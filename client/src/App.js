@@ -13,6 +13,9 @@ import Logs from './Pages/MyPage/Logs';
 import Info from './Pages/MyPage/Info';
 import Bookmarks from './Pages/MyPage/Bookmarks';
 import Edit from './Pages/Article/Edit';
+//메뉴바 권한을 위한 쿠키
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 function App() {
   //* 로그인 후 받은 id
@@ -31,8 +34,6 @@ function App() {
     nickname: '',
   });
 
-  const [boardId, setBoardId] = useState('');
-  // modalHandler
   const openLoginModalHandler = () => {
     setIsOpen(!isOpen);
   };
@@ -48,6 +49,7 @@ function App() {
     axios.post('http://15.164.104.171:80/auth/logout').then(response => {
       if (response.status === 200) {
         console.log('logout ok');
+        cookies.remove('accToken');
         setIsLogin(!isLogin);
       }
     });
@@ -67,7 +69,7 @@ function App() {
         logoutHandler={logoutHandler}
         openLoginModalHandler={openLoginModalHandler}
       >
-        {isLogin ? (
+        {cookies.get('accToken') ? (
           <ul className="loggedin-menu">
             <Link to="mypage">
               <li>마이페이지</li>
@@ -88,7 +90,6 @@ function App() {
             <Main
               isLogin={isLogin}
               setIsLogin={setIsLogin}
-              logoutHandler={logoutHandler}
               openLoginModalHandler={openLoginModalHandler}
               isOpen={isOpen}
               isMember={isMember}
@@ -124,8 +125,8 @@ function App() {
           }
         >
           <Route index element={<Info />} />
-          <Route path="logs/*" element={<Logs />} />
           <Route path="info" element={<Info />} />
+          <Route path="logs/*" element={<Logs />} />
           <Route path="bookmarks/*" element={<Bookmarks />} />
         </Route>
         <Route

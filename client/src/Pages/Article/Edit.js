@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 
@@ -10,6 +10,13 @@ import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 import axios from 'axios';
+
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
+
+axios.defaults.headers.common['Authorization'] = `Bearer ${cookies.get(
+  'accToken',
+)}`;
 
 export default function Edit({ currentArticle, setCurrentArticle }) {
   console.log('/edit으로 내려준 게시글 정보', currentArticle);
@@ -52,7 +59,7 @@ export default function Edit({ currentArticle, setCurrentArticle }) {
       .catch(console.log);
   };
 
-  return (
+  return cookies.get('accToken') ? (
     <section className="wrtie">
       <div>
         <input
@@ -76,5 +83,7 @@ export default function Edit({ currentArticle, setCurrentArticle }) {
       <button onClick={() => navigate(-1)}>나가기</button>
       <button onClick={handleSubmit}>수정 완료</button>
     </section>
+  ) : (
+    <Navigate to="/" />
   );
 }

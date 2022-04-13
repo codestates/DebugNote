@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 axios.defaults.withCredentials = true;
 
@@ -36,10 +38,14 @@ export default function SigninForm({
       .then(response => {
         console.log('$$$$$$$로그인 응답--->', response.data.id);
         if (response.status === 201) {
+          //이후의 모든 요청에 이 헤더 적용된다.
           axios.defaults.headers.common[
             'Authorization'
           ] = `Bearer ${response.data.accToken}`;
+
           setIsLogin(!isLogin);
+          //쿠키 저장
+          cookies.set('accToken', response.data.accToken, { maxAge: 21600 }); // 6시간.
           //모달 창 닫기
           openLoginModalHandler();
           setMyId(`${response.data.id}`);

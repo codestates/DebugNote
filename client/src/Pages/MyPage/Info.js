@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   idValidator,
@@ -9,6 +10,9 @@ import {
   selectValidator,
 } from '../../Utils/validator';
 import styled from 'styled-components';
+
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 const Box = styled.div`
   height: 100%;
@@ -229,7 +233,7 @@ export default function Info() {
       });
   };
 
-  return (
+  return cookies.get('accToken') ? (
     <Box>
       <h2>회원정보</h2>
       <InfoSection>
@@ -321,5 +325,7 @@ export default function Info() {
         <Button onClick={withdrawalHanlder}>회원탈퇴</Button>
       </Btnsection>
     </Box>
+  ) : (
+    <Navigate to="/" />
   );
 }

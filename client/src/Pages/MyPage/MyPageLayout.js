@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import './MyPageLayout.css';
 import '../../App.css';
 import Tab from '../../Components/Tab';
@@ -12,5 +12,5 @@ export default function MyPageLayout() {
         </section>
       </section>
     </div>
-  );
+  )
 }
