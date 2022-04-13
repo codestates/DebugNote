@@ -9,7 +9,6 @@ const { sequelize } = require('./models');
 dotenv.config();
 const app = express();
 
-
 // 데이터베이스 연결
 sequelize
   .sync({ force: false })
@@ -28,11 +27,7 @@ const corsOption = {
   // withcredentials: true, // allow the Access-Control-Allow-Credentials
 };
 
-
-
-
 app.use(cors(corsOption));
-
 // app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json({}));
 app.use(
@@ -45,7 +40,13 @@ app.use(helmet());
 
 app.use(morgan('dev'));
 
+
 app.use('/', indexRouter);
+
+// http://15.164.104.171/
+app.get('/api', (req, res) => {
+  res.send('debugNote API')
+})
 
 // 지원하지 않는 api
 app.use((req, res, next) => {

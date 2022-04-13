@@ -16,11 +16,13 @@ export default function Article({
   setCurrentArticle,
   currentArticleCallback,
   myId,
+  isLogin,
 }) {
   let { id } = useParams();
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState('');
+  let [bookmarks, setBookmarks] = useState(null);
 
   const loadArticle = () => {
     axios
@@ -32,8 +34,14 @@ export default function Article({
         // console.log('댓글 노테이션 맞니', resp.data.comment);
 
         if (resp.status === 200) {
+          console.log('axios');
           const { id, title, content, createdAt, nickname } = resp.data.board;
           const { comment } = resp.data;
+          const { BoardId } = resp.data.bookmark;
+
+          if (BoardId == id) {
+            setBookmarks(resp.data.bookmark.boardId);
+          }
 
           setCurrentArticle({
             id,
@@ -47,6 +55,10 @@ export default function Article({
       })
       .catch(() => console.log);
   };
+
+  console.log('<Article /> 상세 조회중인 게시물 정보----->', currentArticle);
+  console.log('<Article /> 상세 조회중인 댓글 배열 정보----->', comments);
+  // console.log('뷰어에서 볼 컨텐트 ------>', currentArticle.content);
 
   //* 삭제 핸들러
   const deleteArticle = () => {
@@ -124,8 +136,43 @@ export default function Article({
   console.log('<Article /> 상세 조회중인 댓글 배열', comments);
   console.log('<Article /> props로 받은 currentArticle 상태: ', currentArticle);
 
+  const addBookmark = () => {
+    axios
+      .post(`http://15.164.104.171/bookmarks/${id}`)
+      .then(response => {
+        if (response.status === 203) {
+          alert('북마크 추가했습니다');
+          setBookmarks(1);
+        } else {
+          console.log('북마크 추가 실패');
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
+  const deleteBookmark = () => {
+    axios
+      .delete(`http://15.164.104.171/bookmarks/${id}`)
+      .then(response => {
+        if (response.status === 200) {
+          alert('북마크 삭제했습니다');
+          setBookmarks(null);
+        } else {
+          console.log('북마크 취소 실패');
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <div>
+      {isLogin === true ? (
+        bookmarks === null ? (
+          <button onClick={addBookmark}>북마크하기</button>
+        ) : (
+          <button onClick={deleteBookmark}>북마크취소</button>
+        )
+      ) : null}
       <section className="article-wrapper">
         <h2>{currentArticle.title}</h2>
         <div className="article-info">

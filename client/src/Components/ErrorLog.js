@@ -53,9 +53,10 @@ const Title = styled.div`
 
 //* 게시물 각각 pk 값으로 뿌려줬기 때문에 그 pk로 상세 요청 가능
 export default function ErrorLog({ article }) {
+  console.log(article, '게시글');
   return (
     <Article className="errlog">
-      <Link to={`${article.id}`}>
+      <Link to={`/${article.id}`}>
         <Icon>
           <div>
             <i className="fa-solid fa-bookmark"></i>

@@ -45,7 +45,7 @@ const Pagination = ({ totalArticles, setCurrentPage }) => {
   for (let i = 1; i <= Math.ceil(totalArticles / 10); i++) {
     pageNumbers.push(i);
   }
-
+  console.log(pageNumbers);
   return (
     <div>
       <nav>

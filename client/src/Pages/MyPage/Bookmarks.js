@@ -49,8 +49,9 @@ export default function Bookmarks() {
       .then(response => {
         console.log('axios 요청', response.data.boards);
         if (response.status === 200) {
-          setCurrentArticle(response.data.boards.rows);
+          setCurrentArticle(response.data.boards.rows[0].Boards);
           setTotalArticles(response.data.boards.count);
+          //console.log(response.data.boards.rows[0].Boards, '응답');
         } else {
           console.log('게시물부르기실패');
         }
@@ -59,11 +60,13 @@ export default function Bookmarks() {
         console.log('게시글 못받음');
       });
   };
+
   useEffect(() => {
     setIsLoading(true);
     paginationHandler(currentPage);
     setIsLoading(false);
-  }, [currentPage]);
+  }, []);
+
   return (
     <Box>
       <Routes>
@@ -84,7 +87,7 @@ export default function Bookmarks() {
               )}
               <Pagination
                 totalArticles={totalArticles}
-                paginate={setCurrentPage}
+                setCurrentPage={setCurrentPage}
               ></Pagination>
             </Section>
           }
