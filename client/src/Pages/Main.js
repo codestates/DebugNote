@@ -1,4 +1,3 @@
-import './Main.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Searchbar from '../Components/Searchbar';
@@ -10,11 +9,16 @@ import Pagination from '../Components/Pagination';
 import styled from 'styled-components';
 
 const Box = styled.div`
-  border: 1px solid red;
-  /* padding: 1.5rem 1.5rem 0rem 1.5rem; */
   display: flex;
   flex-direction: column;
   align-items: center;
+  >.articles{
+    padding-top:1rem;
+    width: 100%;
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+  }
 `;
 
 export default function Main({
@@ -73,7 +77,6 @@ export default function Main({
         currentPage={currentPage}
       />
       <section className="articles">
-        <div className="main-errlog-list-title">최신순</div>
         {/*useEffect을 통해 전체 게시글을 보여줄 부분*/}
         {isLoading ? (
           <LoadingIndicator />

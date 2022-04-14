@@ -19,7 +19,7 @@ function App() {
   const [myId, setMyId] = useState('');
   const [isLogin, setIsLogin] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [isMember, setIsMember] = useState(false);
+  const [isMember, setIsMember] = useState(true);
   // 컴포넌트가 렌더링된 후  불러온 게시물 10개
   const [loadedArticles, setLoadedArticles] = useState([]);
   // 상세 페이지에서 조회중인 게시글 제목, 본문 상태
@@ -35,9 +35,9 @@ function App() {
     setIsOpen(!isOpen);
   };
 
-  const modalToggleHandler = () => {
+  const modalToggleHandler = value => {
     console.log('modal토글 함수 작동');
-    setIsMember(!isMember);
+    setIsMember(value);
   };
 
   // logoutHandler
@@ -45,9 +45,9 @@ function App() {
     console.log('로그아웃 버튼 눌림');
     axios.post('http://15.164.104.171:80/auth/logout').then(response => {
       if (response.status === 200) {
-        console.log('logout ok');
-
+        axios.defaults.headers.common['Authorization'] = '';
         setIsLogin(!isLogin);
+        alert('로그아웃 되었습니다');
       }
     });
   };
@@ -122,8 +122,16 @@ function App() {
             <MypageLayout isLogin={isLogin} logoutHandler={logoutHandler} />
           }
         >
-          <Route index element={<Info />} isLogin={isLogin} />
-          <Route path="info" element={<Info />} isLogin={isLogin} />
+          <Route
+            index
+            element={<Info myId={myId} setMyId={setMyId} />}
+            isLogin={isLogin}
+          />
+          <Route
+            path="info"
+            element={<Info myId={myId} setMyId={setMyId} />}
+            setIsLogin={setIsLogin}
+          />
           <Route path="logs/*" element={<Logs />} isLogin={isLogin} />
           <Route path="bookmarks/*" element={<Bookmarks />} isLogin={isLogin} />
         </Route>
@@ -146,6 +154,7 @@ function App() {
           openLoginModalHandler={openLoginModalHandler}
           modalToggleHandler={modalToggleHandler}
           setMyId={setMyId}
+          myId={myId}
         />
       ) : null}
     </BrowserRouter>

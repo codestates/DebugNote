@@ -1,6 +1,6 @@
-import styled from 'styled-components';
 import SigninForm from './SigninForm';
 import SignupForm from './SignupForm';
+import styled from 'styled-components';
 
 export const ModalBackdrop = styled.div`
   position: fixed; //전체화면에 깔리도록..
@@ -14,38 +14,52 @@ export const ModalBackdrop = styled.div`
   place-items: center; // 배경 가운데 오는 아이템을 가운데 오도록 만드는 속성
 `;
 
-export const ModalContainer = styled.div`
-  height: 15rem;
-  text-align: center;
-  margin: 120px auto;
-`;
-
-export const ModalBtn = styled.button`
-  background-color: #4000c7;
-  text-decoration: none;
-  border: none;
-  padding: 20px;
-  color: white;
-  border-radius: 30px;
-  cursor: grab;
-`;
-
 export const ModalView = styled.div.attrs(props => ({
   // attrs 메소드를 이용해서 아래와 같이 div 엘리먼트에 속성을 추가할 수 있습니다.
   role: 'dialog',
 }))`
-  border-radius: 10px;
   background-color: #ffffff;
-  width: 350px;
-  height: 600px;
+  width: 530px;
+  height: 650px;
+  align-items: center;
+  padding: 1.5rem 1.5rem;
   justify-content: center;
-  > span.close-btn {
-    margin-top: 5px;
+  padding: 0.5rem 1rem;
+  > div.close-btn {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 2rem;
     cursor: pointer;
   }
-  > div.desc {
-    margin-top: 25px;
-    color: #4000c7;
+  > section {
+    width: 100%;
+    height: 95%;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    > .signupform {
+      > h2 {
+        margin-bottom: 1rem;
+      }
+      width: 95%;
+      height: 75%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      > .ismember {
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
+      > .guide {
+        width: 85%;
+        display: flex;
+        justify-content: flex-end;
+        font-size: 0.6rem;
+      }
+    }
   }
 `;
 
@@ -56,29 +70,31 @@ export default function LoginModal({
   isLogin,
   setIsLogin,
   setMyId,
+  myId,
 }) {
   return (
     <ModalBackdrop onClick={openLoginModalHandler}>
       <ModalView onClick={e => e.stopPropagation()}>
         <div onClick={openLoginModalHandler} className="close-btn">
-          &times;
+          <i className="fa-solid fa-xmark"></i>
         </div>
-        <section>
-          {isMember ? (
-            <SignupForm
-              modalToggleHandler={modalToggleHandler}
-              openLoginModalHandler={openLoginModalHandler}
-            />
-          ) : (
-            <SigninForm
-              modalToggleHandler={modalToggleHandler}
-              openLoginModalHandler={openLoginModalHandler}
-              isLogin={isLogin}
-              setIsLogin={setIsLogin}
-              setMyId={setMyId}
-            />
-          )}
-        </section>
+        {isMember ? (
+          <SigninForm
+            modalToggleHandler={modalToggleHandler}
+            openLoginModalHandler={openLoginModalHandler}
+            isLogin={isLogin}
+            setIsLogin={setIsLogin}
+            setMyId={setMyId}
+            myId={myId}
+          />
+        ) : (
+          <SignupForm
+            modalToggleHandler={modalToggleHandler}
+            openLoginModalHandler={openLoginModalHandler}
+            setMyId={setMyId}
+            myId={myId}
+          />
+        )}
       </ModalView>
     </ModalBackdrop>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {
   idValidator,
@@ -44,9 +44,13 @@ const Important = styled.section`
 
 const Namebox = styled.section`
   display: flex;
-  justify-content: space-around;
-  width: 45%;
-  padding: 0 0.4rem;
+  justify-content: space-between;
+  width: 500px;
+  /* padding: 0 0.4rem; */
+  margin-bottom: 0.4rem;
+  > div {
+    width: 48%;
+  }
 `;
 
 const Legend = styled.h5`
@@ -57,7 +61,7 @@ const Infobox = styled.div`
   margin: 0.5rem 0;
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
+  align-items: flex-start;
 `;
 
 const Input = styled.input`
@@ -72,8 +76,9 @@ const Input = styled.input`
 
 const Name = styled.input`
   margin-top: 0.3rem;
+  /* margin-left: 0.5rem; */
   height: 35px;
-  width: 240px;
+  width: 100%;
   padding: 0rem 0.4rem;
   border: 1px solid #cccccc;
   border-radius: 3px;
@@ -111,7 +116,7 @@ const Button = styled.button`
   background-color: #a3cca3;
   width: 32rem;
   height: 2rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.7rem;
   &:hover {
     background-color: #82a382;
   }
@@ -119,7 +124,7 @@ const Button = styled.button`
 
 axios.defaults.withCredentials = false;
 
-export default function Info({isLogin}) {
+export default function Info({ setIsLogin, myId, setMyId }) {
   const [changeInfo, setChangeInfo] = useState({
     email: '',
     password: '',
@@ -146,7 +151,7 @@ export default function Info({isLogin}) {
       })
       .catch(error => {
         console.log(error);
-        console.log('회원정보 불러오기 실패');
+        alert('회원정보를 불러오지 못했습니다');
       });
   }, []);
 
@@ -168,6 +173,7 @@ export default function Info({isLogin}) {
       job === ''
     ) {
       //모달 창 띄워주면 더 좋고.
+      alert('회원정보 수정 실패하였습니다. 입력하신 정보를 다시 확인해주세요.');
       return;
     }
     axios
@@ -189,11 +195,11 @@ export default function Info({isLogin}) {
       .then(response => {
         if (response.status === 200) {
           //정보 수정 성공: 성공했다고 메세지만 보내줌: 데이터없음
-          console.log('수정 성공했습니다');
+          alert('회원정보 수정 성공했습니다.');
           //성공했다고 모달 창 띄워주기
         } else {
           //정보 수정 실패
-          console.log('수정 실패했습니다');
+          alert('회원정보 수정 실패했습니다.');
           //수정에 실패했다고 모달 창 띄워주기
         }
       })
@@ -202,35 +208,38 @@ export default function Info({isLogin}) {
         console.log('수정 실패했습니다');
       });
   };
+
+  console.log(myId, '회원탈퇴 시 전달되는 pk값: 탈퇴요청 전');
   //탈퇴 처리
   const withdrawalHanlder = () => {
     console.log('회원탈퇴요청');
     //정말로 탈퇴할 건지 물어보는 모달 창 필요
     //조건 묻지 않고 탈퇴 처리
     //파라미터는 테이블의 pk값으로 하여 보낸다! 모든 인증절차 보내는 요청은 pk값을 필요로한다.:추후 논의예정
-
+    const userId = myId;
+    console.log(myId, '회원탈퇴 시 전달되는 pk값');
     axios
-      .delete(`http://15.164.104.171:80/users`, {
+      .delete(`http://15.164.104.171:80/auth/${userId}`, {
         headers: { accept: 'application/json' },
       })
       .then(response => {
         if (response.status === 204) {
           //탈퇴 잘 됨
-          console.log('탈퇴되었습니다');
+          setMyId('');
+          setIsLogin(false);
+          axios.defaults.headers.common['Authorization'] = '';
+          alert('탈퇴되었습니다');
           //탈퇴 잘 되었다고 모달 창 띄워주기
-        } else {
-          //탈퇴 실패
-          console.log('탈퇴 실패했습니다');
-          //탈퇴 실패 모달 창 띄우기
+          //리디렉션
         }
       })
       .catch(() => {
         //탈퇴에 실패했다고 모달 창 띄워주기
-        console.log('탈퇴 실패했습니다');
+        alert('탈퇴 실패했습니다');
       });
   };
 
-  return isLogin ? (
+  return (
     <Box>
       <h2>회원정보</h2>
       <InfoSection>
@@ -319,10 +328,10 @@ export default function Info({isLogin}) {
       </InfoSection>
       <Btnsection className="userBtn">
         <Button onClick={infoChangeHandler}>수정</Button>
-        <Button onClick={withdrawalHanlder}>회원탈퇴</Button>
+        <Link to="/">
+          <Button onClick={withdrawalHanlder}>회원탈퇴</Button>
+        </Link>
       </Btnsection>
     </Box>
-  ) : (
-    <Navigate to="/" />
   );
 }
