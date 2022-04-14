@@ -42,8 +42,20 @@ export default function Comment({
   setIsEditing,
   setComments,
   isLogin,
+  myId,
+  commentUserId,
 }) {
   console.log('<Comment /> props로 내려받은 댓글 상세 정보', comment);
+  console.log(
+    '<Comment /> 유저 아이디와 댓글 작성자 아이디 비교',
+    '#댓글',
+    comment.id,
+    '#로그인 pk',
+    myId,
+    '#댓글작성자',
+    comment.userId,
+    comment.userId === myId,
+  );
   const [isClicked, setIsCliked] = useState(false);
   // const navigate = useNavigate();
   const id = boardId;
@@ -64,17 +76,11 @@ export default function Comment({
         data: { commentId: comment.id },
       })
       .then(response => {
-        if (response.status === 400) {
-          console.log('삭제 요청완료');
-          return alert('다른 사람의 글은 삭제할 수 없습니다.');
-        } else {
-          setComments(response.data.comment);
-          alert('삭제되었습니다');
-        }
-
+        setComments(response.data.comment);
+        alert('삭제되었습니다');
         // 삭제된 댓글 제외한 모든 댓글 응답으로 옴
       })
-      .catch(err => console.log(err));
+      .catch(() => alert('다른 사람의 댓글은 삭제할 수 없습니다'));
   };
 
   const parsedDate = new Date(comment.createdAt).toLocaleDateString('ko-kr');
@@ -84,7 +90,8 @@ export default function Comment({
         <div className="comment-nick">{comment.nickname}</div>
         <div className="comment-timestamp">{parsedDate}</div>
       </section>
-      {isClicked ? (
+      {/*클릭되었고, 현재 사용자의 아이디와 일치하는 경우에만 열리도록.*/}
+      {isClicked && comment.userId === Number(myId) ? (
         <CommentEdit
           comment={comment}
           setIsEditing={setIsEditing}
@@ -98,7 +105,7 @@ export default function Comment({
           <div>{comment.comment}</div>
         </div>
       )}
-      {isLogin ? (
+      {isLogin && comment.userId === Number(myId) ? (
         <div className="comment-button-wrapper">
           <button onClick={() => setIsCliked(true)}>수정 </button>
           <button onClick={deleteComment}>삭제</button>

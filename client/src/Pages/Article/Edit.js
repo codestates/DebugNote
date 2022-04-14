@@ -11,7 +11,6 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 import axios from 'axios';
 
-
 export default function Edit({ currentArticle, setCurrentArticle, isLogin }) {
   console.log('/edit으로 내려준 게시글 정보', currentArticle);
   // const [article, setArticle] = useState({
@@ -48,10 +47,10 @@ export default function Edit({ currentArticle, setCurrentArticle, isLogin }) {
       .then(resp => {
         console.log(resp.data);
         //* 수정 전 조회중이던 게시글 상세페이지로 이동
-        alert("게시글이 수정되었습니다")
+        alert('게시글이 수정되었습니다');
         navigate(`/${currentArticle.id}`);
       })
-      .catch(()=> alert("게시글 수정에 실패했습니다"));
+      .catch(() => alert('다른 사람의 게시글은 수정할 수 없습니다'));
   };
 
   return isLogin ? (

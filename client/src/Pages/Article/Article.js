@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import { Viewer } from '@toast-ui/react-editor';
-import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { nord } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import axios from 'axios';
-import Prism from 'prismjs';
-import 'prismjs/themes/prism.css';
+
 import Comment from '../../Components/Comment';
 
 import styled from 'styled-components';
@@ -15,7 +15,6 @@ const Box = styled.div`
   padding: 2rem 10rem;
 `;
 const ArticleDetail = styled.section`
-  /* border: 1px solid red; */
   > header {
     height: 5rem;
     display: flex;
@@ -114,7 +113,8 @@ export default function Article({
 
         if (resp.status === 200) {
           console.log('axios');
-          const { id, title, content, createdAt, nickname } = resp.data.board;
+          const { id, title, content, createdAt, nickname, userId } =
+            resp.data.board;
           console.log('1');
           const { comment } = resp.data;
           console.log('2');
@@ -133,6 +133,7 @@ export default function Article({
             content,
             createdAt,
             nickname,
+            userId,
           });
           setComments(comment);
           console.log('axios 요청 후 게시글', currentArticle);
@@ -152,14 +153,11 @@ export default function Article({
       .delete(`http://15.164.104.171/boards/${id}`)
       .then(response => {
         if (response.status === 200) {
-          alert('정상적으로 삭제되었습니다');
+          alert('삭제되었습니다');
           navigate('/');
-        } else {
-          console.log('삭제 실패');
-          alert('다른 사람의 게시글은 삭제 불가합니다');
         }
       })
-      .catch(err => console.log(err));
+      .catch(() => alert('다른 사람의 게시글은 삭제할 수 없습니다'));
   };
 
   // 댓글 수정 콜백
@@ -195,23 +193,31 @@ export default function Article({
         // 응답으로 작성한 댓글 정보가 온다
         // textarea 내용을 지운다
         setCommentContent('');
-        const { id, comment, createdAt, updatedAt } = resp.data.comment;
+        const { BoardId, comment, createdAt, updatedAt, UserId } =
+          resp.data.comment;
+
+        //console.log(id1, '<Article>');
         const commentObj = {
-          id,
+          id: BoardId,
           comment,
           createdAt,
           updatedAt,
           nickname: resp.data.nickname,
+          userId: UserId,
         };
 
         setComments([commentObj, ...comments]);
-        alert('정상적으로 등록되었습니다');
       })
-      .catch(() => alert('다른 사람의 댓글은 수정 불가합니다'));
+      .catch(console.log);
   };
 
   const moveToEdit = () => {
-    navigate('/edit');
+    console.log(myId, currentArticle.userId, '아이디가 같니?');
+    if (myId === currentArticle.userId) {
+      navigate('/edit');
+    } else {
+      alert('다른사람의 게시글은 수정할 수 없습니다');
+    }
   };
 
   //!
@@ -230,7 +236,7 @@ export default function Article({
           alert('북마크 추가했습니다');
           setBookmarks(1);
         } else {
-          alert('북마크 추가 실패했습니다');
+          console.log('북마크 추가 실패');
         }
       })
       .catch(err => console.log(err));
@@ -244,7 +250,7 @@ export default function Article({
           alert('북마크 삭제했습니다');
           setBookmarks(null);
         } else {
-          alert('북마크를 취소하지 못했습니다');
+          console.log('북마크 취소 실패');
         }
       })
       .catch(err => console.log(err));
@@ -256,7 +262,7 @@ export default function Article({
     <Box>
       <ArticleDetail className="article-wrapper">
         <header>
-          <div class="name-timestamp">
+          <div className="name-timestamp">
             <div>{currentArticle.nickname}</div>
             <div className="timestamp">{parsedDate}</div>
           </div>
@@ -275,16 +281,83 @@ export default function Article({
             <button onClick={deleteArticle}>삭제</button>{' '}
           </div>
         ) : null}
-
         <div className="viewer-wrapper">
-          <Viewer
-            initialValue={currentArticle.content}
-            plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
-            height={'600px'}
-          />
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || '');
+                return inline ? (
+                  // 강조 (``)
+                  <code
+                    style={{
+                      background:
+                        'linear-gradient( to right, var(--sub-highlight-color) 15%, var(--highlight-color) 85%, var(--sub-highlight-color) )',
+                      padding: '2px',
+                      borderRadius: '3px',
+                    }}
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                ) : match ? (
+                  // 코드 (```)
+                  <SyntaxHighlighter
+                    style={nord}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                ) : (
+                  <SyntaxHighlighter
+                    style={nord}
+                    language="textile"
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, '')}
+                  </SyntaxHighlighter>
+                );
+              },
+              // 인용문 (>)
+              blockquote({ node, children, ...props }) {
+                return (
+                  <div
+                    style={{
+                      background: '#f0f0f0',
+                      padding: '1px 15px',
+                      borderRadius: '10px',
+                    }}
+                    {...props}
+                  >
+                    {children}
+                  </div>
+                );
+              },
+              img({ node, ...props }) {
+                return (
+                  <img
+                    style={{ maxWidth: '60vw' }}
+                    src={props.src.replace('../../../../public/', '/')}
+                    alt="MarkdownRenderer__Image"
+                  />
+                );
+              },
+            }}
+          >
+            {currentArticle.content
+              .replace(/\n\s\n\s/gi, '\n\n&nbsp;\n\n')
+              .replace(/\*\*/gi, '@$_%!^')
+              .replace(/\**\*/gi, '/')
+              .replace(/@\$_%!\^/gi, '**')
+              .replace(/<\/?u>/gi, '*')}
+          </ReactMarkdown>
         </div>
+
         <section className="write-comments-wrapper">
-          <h4>댓글 {comments.length}</h4>
+          <h4>댓글{comments.length}</h4>
           <div className="write-comment-wrapper">
             {isLogin ? (
               <>
@@ -293,6 +366,7 @@ export default function Article({
                   onChange={handleInputValue}
                   value={commentContent}
                 ></textarea>
+
                 <button onClick={submitComment}>댓글 달기</button>
               </>
             ) : null}
@@ -309,6 +383,7 @@ export default function Article({
                       commentContent={commentContent}
                       setComments={setComments}
                       isLogin={isLogin}
+                      myId={myId}
                     />
                   ))
                 : null}
