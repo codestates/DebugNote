@@ -233,9 +233,8 @@ export default function Info({ setIsLogin, myId, setMyId }) {
           //리디렉션
         }
       })
-      .catch(() => {
-        //탈퇴에 실패했다고 모달 창 띄워주기
-        alert('탈퇴 실패했습니다');
+      .catch(err => {
+        alert(err);
       });
   };
 

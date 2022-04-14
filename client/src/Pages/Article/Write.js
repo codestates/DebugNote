@@ -10,7 +10,6 @@ import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
-
 import axios from 'axios';
 
 const Section = styled.section`
@@ -21,7 +20,7 @@ const Section = styled.section`
   border-bottom: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
-> .editor-wrapper {
+  > .editor-wrapper {
     padding: 1rem;
   }
 `;
@@ -29,13 +28,13 @@ const Section = styled.section`
 const Title = styled.div`
   /* border: 1px solid blue; */
   /* background-color: #8fbc8f; */
-  font-family: ;
+  font-family: sans-serif;
   height: 3rem;
   display: flex;
   align-items: center;
   margin: 2rem 5rem;
 
-> .input {
+  > .input {
     font-family: sans-serif;
     height: 4rem;
     font-size: 2rem;
@@ -57,7 +56,7 @@ const MenuUl = styled.ul`
   list-style: none;
   width: 100vw;
   padding: 0 1rem 0 1rem;
-> li {
+  > li {
     font-size: 1.5rem;
     color: white;
     background-color: black;
@@ -74,7 +73,7 @@ const MenuUl = styled.ul`
       cursor: pointer;
     }
   }
-> .submit {
+  > .submit {
     border: 1px solid #e0e0e0;
     color: black;
     background-color: white;

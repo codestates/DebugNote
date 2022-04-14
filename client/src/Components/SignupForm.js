@@ -54,6 +54,11 @@ const Button = styled.button`
   &:hover {
     background-color: #82a382;
   }
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
 `;
 
 axios.defaults.withCredentials = true;
@@ -114,8 +119,11 @@ export default function SignupForm({
           openLoginModalHandler();
           modalToggleHandler(true);
         }
+        if (response.status === 409) {
+          console.log('이미 존재하는 이메일입니다');
+        }
       })
-      .catch(console.log);
+      .catch(() => alert('회원가입에 실패하였습니다'));
   };
   return (
     <section>
@@ -144,7 +152,7 @@ export default function SignupForm({
         <div className="guide">
           {pwValidator(signupInfo.password)
             ? '올바른 비밀번호 형식입니다'
-            : '비밀번호 형식에 맞지 않습니다'}
+            : '비밀번호는 영문자와 숫자 모두 포함, 8-20글자여야 합니다'}
         </div>
         <Label>
           <div>password 확인</div>

@@ -124,16 +124,17 @@ function App() {
         >
           <Route
             index
-            element={<Info myId={myId} setMyId={setMyId} />}
+            element={<Logs myId={myId} setMyId={setMyId} />}
             isLogin={isLogin}
           />
+          <Route path="logs/" element={<Logs />} isLogin={isLogin} />
+          <Route path="bookmarks/" element={<Bookmarks />} isLogin={isLogin} />
           <Route
             path="info"
-            element={<Info myId={myId} setMyId={setMyId} />}
-            setIsLogin={setIsLogin}
+            element={
+              <Info myId={myId} setMyId={setMyId} setIsLogin={setIsLogin} />
+            }
           />
-          <Route path="logs/*" element={<Logs />} isLogin={isLogin} />
-          <Route path="bookmarks/*" element={<Bookmarks />} isLogin={isLogin} />
         </Route>
         <Route
           path="write"

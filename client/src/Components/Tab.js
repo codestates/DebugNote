@@ -9,13 +9,14 @@ const Tabul = styled.ul`
 `;
 
 const Tabli = styled.li`
+  /* border: 1px solid blue; */
   position: relative;
   padding: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
-  font-size: 1.5rem;
+  margin: 1.3rem 0;
+  font-size: 2.3rem;
   color: #a4a8a4;
   &:hover {
     color: #82a382;
@@ -29,11 +30,12 @@ const Tooltip = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 3px;
-  width: 80px;
-  height: 20px;
+  width: 100px;
+  height: 30px;
   background-color: #545654;
   color: white;
-  font-size: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: bold;
   position: absolute;
   visibility: hidden;
   z-index: 1;
