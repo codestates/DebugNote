@@ -8,6 +8,10 @@ const bookmarkRouter = require('./bookmark');
 const searchRouter = require('./search');
 const mypageRouter = require('./mypage');
 
+const Board = require('../models/board');
+const User = require('../models/user');
+const db = require('../models');
+
 router.use('/auth', authRouter);
 router.use('/boards', boardRouter);
 router.use('/comments', commentRouter);
@@ -25,10 +29,23 @@ router.get('/', async (req, res) => {
   pages = Number(req.query.pages || 1);
 
   const boards = await pagenation.getBoards(pages, limit);
+  
 
-  if (boards.rows.length === 0) {
-    return res.status(404).json({ message: '게시물이 존재하지 않습니다.' });
-  }
+  // 북마크 갯수 내려주기
+  // const boardsId = boards.rows.map(board => {
+  //   return board.id;
+  // });
+  // // console.log(boardsId);
+
+  // const countBookmark = await pagenation.countBookmark(boardsId);
+
+  // if (boards.rows.length === 0) {
+  //   return res.status(404).json({ message: '게시물이 존재하지 않습니다.' });
+  // }
+
+  // for (let i = 0; i < 10; i++) {
+  //   boards.rows[i].dataValues['totalBookmark'] = countBookmark[i];
+  // }
 
   res
     .status(200)

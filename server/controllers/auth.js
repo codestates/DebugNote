@@ -71,7 +71,7 @@ module.exports = {
   },
   // 로그아웃
   logout: async (req, res) => {
-    res.cookie('token', '');
+    // res.cookie('token', '');
     res.status(200).json({ message: '로그아웃에 성공했습니다.' });
   },
   // 인증

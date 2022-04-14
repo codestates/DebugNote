@@ -40,10 +40,15 @@ module.exports = class User extends Sequelize.Model {
   }
  
   static associate(db) {
-    db.User.hasMany(db.Board);
-    db.User.hasMany(db.Comment);
+    db.User.hasMany(db.Board, {
+      onDelete: 'CASCADE',
+    });
+    db.User.hasMany(db.Comment, {
+      onDelete: 'CASCADE',
+    });
     db.User.belongsToMany(db.Board, {
       through: 'Bookmark',
+      onDelete: 'CASCADE',
     });
   }
 };
