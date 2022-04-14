@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route} from 'react-router-dom';
 import axios from 'axios';
 import LoadingIndicator from '../../Components/LoadingIndicator';
 import ErrorLog from '../../Components/ErrorLog';
@@ -66,7 +66,7 @@ export default function Logs({isLogin}) {
     setIsLoading(false);
   }, [currentPage]);
 
-  return isLogin ? (
+  return (
     <Box className="logs">
       <Routes>
         {/* <Route path="/:id" element={<Article />} /> 전체 게시글 프롭스뺌 */}
@@ -93,7 +93,5 @@ export default function Logs({isLogin}) {
         />
       </Routes>
     </Box>
-  ) : (
-    <Navigate to="/" />
-  );
+  )
 }

@@ -3,7 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 const Box = styled.div`
-  border: 1px solid blue;
+  border-bottom: 1px solid #000000;
+  background-color: #a3cca3;
   width: 100%;
   height: 28rem;
   display: flex;
@@ -25,34 +26,42 @@ const Home = styled.section`
   }
   > .logo {
     font-family: 'Abril Fatface', cursive;
-    color: #8fbc8f;
+    /* color: #8fbc8f; */
+    color: #ffffff;
     font-size: 3rem;
   }
 `;
 
 const SearchSection = styled.div`
-  border: 1px solid pink;
+  /* border: 1px solid pink; */
   width: 100%;
   display: flex;
   flex: 2;
   justify-content: flex-start;
   align-items: flex-start;
   > .input-icon-wrapper {
-    border: 1px solid red;
-    > select {
-      border: none;
-      background-color: none;
-      width: 6rem;
-      height: 2rem;
-      padding: 0.4rem;
-    }
+    /* border: 1px solid red; */
     margin-left: 40px;
+    background-color:#ffffff;
     border: 1px solid #e0e0e0;
-    width: 50%;
-    height: 2.7rem;
+    width: 35%;
+    padding: 0 0.8rem;
+    height: 3rem;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    > select {
+      font-weight:bold;
+      border: none;
+      background-color: #ffffff;
+      width: 6rem;
+      height: 2rem;
+      padding: 0.4rem;
+      margin-right: 1rem;
+      &:focus{
+        outline: none;
+      }
+    }
     &:focus {
       border: 1px solid #a3cca3;
     }
@@ -140,6 +149,7 @@ export default function Searchbar({
   return (
     <Box>
       <Home>
+        <div>개발자들의</div>
         <div>에러 로그 공유 플랫폼,</div>
         <div className="logo">DebugNote .</div>
       </Home>
