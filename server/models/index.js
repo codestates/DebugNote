@@ -27,5 +27,4 @@ User.associate(db);
 Board.associate(db);
 Comment.associate(db);
 
-
 module.exports = db;

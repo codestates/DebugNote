@@ -40,5 +40,6 @@ module.exports = class Board extends Sequelize.Model {
       through: 'Bookmark',
       onDelete: 'CASCADE',
     });
+    db.Board.hasMany(db.Comment, { onDelete: 'cascade' });
   }
 };

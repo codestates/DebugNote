@@ -9,7 +9,6 @@ const { sequelize } = require('./models');
 dotenv.config();
 const app = express();
 
-
 // 데이터베이스 연결
 sequelize
   .sync({ force: false })
