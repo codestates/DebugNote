@@ -14,3 +14,7 @@
 (*에러 로그란? 나의 에러 해결 과정을 기록한 게시물입니다.)
 - 도움이 되는 에러로그들은 `북마크` 해 Mypage 에서 확인할 수 있습니다.
 - `댓글` 기능을 통해 유저들과 소통할 수 있습니다.
+
+# 배포 주소
+
+[DebugNote](http://debugnote-client.s3-website.ap-northeast-2.amazonaws.com/)
