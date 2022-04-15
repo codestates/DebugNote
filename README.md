@@ -1,5 +1,8 @@
 # DebugNote
 
+![스크롤](https://user-images.githubusercontent.com/71710671/163518396-d55ccabf-3a1e-46c8-bfa8-0c6e2e3d6f1f.gif)
+
+
 ## About
 
 **오늘도 개발 공부를 하며 수많은 에러와 씨름하는 당신!** <br/>
